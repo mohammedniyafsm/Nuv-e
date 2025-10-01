@@ -1,12 +1,15 @@
-import mongoose, { Schema, Model } from "mongoose";
+import mongoose, { Document, Schema, Model, Types } from "mongoose";
+import bcrypt from "bcrypt";
 
-interface IUser {
+interface IUser extends Document {
+    _id : Types.ObjectId;
     username: string;
     email: string;
     password: string;
     role: string;
     isVerified: boolean;
     status: string;
+    comparePassword(password: string): Promise<boolean>;
 }
 
 const UserSchema = new Schema<IUser>(
@@ -21,5 +24,24 @@ const UserSchema = new Schema<IUser>(
     { timestamps: true }
 );
 
+// Pre-save middleware to hash password
+UserSchema.pre("save", async function (next) {
+    if (!this.isModified("password")) return next();
+
+    try {
+        const salt = await bcrypt.genSalt(8);
+        this.password = await bcrypt.hash(this.password, salt);
+        next();
+    } catch (error: any) {
+        next(error);
+    }
+});
+
+// Instance method to compare passwords
+UserSchema.methods.comparePassword = async function(password: string): Promise<boolean> {
+    return bcrypt.compare(password, this.password);
+};
+
 const User: Model<IUser> = mongoose.model<IUser>("User", UserSchema);
+
 export default User;
