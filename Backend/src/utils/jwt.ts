@@ -15,3 +15,19 @@ export const generateToken = (id: string): string => {
         throw error;
     }
 };
+
+
+export const generateOtpToken = (otp: number ): string => {
+    const otp_key = process.env.OTP_SECRET_KEY;
+    if (!otp_key) {
+        throw new Error("OTP_SECRET_KEY is not defined in .env");
+    }
+    try {
+        const payload = { otp }
+        const otpToken = jwt.sign(payload, otp_key,{expiresIn : "5min"});
+        return otpToken
+    } catch (error) {
+        console.error("Error while generating JWT token", error);
+        throw error;
+    }
+}
