@@ -4,6 +4,7 @@ import { forgotPassword, getUserProfile, loginUser, resendOtp, sendOtp, signupUs
 import { getAllProducts, getProductById } from "../controller/productController";
 import { addAddress, deleteAddress, getAddresses, updateAddress } from "../controller/addressController";
 import { addItemToCart, clearCart, getCart, removeCartItem, updateCartItem } from "../controller/cartController";
+import { addToWishlist, getWishlist, removeFromWishlist } from "../controller/wishlistController";
 
 const router = express.Router();
 
@@ -35,5 +36,9 @@ router.put('/cart/:itemId',userProtect,updateCartItem)
 router.delete('/cart/:itemId',userProtect,removeCartItem);
 router.delete('/cart/',userProtect,clearCart)
 
+//wishlist 
+router.get('/wishlist',userProtect,getWishlist);
+router.post('/wishlist',userProtect,addToWishlist );
+router.delete('/wishlist/:productId',userProtect,removeFromWishlist );
 
 export default router;

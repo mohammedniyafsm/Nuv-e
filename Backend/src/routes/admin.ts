@@ -1,5 +1,5 @@
 import express from "express";
-import { adminProtect, protect } from "../middleware/Auth";
+import { adminProtect, protect, userProtect } from "../middleware/Auth";
 import { addProduct, deleteProduct, getAdminProducts, getProductByIdAdmin, updateProduct } from "../controller/productController";
 import { adminProfile, getAllUsers, getUserById, loginAdmin, sendOtp, signupAdmin, updateUserStatus, verifyOtp } from "../controller/adminController";
 
@@ -22,6 +22,8 @@ router.get('/admin/products/:id',adminProtect,protect,getProductByIdAdmin);
 router.get('/admin/users',adminProtect,protect,getAllUsers);
 router.get('/admin/users/:id',adminProtect,protect,getUserById);
 router.put('/admin/users/:id',adminProtect,protect,updateUserStatus);
+
+
 
 
 export default router;
