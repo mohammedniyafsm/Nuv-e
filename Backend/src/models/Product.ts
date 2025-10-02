@@ -48,5 +48,5 @@ export const ProductSchema = new Schema<IProduct>(
   { timestamps: true }
 );
 
-export const Product : Model <IProduct> = model<IProduct>("Product", ProductSchema);
+export const Product: Model<IProduct> = model<IProduct>("Product", ProductSchema);
 
