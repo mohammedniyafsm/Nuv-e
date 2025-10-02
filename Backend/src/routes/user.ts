@@ -3,6 +3,7 @@ import { userProtect } from "../middleware/Auth";
 import { forgotPassword, getUserProfile, loginUser, resendOtp, sendOtp, signupUser, updatePassword, updateUserProfile, verifyOtp } from "../controller/userController";
 import { getAllProducts, getProductById } from "../controller/productController";
 import { addAddress, deleteAddress, getAddresses, updateAddress } from "../controller/addressController";
+import { addItemToCart, clearCart, getCart, removeCartItem, updateCartItem } from "../controller/cartController";
 
 const router = express.Router();
 
@@ -26,6 +27,13 @@ router.delete('/user/address/:id',userProtect,deleteAddress);
 //Public Api -->
 router.get('/user/products',getAllProducts);
 router.get('/user/products/:id',getProductById);
+
+//cart 
+router.get('/cart',userProtect,getCart);
+router.post('/cart',userProtect,addItemToCart);
+router.put('/cart/:itemId',userProtect,updateCartItem)
+router.delete('/cart/:itemId',userProtect,removeCartItem);
+router.delete('/cart/',userProtect,clearCart)
 
 
 export default router;
