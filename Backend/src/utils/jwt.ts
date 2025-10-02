@@ -6,9 +6,9 @@ if (!jwtKey) {
     throw new Error("JWT_SECRET_KEY is not defined in .env");
 }
 
-export const generateToken = (id: string): string => {
+export const generateToken = (id: string, role : string): string => {
     try {
-        const payload = { id };
+        const payload = { id ,role };
         return jwt.sign(payload, jwtKey, { expiresIn: "30d" });
     } catch (error) {
         console.error("Error while generating JWT token", error);

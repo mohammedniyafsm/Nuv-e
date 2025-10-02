@@ -3,6 +3,7 @@ import dotenv from "dotenv";
 dotenv.config();
 import { connectDB } from "./config/db";
 import userRoute from "./routes/user";
+import adminRoute from "./routes/admin";
 
 
 const app = express();
@@ -10,6 +11,7 @@ connectDB();
 
 app.use(express.json())
 app.use('/api', userRoute);
+app.use('/api', adminRoute);
 
 app.use('/', (req: Request, res: Response) => {
     res.send("Server Running....")

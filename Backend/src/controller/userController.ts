@@ -5,10 +5,10 @@ import jwt, { JwtPayload } from "jsonwebtoken"
 import { ZodError } from "zod"
 import { generateOtpToken, generateToken } from "../utils/jwt";
 import { generateOtp } from "../utils/otpHelper";
-import { sendOtpEmail } from "../utils/nodemailer";
+import { ForgotPasswordOtpEmail, sendOtpEmail } from "../utils/nodemailer";
 
 
-export const Signup = async (req: Request, res: Response): Promise<void> => {
+export const signupUser = async (req: Request, res: Response): Promise<void> => {
     try {
         const validatedData = signupSchema.parse(req.body);
 
@@ -36,7 +36,7 @@ export const Signup = async (req: Request, res: Response): Promise<void> => {
 };
 
 
-export const Login = async (req: Request, res: Response): Promise<void> => {
+export const loginUser = async (req: Request, res: Response): Promise<void> => {
     try {
         const validatedData = loginSchema.parse(req.body);
 
@@ -52,7 +52,7 @@ export const Login = async (req: Request, res: Response): Promise<void> => {
             return
         }
 
-        const token = generateToken(user._id.toString());
+        const token = generateToken(user._id.toString(), user.role);
 
         res.status(200).json({
             message: "Logged in successfully",
@@ -74,36 +74,184 @@ export const Login = async (req: Request, res: Response): Promise<void> => {
 };
 
 
-export const RequestOtp = async (req: Request, res: Response): Promise<void> => {
+export const sendOtp = async (req: Request, res: Response): Promise<void> => {
     try {
         const { email } = req.body;
+
+        const user = await User.findOne({ email });
+        if (!user) {
+            res.status(400).json({ message: "User Not Found" });
+            return;
+        }
+
+        const now = new Date();
+        if (user.lastOtpSentAt && (now.getTime() - user.lastOtpSentAt.getTime()) < 2 * 60 * 1000) {
+            const waitTime = Math.ceil(
+                (2 * 60 * 1000 - (now.getTime() - user.lastOtpSentAt.getTime())) / 1000
+            );
+            res.status(429).json({ message: `Please wait ${waitTime} seconds before requesting a new OTP` });
+            return;
+        }
+
         const otp = await generateOtp();
         const otpToken = await generateOtpToken(otp);
         await sendOtpEmail(email, otp);
-        res.status(200).json({ message: "OTP Sent Succeesfully", otpToken });
-        return;
-    } catch (error) {
-        res.status(500).json({ message: "Server Error", error })
-    }
-}
 
-export const VerifyOtp = async (req: Request, res: Response): Promise<void> => {
+        await User.findOneAndUpdate(
+            { email },
+            { lastOtpSentAt: now, }
+        );
+
+        res.status(200).json({ message: "OTP Sent Successfully", otpToken });
+
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({ message: "Server Error", error });
+    }
+};
+
+
+export const verifyOtp = async (req: Request, res: Response): Promise<void> => {
     try {
         const { otpToken, otp } = req.body;
         const otp_secret_key = process.env.OTP_SECRET_KEY as string;
         if (otpToken) {
             const decoded = await jwt.verify(otpToken, otp_secret_key) as JwtPayload;
-            console.log(decoded,otp)
+            console.log(decoded, otp)
             const verify = decoded.otp == otp;
             if (!verify) {
                 res.status(400).json({ message: "Invalid OTP" });
                 return;
             }
             else {
-                res.status(200).json({ message: "Verifyied" })
+                await User.findByIdAndUpdate({})
+                res.status(200).json({ message: "Verifyied" });
+                return;
             }
         }
     } catch (error) {
-        res.status(500).json({ message: "Server error ", error })
+        res.status(500).json({ message: "Server error ", error });
+        return;
+    }
+}
+
+export const resendOtp = async (req: Request, res: Response): Promise<void> => {
+    try {
+        const { email } = req.body;
+        const user = await User.findOne({ email });
+        if (!user) {
+            res.status(400).json({ message: "User Not Found" });
+            return;
+        }
+
+        //  2-minute cooldown
+        const now = new Date();
+        if (user.lastOtpSentAt && (now.getTime() - user.lastOtpSentAt.getTime()) < 2 * 60 * 1000) {
+            const waitTime = Math.ceil(
+                (2 * 60 * 1000 - (now.getTime() - user.lastOtpSentAt.getTime())) / 1000
+            );
+            res.status(429).json({ message: `Please wait ${waitTime} seconds before requesting a new OTP` });
+            return;
+        }
+
+        //  Generate OTP & send email
+        const otp = await generateOtp();
+        const otpToken = await generateOtpToken(otp);
+        await sendOtpEmail(email, otp);
+
+        // Update user document
+        await User.findOneAndUpdate(
+            { email },
+            { lastOtpSentAt: new Date() }
+        );
+
+        res.status(200).json({ message: "OTP Sent Successfully", otpToken });
+
+    } catch (error) {
+        res.status(500).json({ message: "Server Error", error });
+        return;
+    }
+};
+
+
+export const forgotPassword = async (req: Request, res: Response): Promise<void> => {
+    try {
+        const { email } = req.body;
+        const user = await User.findOne({ email });
+        if (!user) {
+            res.status(400).json({ message: "User Not Found" });
+            return;
+        }
+        const now = new Date();
+        if (user.lastOtpSentAt && (now.getTime() - user.lastOtpSentAt.getTime()) < 2 * 60 * 1000) {
+            const waitTime = Math.ceil(
+                (2 * 60 * 1000 - (now.getTime() - user.lastOtpSentAt.getTime())) / 1000
+            );
+            res.status(429).json({ message: `Please wait ${waitTime} seconds before requesting a new OTP` });
+            return;
+        }
+        const otp = await generateOtp();
+        const otptoken = generateOtpToken(otp);
+        await ForgotPasswordOtpEmail(email,otp);
+        await User.findByIdAndUpdate( user._id ,{lastOtpSentAt : new Date()});
+        res.status(200).json({message : "OTP sent to your email successfully",otptoken})
+    } catch (error) {
+        res.status(500).json({ message: "Server Error", error });
+        return;
+    }
+}
+
+export const updatePassword = async (req: Request, res: Response): Promise<void> => {
+    try {
+        const id = req.user.id;
+        const { oldPassword, newPassword } = req.body;
+        const user = await User.findOne({ _id: id });
+        if (!user) {
+            res.status(400).json({ message: "User Not Found" });
+            return;
+        }
+        const verifyPassword = await user.comparePassword(oldPassword);
+        if (!verifyPassword) {
+            res.status(400).json({ message: "Invalid Password" });
+            return;
+        }
+        user.password = newPassword;
+        await user.save();
+        res.status(200).json({ message: "Password Updated" })
+    } catch (error) {
+        res.status(500).json({ message: "Server Error", error })
+    }
+}
+
+export const getUserProfile = async (req: Request, res: Response): Promise<void> => {
+    try {
+        const id = req.user.id;
+        const userData = await User.findOne({ _id: id });
+        if (!userData) {
+            res.status(400).json({ message: "User Not Found" })
+            return;
+        }
+
+        res.status(200).json(userData);
+        return;
+    } catch (error) {
+        res.status(500).json({ message: "Server Error", error })
+    }
+}
+
+
+export const updateUserProfile = async (req:Request,res: Response):Promise<void>=>{
+    try {
+        const userID = req.user.id;
+        const {username ,email} = req.body;
+        console.log(username,email)
+        const updateData = await User.findByIdAndUpdate(userID,{ username, email},
+          {  new : true,}
+        )
+        res.status(200).json({message : "User Data Updated",updateData});
+        return;
+    } catch (error) {
+        res.status(500).json({message : "Server Error",error});
+        return;
     }
 }

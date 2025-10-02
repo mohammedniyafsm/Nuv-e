@@ -2,13 +2,14 @@ import mongoose, { Document, Schema, Model, Types } from "mongoose";
 import bcrypt from "bcrypt";
 
 interface IUser extends Document {
-    _id : Types.ObjectId;
+    _id: Types.ObjectId;
     username: string;
     email: string;
     password: string;
     role: string;
     isVerified: boolean;
     status: string;
+    lastOtpSentAt :Date;
     comparePassword(password: string): Promise<boolean>;
 }
 
@@ -20,6 +21,7 @@ const UserSchema = new Schema<IUser>(
         role: { type: String, enum: ["user", "admin"], default: "user" },
         isVerified: { type: Boolean, default: false },
         status: { type: String, enum: ["active", "inactive", "banned"], default: "active" },
+        lastOtpSentAt : { type : Date}
     },
     { timestamps: true }
 );
@@ -38,7 +40,7 @@ UserSchema.pre("save", async function (next) {
 });
 
 // Instance method to compare passwords
-UserSchema.methods.comparePassword = async function(password: string): Promise<boolean> {
+UserSchema.methods.comparePassword = async function (password: string): Promise<boolean> {
     return bcrypt.compare(password, this.password);
 };
 
