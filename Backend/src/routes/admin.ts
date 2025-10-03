@@ -2,6 +2,7 @@ import express from "express";
 import { adminProtect, protect, userProtect } from "../middleware/Auth";
 import { addProduct, deleteProduct, getAdminProducts, getProductByIdAdmin, updateProduct } from "../controller/productController";
 import { adminProfile, getAllUsers, getUserById, loginAdmin, sendOtp, signupAdmin, updateUserStatus, verifyOtp } from "../controller/adminController";
+import { deleteOrder, getAllOrders, updateOrderStatus } from "../controller/orderController";
 
 const router = express.Router();
 
@@ -22,5 +23,10 @@ router.get('/admin/products/:id',adminProtect,protect,getProductByIdAdmin);
 router.get('/admin/users',adminProtect,protect,getAllUsers);
 router.get('/admin/users/:id',adminProtect,protect,getUserById);
 router.put('/admin/users/:id',adminProtect,protect,updateUserStatus);
+
+router.get('/admin/orders',adminProtect,protect,getAllOrders);
+router.put('/admin/orders/:id/status',adminProtect,protect,updateOrderStatus);
+router.delete('/admin/orders/:id',adminProtect,protect,deleteOrder);
+
 
 export default router;
