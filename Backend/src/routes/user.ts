@@ -4,7 +4,7 @@ import { forgotPassword, getUserProfile, loginUser, resendOtp, sendOtp, signupUs
 import { filterProducts, getAllProducts, getPaginatedProducts, getProductById, searchProducts } from "../controller/productController";
 import { addAddress, deleteAddress, getAddresses, updateAddress } from "../controller/addressController";
 import { addItemToCart, clearCart, getCart, removeCartItem, updateCartItem } from "../controller/cartController";
-import { addToWishlist, getWishlist, removeFromWishlist } from "../controller/wishlistController";
+import { addToWishlist, getWishlist, moveWishlistToCart, removeFromWishlist } from "../controller/wishlistController";
 import { cancelOrder, getOrderById, getUserOrders, placeOrder, returnOrder } from "../controller/orderController";
 
 const router = express.Router();
@@ -45,6 +45,7 @@ router.delete('/cart/',userProtect,clearCart)
 router.get('/wishlist',userProtect,getWishlist);
 router.post('/wishlist',userProtect,addToWishlist );
 router.delete('/wishlist/:productId',userProtect,removeFromWishlist );
+router.post('/wishlist/:productId/move-to-cart',userProtect,moveWishlistToCart );
 
 //order 
 router.get('/orders',userProtect,getUserOrders);

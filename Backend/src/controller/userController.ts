@@ -124,7 +124,8 @@ export const verifyOtp = async (req: Request, res: Response): Promise<void> => {
                 return;
             }
             else {
-                await User.findByIdAndUpdate({})
+                await User.findByIdAndUpdate({});
+                await User.findByIdAndUpdate(decoded.id, { isVerified: true });
                 res.status(200).json({ message: "Verifyied" });
                 return;
             }

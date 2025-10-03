@@ -78,7 +78,7 @@ export const getProductByIdAdmin = async (req: Request, res: Response): Promise<
 //Public get all product
 export const getAllProducts = async (req: Request, res: Response): Promise<void> => {
     try {
-        const products = Product.find();
+        const products = await Product.find();
         res.status(200).json(products);
     } catch (error) {
         res.status(500).json({ message: "Server Error", error });
@@ -149,11 +149,11 @@ export const getPaginatedProducts = async (req: Request, res: Response): Promise
         const { page, limit, sort } = req.query;
         const li = Number(limit);
         const pa = Number(page)
-        const skip = (pa - 1 * li);
+        const skip = (pa - 1 )* li;
         let sortOption: any = {};
         if (sort) sortOption[sort as string] = 1
 
-        const product = await Product.find().limit(li).skip(skip).sort();
+        const product = await Product.find().limit(li).skip(skip).sort(sortOption);
         res.status(200).json({ page: page, product: product });
         return;
     } catch (error) {

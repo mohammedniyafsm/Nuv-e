@@ -1,5 +1,8 @@
 import { Request, Response } from "express";
 import { WishList } from "../models/WishList";
+import { Cart } from "../models/Cart";
+import { Product } from "../models/Product";
+import { Types } from "mongoose";
 
 
 export const getWishlist = async (req: Request, res: Response): Promise<void> => {
@@ -21,17 +24,22 @@ export const addToWishlist = async (req: Request, res: Response): Promise<void> 
     try {
         const userId = req.user.id;
         const { productId } = req.body;
-        const update = await WishList.findOneAndUpdate(
+        if (!productId) {
+            res.status(400).json({ message: "Product ID is required" });
+            return;
+        }
+        const wishlist = await WishList.findOneAndUpdate(
             { userId },
-            { $push: { "products": productId } },
+            { $addToSet: { products: productId } },
             { new: true, upsert: true }
-        )
-        res.status(200).json({ message: "Added to Wishlist", update });
-        return;
+        );
+        res.status(200).json({ message: "Added to Wishlist", wishlist });
     } catch (error) {
-        res.status(500).json({ message: "Server Error ", error })
+        console.error("Wishlist error:", error);
+        res.status(500).json({ message: "Server Error", error });
     }
-}
+};
+
 
 export const removeFromWishlist = async (req: Request, res: Response): Promise<void> => {
     try {
@@ -48,3 +56,62 @@ export const removeFromWishlist = async (req: Request, res: Response): Promise<v
         res.status(500).json({ message: "Server Error", error })
     }
 }
+
+export const moveWishlistToCart = async (req: Request, res: Response): Promise<void> => {
+    try {
+        const userId = req.user.id;
+        const productId = req.params.productId;
+
+        const product = await Product.findById(productId);
+        if (!product) {
+            res.status(404).json({ message: "Product Not Found" });
+            return;
+        }
+
+        let cart = await Cart.findOne({ userId });
+
+        if (!cart) {
+            // No cart yet → create one with this product
+            cart = await Cart.findOneAndUpdate(
+                { userId },
+                { 
+                    $set: { 
+                        userId, 
+                        items: [{ productId: product._id, quantity: 1, price: product.price }] 
+                    } 
+                },
+                { new: true, upsert: true }
+            );
+        } else {
+            // Check if product already exists in cart
+            const existingItem = cart.items.find(
+                (item) => item.productId.toString() === productId
+            );
+            console.log(existingItem)
+
+            if (existingItem) {
+                existingItem.quantity += 1;
+                await cart.save();
+            } else {
+                cart = await Cart.findOneAndUpdate(
+                    { userId },
+                    { $push: { items: { productId: product._id, quantity: 1, price: product.price } } },
+                    { new: true }
+                );
+            }
+        }
+
+        // Always remove product from wishlist
+        await WishList.findOneAndUpdate(
+            { userId },
+            { $pull: { products: productId } },
+            { new: true }
+        );
+
+        res.status(200).json({ message: "Product moved from wishlist to cart", cart });
+
+    } catch (error) {
+        res.status(500).json({ message: "Server Error", error });
+    }
+};
+
