@@ -5,7 +5,7 @@ import { filterProducts, getAllProducts, getPaginatedProducts, getProductById, s
 import { addAddress, deleteAddress, getAddresses, updateAddress } from "../controller/addressController";
 import { addItemToCart, clearCart, getCart, removeCartItem, updateCartItem } from "../controller/cartController";
 import { addToWishlist, getWishlist, removeFromWishlist } from "../controller/wishlistController";
-import { cancelOrder, getOrderById, getUserOrders, placeOrder } from "../controller/orderController";
+import { cancelOrder, getOrderById, getUserOrders, placeOrder, returnOrder } from "../controller/orderController";
 
 const router = express.Router();
 
@@ -51,5 +51,6 @@ router.get('/orders',userProtect,getUserOrders);
 router.post('/orders',userProtect,placeOrder);
 router.get('/orders/:id',userProtect,getOrderById );
 router.put('/orders/:id/cancel',userProtect,cancelOrder );
+router.put('/orders/:id/return',userProtect,returnOrder );
 
 export default router;

@@ -105,3 +105,23 @@ export const deleteOrder = async(req:Request,res:Response):Promise<void>=>{
         return;
     }
 }
+
+export const returnOrder = async (req:Request,res:Response):Promise<void>=>{
+    try {
+        const orderId = req.params.id;
+        const order = await Order.findOne({ _id : orderId });
+        if(order?.orderStatus == "Delivered"){
+            order.orderStatus = "Returned"
+        }
+        else {
+            res.status(400).json({message : "only Delievered Product can return"})
+            return ;
+        }
+        await order.save();
+        res.status(200).json({message : "Order Returned"});
+        return;
+    } catch (error) {
+        res.status(500).json({message : "server Error",error});
+        return;
+    }
+}
