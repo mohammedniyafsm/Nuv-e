@@ -5,6 +5,7 @@ import { getAllProducts, getProductById } from "../controller/productController"
 import { addAddress, deleteAddress, getAddresses, updateAddress } from "../controller/addressController";
 import { addItemToCart, clearCart, getCart, removeCartItem, updateCartItem } from "../controller/cartController";
 import { addToWishlist, getWishlist, removeFromWishlist } from "../controller/wishlistController";
+import { cancelOrder, getOrderById, getUserOrders, placeOrder } from "../controller/orderController";
 
 const router = express.Router();
 
@@ -40,5 +41,11 @@ router.delete('/cart/',userProtect,clearCart)
 router.get('/wishlist',userProtect,getWishlist);
 router.post('/wishlist',userProtect,addToWishlist );
 router.delete('/wishlist/:productId',userProtect,removeFromWishlist );
+
+//order 
+router.get('/orders',userProtect,getUserOrders);
+router.post('/orders',userProtect,placeOrder);
+router.get('/orders/:id',userProtect,getOrderById );
+router.put('/orders/:id/cancel',userProtect,cancelOrder );
 
 export default router;

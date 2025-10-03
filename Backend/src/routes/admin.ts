@@ -23,7 +23,4 @@ router.get('/admin/users',adminProtect,protect,getAllUsers);
 router.get('/admin/users/:id',adminProtect,protect,getUserById);
 router.put('/admin/users/:id',adminProtect,protect,updateUserStatus);
 
-
-
-
 export default router;
