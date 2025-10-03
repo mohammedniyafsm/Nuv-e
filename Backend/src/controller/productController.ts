@@ -1,5 +1,7 @@
 import { Request, Response } from "express";
 import { Product } from "../models/Product";
+import { finished } from "nodemailer/lib/xoauth2";
+import { findPackageJSON } from "module";
 
 export const addProduct = async (req: Request, res: Response): Promise<void> => {
     try {
@@ -98,3 +100,67 @@ export const getProductById = async (req: Request, res: Response): Promise<void>
         return;
     }
 }
+
+//user/products/search?query=keyword
+export const searchProducts = async (req: Request, res: Response): Promise<void> => {
+    try {
+        const searchQuery = req.query.search as string;
+        if (!searchQuery) {
+            res.status(400).json({ message: 'Search query is required.' });
+            return;
+        }
+        const response = await Product.find({
+            name: { $regex: searchQuery, $options: 'i', }
+        })
+        res.status(200).json({ response });
+        return;
+    } catch (error) {
+        res.status(500).json({ message: "Server Error", error });
+        return;
+    }
+}
+
+///user/products/filter?category=perfume&priceMin=1000&priceMax=5000
+export const filterProducts = async (req: Request, res: Response): Promise<void> => {
+    try {
+        const { category, priceMin, priceMax } = req.query;
+        const filter: any = {};
+        if (category) {
+            filter.category = category;
+        }
+        if (priceMin || priceMax) {
+            filter.price = {}
+            if (priceMin) filter.price.$gte = Number(priceMin);
+            if (priceMax) filter.price.$lte = Number(priceMax);
+        }
+        const response = await Product.find(filter);
+        res.status(200).json({ response });
+        return;
+    } catch (error) {
+        res.status(500).json({ message: "server error", error });
+        console.log(error)
+        return;
+    }
+}
+
+///user/products?page=1&limit=10&sort=price
+export const getPaginatedProducts = async (req: Request, res: Response): Promise<void> => {
+    try {
+        const { page, limit, sort } = req.query;
+        const li = Number(limit);
+        const pa = Number(page)
+        const skip = (pa - 1 * li);
+        let sortOption: any = {};
+        if (sort) sortOption[sort as string] = 1
+
+        const product = await Product.find().limit(li).skip(skip).sort();
+        res.status(200).json({ page: page, product: product });
+        return;
+    } catch (error) {
+        res.status(500).json({ message: "server error", error });
+        return;
+    }
+}
+
+
+

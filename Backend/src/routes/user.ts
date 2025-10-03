@@ -1,7 +1,7 @@
 import express from "express";
 import { userProtect } from "../middleware/Auth";
 import { forgotPassword, getUserProfile, loginUser, resendOtp, sendOtp, signupUser, updatePassword, updateUserProfile, verifyOtp } from "../controller/userController";
-import { getAllProducts, getProductById } from "../controller/productController";
+import { filterProducts, getAllProducts, getPaginatedProducts, getProductById, searchProducts } from "../controller/productController";
 import { addAddress, deleteAddress, getAddresses, updateAddress } from "../controller/addressController";
 import { addItemToCart, clearCart, getCart, removeCartItem, updateCartItem } from "../controller/cartController";
 import { addToWishlist, getWishlist, removeFromWishlist } from "../controller/wishlistController";
@@ -28,7 +28,11 @@ router.delete('/user/address/:id',userProtect,deleteAddress);
 
 //Public Api -->
 router.get('/user/products',getAllProducts);
+router.get('/user/products/search',searchProducts);
+router.get('/user/products/filter',filterProducts);
+router.get('/user/products/products',getPaginatedProducts);
 router.get('/user/products/:id',getProductById);
+
 
 //cart 
 router.get('/cart',userProtect,getCart);
