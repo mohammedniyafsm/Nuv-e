@@ -1,0 +1,94 @@
+@import "tailwindcss";
+
+/* Your gradient + utilities */
+.bg-nuvee-gradient {
+  background: linear-gradient(-134.197deg, #F1EEEB 2%, #EBE6E1 11%, #EAE6E1 18%, #E4DED7 45%, #E2DBD3 66%, #DCD1C6 82%, #D8CCC0 100%);
+}
+
+.img-fade-right {
+  mask-image: linear-gradient(to right, black 85%, transparent 100%);
+  -webkit-mask-image: linear-gradient(to right, black 85%, transparent 100%);
+}
+
+
+
+/* Load font files */
+@font-face {
+  font-family: 'Neogrotesk Bold';
+  src: url('/fonts/Fontspring-DEMO-neogroteskessalt-bold.otf') format('opentype');
+  font-weight: 700;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Neogrotesk Regular';
+  src: url('/fonts/Fontspring-DEMO-neogroteskessalt-regular.otf') format('opentype');
+  font-weight: 600;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Neogrotesk UltraLight';
+  src: url('/fonts/Fontspring-DEMO-neogroteskessalt-ultralight.otf') format('opentype');
+  font-weight: 200;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'Neogrotesk Sc Bold';
+  src: url('/fonts/Fontspring-DEMO-neogrotesksc-bold.otf') format('opentype');
+  font-weight: 200;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Garamond LightItalic';
+  src: url('/fonts/ITCGaramondStd-LtIta.ttf') format('truetype');
+  font-weight: 300;
+  font-style: italic;
+}
+
+@font-face {
+  font-family: 'ITCGaramondStd-BdCondIta';
+  src: url('/fonts/ITCGaramondStd-BdCondIta.ttf') format('truetype');
+  font-weight: 300;
+  font-style: italic;
+}
+
+@font-face {
+  font-family: 'ITCGaramondStd-BdCond';
+  src: url('/fonts/ITCGaramondStd-BdCond.ttf') format('truetype');
+  font-weight: 300;
+  font-style: italic;
+}
+@font-face {
+  font-family: 'ITCGaramondStd-BkCondIta';
+  src: url('/fonts/ITCGaramondStd-BkCondIta.ttf') format('truetype');
+  font-weight: 300;
+  font-style: italic;
+}
+@font-face {
+  font-family: 'neogroteskessalt-light';
+  src: url('/fonts/Fontspring-DEMO-neogroteskessalt-light.otf') format('truetype');
+  font-weight: 300;
+  font-style: italic;
+}
+
+/* 👇 Define custom font utilities (Tailwind v4 way) */
+@theme {
+  --font-neogrotesk-bold: "Neogrotesk Bold", sans-serif;
+  --font-neogrotesk-regular: "Neogrotesk Regular", sans-serif;
+  --font-neogrotesk-ultralight: "Neogrotesk UltraLight", sans-serif;
+  --font-neogroteskessalt-light: "neogroteskessalt-light", sans-serif;
+  --font-neogrotesk-sc-bold: "Neogrotesk Sc Bold", sans-serif;  /* this font landing page */
+  --font-garamond-lightitalic: "Garamond LightItalic", serif;
+  --font-ITCGaramondStd-BdCondIta: "ITCGaramondStd-BdCondIta", sans-serif;
+  --font-ITCGaramondStd-BdCond: "ITCGaramondStd-BdCond", sans-serif;
+  --font-ITCGaramondStd-BkCondIta: "ITCGaramondStd-BkCondIta", sans-serif;  /*this light curve text  */
+
+  --color-primary: rgba(46, 46, 46, 0.9333);
+  --color-secondary: rgba(238, 241, 240, 1);
+  --color-light: rgba(156, 128, 128, 1);
+} 
+
+
+
