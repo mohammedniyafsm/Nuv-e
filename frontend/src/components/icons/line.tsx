@@ -7,7 +7,11 @@ function Line({ className = "" }) {
       viewBox="0 0 16 16"
       className={className}
     >
-      <path fill="currentColor" d="M8 0h1v16H8V0z"></path>
+      <path
+        fill="#ccc"         // Light gray color
+        opacity="0.6"       // Slight transparency
+        d="M8 0h0.5v16H8V0z" // Thinner vertical line
+      />
     </svg>
   );
 }

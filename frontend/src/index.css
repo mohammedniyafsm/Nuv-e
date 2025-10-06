@@ -1,5 +1,11 @@
 @import "tailwindcss";
 
+
+.{
+  margin: 0%;
+  padding: 0%;
+  box-sizing: border-box;
+}
 /* Your gradient + utilities */
 .bg-nuvee-gradient {
   background: linear-gradient(-134.197deg, #F1EEEB 2%, #EBE6E1 11%, #EAE6E1 18%, #E4DED7 45%, #E2DBD3 66%, #DCD1C6 82%, #D8CCC0 100%);
@@ -70,6 +76,18 @@
   font-family: 'neogroteskessalt-light';
   src: url('/fonts/Fontspring-DEMO-neogroteskessalt-light.otf') format('truetype');
   font-weight: 300;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'neogroteskessalt-boldit';
+  src: url('/fonts/Fontspring-DEMO-neogroteskessalt-boldit.otf') format('truetype');
+  font-weight: 300;
+  font-style: italic;
+}
+@font-face {
+  font-family: 'ITCGaramondStd-BkIta';
+  src: url('/fonts/ITCGaramondStd-BkIta.ttf') format('truetype');
+  font-weight: 300;
   font-style: italic;
 }
 
@@ -80,10 +98,12 @@
   --font-neogrotesk-ultralight: "Neogrotesk UltraLight", sans-serif;
   --font-neogroteskessalt-light: "neogroteskessalt-light", sans-serif;
   --font-neogrotesk-sc-bold: "Neogrotesk Sc Bold", sans-serif;  /* this font landing page */
+  --font-neogroteskessalt-boldit: "neogroteskessalt-boldit", sans-serif; 
   --font-garamond-lightitalic: "Garamond LightItalic", serif;
   --font-ITCGaramondStd-BdCondIta: "ITCGaramondStd-BdCondIta", sans-serif;
   --font-ITCGaramondStd-BdCond: "ITCGaramondStd-BdCond", sans-serif;
   --font-ITCGaramondStd-BkCondIta: "ITCGaramondStd-BkCondIta", sans-serif;  /*this light curve text  */
+  --font-ITCGaramondStd-BkIta: "ITCGaramondStd-BkIta", sans-serif;  /*this light curve text  */
 
   --color-primary: rgba(46, 46, 46, 0.9333);
   --color-secondary: rgba(238, 241, 240, 1);

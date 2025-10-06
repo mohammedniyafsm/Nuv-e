@@ -23,7 +23,7 @@ function Landing() {
             {/* <div  className="bg-amber-300 h-10 w-10"></div> */}
             <div className="relative h-full w-full ">
 
-                <div className="fixed bottom-0 left-1/2 -translate-x-1/2 z-0  img-fade-top  ">
+                <div className="absolute bottom-0 left-1/2 -translate-x-1/2 z-0  img-fade-top  ">
                     <img className="h-[500px] img-fade-right " src="./public/images/hero1.png" alt="" />
                 </div>
 
