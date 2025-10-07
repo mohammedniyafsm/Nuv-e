@@ -4,12 +4,14 @@ dotenv.config();
 import { connectDB } from "./config/db";
 import userRoute from "./routes/user";
 import adminRoute from "./routes/admin";
+const cookieParser = require("cookie-parser");
 
 
 const app = express();
 connectDB();
 
-app.use(express.json())
+app.use(express.json());
+app.use(cookieParser());
 app.use('/api', userRoute);
 app.use('/api', adminRoute);
 

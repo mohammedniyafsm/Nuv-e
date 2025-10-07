@@ -54,10 +54,12 @@ export const loginUser = async (req: Request, res: Response): Promise<void> => {
 
         const token = generateToken(user._id.toString(), user.role);
 
-        res.status(200).json({
-            message: "Logged in successfully",
-            token
-        });
+        res.cookie("acess_token",token,{
+            httpOnly : true,
+            secure : false
+        })
+        .status(200).json({message: "Logged in successfully"});
+        return;
     } catch (error) {
         if (error instanceof ZodError) {
             res.status(400).json({
@@ -114,6 +116,7 @@ export const sendOtp = async (req: Request, res: Response): Promise<void> => {
 export const verifyOtp = async (req: Request, res: Response): Promise<void> => {
     try {
         const { otpToken, otp } = req.body;
+        const userId = req.user.id;
         const otp_secret_key = process.env.OTP_SECRET_KEY as string;
         if (otpToken) {
             const decoded = await jwt.verify(otpToken, otp_secret_key) as JwtPayload;
@@ -124,8 +127,7 @@ export const verifyOtp = async (req: Request, res: Response): Promise<void> => {
                 return;
             }
             else {
-                await User.findByIdAndUpdate({});
-                await User.findByIdAndUpdate(decoded.id, { isVerified: true });
+                await User.findByIdAndUpdate({_id : userId}, { isVerified: true });
                 res.status(200).json({ message: "Verifyied" });
                 return;
             }
@@ -227,7 +229,7 @@ export const updatePassword = async (req: Request, res: Response): Promise<void>
 export const getUserProfile = async (req: Request, res: Response): Promise<void> => {
     try {
         const id = req.user.id;
-        const userData = await User.findOne({ _id: id });
+        const userData = await User.findOne({ _id: id }).select("-password");
         if (!userData) {
             res.status(400).json({ message: "User Not Found" })
             return;

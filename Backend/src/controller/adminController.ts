@@ -55,7 +55,11 @@ export const loginAdmin = async (req: Request, res: Response): Promise<void> => 
             return;
         }
         const token = generateToken(existingUser._id.toString(), existingUser.role);
-        res.status(200).json({ message: "Logged In Successfully", token })
+        res.cookie("acess_token",token,{
+            httpOnly : true,
+            secure : true
+        })
+        .status(200).json({message: "Logged In Successfully"})
     } catch (error) {
         if (error instanceof ZodError) {
             res.status(400).json({
