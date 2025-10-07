@@ -20,7 +20,7 @@ function Card() {
                 </div>
             </div>
             <div className="flex justify-center items-center ">
-                <img className='h-72 ' src="./public/images/1i.png" alt="" />
+                <img className='h-72 ' src="./public/images/product1.png" alt="" />
             </div>
 
             <div className="px-2 pt-8 flex justify-between">

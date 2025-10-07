@@ -1,6 +1,7 @@
 import Bag from "./icons/bag"
 import Person from "./icons/person"
 import Line from "./icons/line"
+import { Link } from "react-router-dom"
 
 function Navbar() {
   return (
@@ -11,14 +12,14 @@ function Navbar() {
              </div>
              <div className="">
                 <ul className="list-none flex gap-8 text-xs font-neogroteskessalt-light">
-                  <li>HOME</li>
-                  <li>PRODUCTS</li>
-                  <li>PHILOSOPHY</li>
-                  <li>JOURNAL</li>
+                  <Link to="/"><li>HOME</li></Link>
+                  <Link to="/shop"><li>SHOP</li></Link>
+                  <Link to="/philosophy"><li>PHILOSOPHY</li></Link>
+                  <Link to="/"><li>JOURNAL</li></Link>
                 </ul>
              </div>
              <div className="bg-[#333333] w-30 h-12 rounded-[5rem] flex items-center  px-4 ">
-                  <Bag className="w-8 h-6 text-white "/>
+                  <Link to="/cart"><Bag className="w-8 h-6 text-white "/></Link>
                   <Line className="w-8 h-6 mr-1 text-white"/>
                   <Person className="w-5 h-6 text-white"/>
              </div>

@@ -8,7 +8,7 @@ function ProductDetail() {
             <Navbar />
             <div className="flex pt-34 justify-between">
                 <div className="pl-44 pt-10">
-                    <img className='h-100' src="./public/images/1i.png" alt="" />
+                    <img className='h-100' src="./public/images/product1.png" alt="" />
                 </div>
 
                 <div className="bg-[#F2F2F2] h-[590px] w-[700px] px-20 py-10">
