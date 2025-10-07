@@ -7,13 +7,17 @@ export const userProtect = async (req: Request, res: Response, next: NextFunctio
         throw new Error("JWT SECRET Not Found");
     }
     try {
-        const AuthHeader = req.headers.authorization;
-        if (!AuthHeader || !AuthHeader.startsWith("Bearer")) {
-            res.status(401).json({ message: "Token Not Provided" });
+        // const AuthHeader = req.headers.authorization;
+        // if (!AuthHeader || !AuthHeader.startsWith("Bearer")) {
+        //     res.status(401).json({ message: "Token Not Provided" });
+        //     return;
+        // }
+        // const token = AuthHeader.split(" ")[1];
+        const token = req.cookies.acess_token;
+        if(!token){
+            res.status(404).json({ message : "Token Not Found"});
             return;
         }
-
-        const token = AuthHeader.split(" ")[1];
         const decoded = jwt.verify(token, jwt_key) as JwtPayload;
         if (!decoded || !decoded.id) {
             res.status(401).json({ message: "Unauthorized" });
@@ -34,13 +38,17 @@ export const adminProtect = async (req: Request, res: Response, next: NextFuncti
         throw new Error("JWT SECRET Not Found");
     }
     try {
-        const AuthHeader = req.headers.authorization;
-        if (!AuthHeader || !AuthHeader.startsWith("Bearer")) {
-            res.status(401).json({ message: "Token Not Provided" });
-            return;
-        }
+        // const AuthHeader = req.headers.authorization;
+        // if (!AuthHeader || !AuthHeader.startsWith("Bearer")) {
+        //     res.status(401).json({ message: "Token Not Provided" });
+        //     return;
+        // }
 
-        const token = AuthHeader.split(" ")[1];
+        // const token = AuthHeader.split(" ")[1];
+        const token = req.cookies.acess_token;
+        if(!token){
+            res.status(404).json({ message : "Token Not Found"})
+        }
         const decoded = jwt.verify(token, jwt_key) as JwtPayload;
         if (!decoded || !decoded.id) {
             res.status(401).json({ message: "Unauthorized" });
