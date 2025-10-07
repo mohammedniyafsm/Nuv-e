@@ -258,3 +258,17 @@ export const updateUserProfile = async (req:Request,res: Response):Promise<void>
         return;
     }
 }
+
+export const logoutUser = async (req:Request,res: Response) :Promise<void> =>{
+    try {
+        res.clearCookie("acess_token",{
+            httpOnly : true,
+            secure : false,
+        })
+        res.json({message : "Logged Out Successfully"});
+        return;
+    } catch (error) {
+        res.status(500).json({message : "Server Error",error});
+        return;
+    }
+}

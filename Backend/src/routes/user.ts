@@ -1,6 +1,6 @@
 import express from "express";
 import { userProtect } from "../middleware/Auth";
-import { forgotPassword, getUserProfile, loginUser, resendOtp, sendOtp, signupUser, updatePassword, updateUserProfile, verifyOtp } from "../controller/userController";
+import { forgotPassword, getUserProfile, loginUser, logoutUser, resendOtp, sendOtp, signupUser, updatePassword, updateUserProfile, verifyOtp } from "../controller/userController";
 import { filterProducts, getAllProducts, getPaginatedProducts, getProductById, searchProducts } from "../controller/productController";
 import { addAddress, deleteAddress, getAddresses, updateAddress } from "../controller/addressController";
 import { addItemToCart, clearCart, getCart, removeCartItem, updateCartItem } from "../controller/cartController";
@@ -16,6 +16,7 @@ router.post('/auth/otp/verify',userProtect,verifyOtp);
 router.post('/auth/otp/resend',userProtect,resendOtp);
 router.post('/auth/password',userProtect,updatePassword);
 router.post('/auth/forgot-password',forgotPassword);
+router.post('/auth/logout', userProtect, logoutUser);
 
 router.get('/user/profile',userProtect,getUserProfile);
 router.put('/user/profile',userProtect,updateUserProfile);
