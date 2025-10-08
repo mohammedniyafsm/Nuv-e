@@ -6,6 +6,7 @@ import { addAddress, deleteAddress, getAddresses, updateAddress } from "../contr
 import { addItemToCart, clearCart, getCart, removeCartItem, updateCartItem } from "../controller/cartController";
 import { addToWishlist, getWishlist, moveWishlistToCart, removeFromWishlist } from "../controller/wishlistController";
 import { cancelOrder, getOrderById, getUserOrders, placeOrder, returnOrder } from "../controller/orderController";
+import { applyCoupon, removeCoupon } from "../controller/couponController";
 
 const router = express.Router();
 
@@ -54,5 +55,11 @@ router.post('/orders',userProtect,placeOrder);
 router.get('/orders/:id',userProtect,getOrderById );
 router.put('/orders/:id/cancel',userProtect,cancelOrder );
 router.put('/orders/:id/return',userProtect,returnOrder );
+
+
+
+router.post("/apply", userProtect, applyCoupon);
+router.post("/remove", userProtect, removeCoupon);
+
 
 export default router;

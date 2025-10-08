@@ -2,7 +2,7 @@ import { model, Schema, Types } from "mongoose";
 
 
 interface ICoupon extends Document {
-    code : String,
+    code : string,
     discountAmount : number,
     discountPercentage? : number,
     minCartAmount? : number,
