@@ -1,8 +1,14 @@
-import  HookNextFunction  from "mongoose";
-import { Schema, Types ,Model, model} from "mongoose";
+import HookNextFunction from "mongoose";
+import { Schema, Types, Model, model } from "mongoose";
+
+
+interface ICouponApplied {
+    code: string;
+    discountAmount: number;
+}
 
 interface ICartItems {
-    _id : Types.ObjectId;
+    _id: Types.ObjectId;
     productId: Types.ObjectId;
     quantity: number;
     price: number;
@@ -10,10 +16,12 @@ interface ICartItems {
 }
 
 interface ICart extends Document {
-    _id : Types.ObjectId;
+    _id: Types.ObjectId;
     userId: Types.ObjectId;
     items: ICartItems[];
     totalAmount: number;
+    totalAfterDiscount?: number;
+    coupon?: ICouponApplied;
     updatedAt: Date;
 }
 
@@ -33,7 +41,7 @@ const cartItemSchema = new Schema<ICartItems>({
     },
     subtotal: {
         type: Number,
-        default :0,
+        default: 0,
         required: true,
     },
 });
@@ -51,11 +59,18 @@ const CartSchema = new Schema<ICart>(
             required: true,
             default: 0,
         },
+        totalAfterDiscount: {
+            type: Number,
+        },
+        coupon: {
+            code: String,
+            discountAmount: Number,
+        },
     },
-    { timestamps: true } 
+    { timestamps: true }
 );
 
-CartSchema.pre("save", function(this: ICart, next) {
+CartSchema.pre("save", function (this: ICart, next) {
     let total = 0;
 
     this.items.forEach((product) => {
@@ -67,4 +82,4 @@ CartSchema.pre("save", function(this: ICart, next) {
     next();
 });
 
-export const Cart :  Model <ICart> = model <ICart>('Cart',CartSchema);
+export const Cart: Model<ICart> = model<ICart>('Cart', CartSchema);
