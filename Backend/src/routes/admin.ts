@@ -1,7 +1,7 @@
 import express from "express";
 import { adminProtect, protect, userProtect } from "../middleware/Auth";
 import { addProduct, deleteProduct, getAdminProducts, getProductByIdAdmin, updateProduct } from "../controller/productController";
-import { adminProfile, getAllUsers, getUserById, loginAdmin, sendOtp, signupAdmin, updateUserStatus, verifyOtp } from "../controller/adminController";
+import { adminProfile, getAllUsers, getPresignedUrl, getUserById, loginAdmin, sendOtp, signupAdmin, updateUserStatus, verifyOtp } from "../controller/adminController";
 import { bulkUpdateOrderStatus, deleteOrder, getAllOrders, getOrderByIdAdmin, updateOrderStatus } from "../controller/orderController";
 import { createCoupon, deleteCoupon, getCoupons } from "../controller/couponController";
 
@@ -17,6 +17,7 @@ router.get('/admin/profile',adminProtect,protect,adminProfile);
 //admin Product
 router.post('/admin/products',adminProtect,protect,addProduct);
 router.get('/admin/products',adminProtect,protect,getAdminProducts);
+router.get('/admin/s3-presign',adminProtect,protect,getPresignedUrl);
 router.put('/admin/products/:id',adminProtect,protect,updateProduct);
 router.delete('/admin/products/:id',adminProtect,protect,deleteProduct);
 router.get('/admin/products/:id',adminProtect,protect,getProductByIdAdmin);

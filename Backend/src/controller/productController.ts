@@ -1,7 +1,6 @@
 import { Request, Response } from "express";
 import { Product } from "../models/Product";
-import { finished } from "nodemailer/lib/xoauth2";
-import { findPackageJSON } from "module";
+
 
 export const addProduct = async (req: Request, res: Response): Promise<void> => {
     try {

@@ -8,7 +8,9 @@ import { sendOtpEmail } from "../utils/nodemailer";
 import { JwtPayload } from "jsonwebtoken";
 import jwt from "jsonwebtoken"
 import User from "../models/User";
-
+import { PutObjectCommand } from "@aws-sdk/client-s3";
+import { getSignedUrl } from "@aws-sdk/s3-request-presigner"
+import s3Client from "../utils/s3Client";
 
 export const signupAdmin = async (req: Request, res: Response): Promise<void> => {
     try {
@@ -55,11 +57,11 @@ export const loginAdmin = async (req: Request, res: Response): Promise<void> => 
             return;
         }
         const token = generateToken(existingUser._id.toString(), existingUser.role);
-        res.cookie("acess_token",token,{
-            httpOnly : true,
-            secure : true
+        res.cookie("acess_token", token, {
+            httpOnly: true,
+            secure: true
         })
-        .status(200).json({message: "Logged In Successfully"})
+            .status(200).json({ message: "Logged In Successfully" })
     } catch (error) {
         if (error instanceof ZodError) {
             res.status(400).json({
@@ -156,14 +158,42 @@ export const updateUserStatus = async (req: Request, res: Response): Promise<voi
     try {
         const id = req.params.id;
         const status = req.body;
-        const update = await User.findByIdAndUpdate(id, status,{
-            new : true,
+        const update = await User.findByIdAndUpdate(id, status, {
+            new: true,
             runValidators: true,
         })
         res.status(200).json(update);
         return;
     } catch (error) {
         res.status(500).json({ message: "Server Error", error });
+        return;
+    }
+}
+
+
+export const getPresignedUrl = async (req: Request, res: Response): Promise<void> => {
+    try {
+        const filename = req.query.filename as string;
+        const contentType = req.query.contentType as string;
+
+        const key = `products/${filename}_${Date.now()}`;
+
+        if (!filename || !contentType) {
+            res.status(400).json({ message: "Missing filename or contentType" });
+            return;
+        }
+
+        const command = new PutObjectCommand({
+            Bucket: process.env.BUCKET_NAME as string,
+            Key: key,
+            ContentType: contentType
+        })
+
+        const url = await getSignedUrl(s3Client, command,{ expiresIn: 60 });
+        res.json({ url, key, cloudfrontUrl: `https://${process.env.CLOUDFRONT_DOMAIN}/${key}` });
+        return ;
+    } catch (error) {
+        res.status(500).json({ message: "Server Error ", error });
         return;
     }
 }
