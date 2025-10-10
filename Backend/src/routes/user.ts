@@ -5,7 +5,7 @@ import { filterProducts, getAllProducts, getPaginatedProducts, getProductById, s
 import { addAddress, deleteAddress, getAddresses, updateAddress } from "../controller/addressController";
 import { addItemToCart, clearCart, getCart, removeCartItem, updateCartItem } from "../controller/cartController";
 import { addToWishlist, getWishlist, moveWishlistToCart, removeFromWishlist } from "../controller/wishlistController";
-import { cancelOrder, getOrderById, getUserOrders, placeOrder, returnOrder } from "../controller/orderController";
+import { cancelOrder, createPayementOrder, getOrderById, getUserOrders, placeOrder, returnOrder, verifyPaymentOrder } from "../controller/orderController";
 import { applyCoupon, removeCoupon } from "../controller/couponController";
 
 const router = express.Router();
@@ -51,6 +51,8 @@ router.post('/wishlist/:productId/move-to-cart',userProtect,moveWishlistToCart )
 
 //order 
 router.get('/orders',userProtect,getUserOrders);
+router.post('/create-order',userProtect,createPayementOrder); //payment cration 
+router.post('/verify-payment',userProtect,verifyPaymentOrder); // verify payment    
 router.post('/orders',userProtect,placeOrder);
 router.get('/orders/:id',userProtect,getOrderById );
 router.put('/orders/:id/cancel',userProtect,cancelOrder );

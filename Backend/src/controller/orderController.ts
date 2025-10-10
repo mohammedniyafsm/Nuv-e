@@ -1,5 +1,9 @@
+import { createHmac } from 'crypto';
 import { Request, Response } from "express";
 import { Order } from "../models/order";
+import { razorpay } from "../utils/razorpay";
+
+
 
 export const placeOrder = async (req: Request, res: Response): Promise<void> => {
     try {
@@ -130,8 +134,8 @@ export const getOrderByIdAdmin = async (req: Request, res: Response): Promise<vo
     try {
         const orderId = req.params.id;
         const orderDetail = await Order.find({ _id: orderId }).populate({ path: "userId", model: "User", select: "username , email" });
-        if (orderDetail) {
-            res.status(500).json({ message: "Order Not found" });
+        if (!orderDetail || orderDetail.length === 0) {
+            res.status(404).json({ message: "Order Not found" });
             return;
         }
         res.status(200).json({ orderDetail });
@@ -222,11 +226,53 @@ export const bulkUpdateOrderStatus = async (req: Request, res: Response): Promis
         }
         const response = await Order.updateMany(
             { _id: { $in: orderIds } },
-            { $set: { orderStatus : status } }
+            { $set: { orderStatus: status } }
         );
         res.status(200).json({ message: "Order Update Successfully", modifiedCount: response.modifiedCount })
     } catch (error) {
         console.error("Bulk update failed:", error);
         res.status(500).json({ message: "Failed to bulk update orders" });
+    }
+}
+
+
+export const createPayementOrder = async (req: Request, res: Response): Promise<void> => {
+    try {
+        const amountInRupees = req.body.amount;
+        if (!amountInRupees || amountInRupees <= 0) {
+            res.status(400).json({ message: "Invalid amount" });
+            return;
+        }
+
+        const options = {
+            amount: amountInRupees * 100, // convert to paise
+            currency: 'INR',
+            receipt: 'receipt_' + Math.random().toString(36).substring(7),
+        };
+
+        const order = await razorpay.orders.create(options);
+        res.status(200).json(order);
+    } catch (error) {
+        res.status(500).json({ message: "Server Error", error });
+    }
+};
+
+
+export const verifyPaymentOrder = async (req: Request, res: Response): Promise<void> => {
+    try {
+        const { razorpay_order_id, razorpay_payment_id, razorpay_signature } = req.body;
+        const sign = razorpay_order_id + '|' + razorpay_payment_id;
+        const expectedSign = createHmac('sha256', process.env.RAZORPAY_SECRET as string)
+            .update(sign.toString())
+            .digest('hex');
+        if (razorpay_signature === expectedSign) {
+            // Payment is verified
+            res.status(200).json({ message: 'Payment verified successfully' });
+        } else {
+            res.status(400).json({ error: 'Invalid payment signature' });
+        }
+    } catch (error) {
+        res.status(500).json({ error });
+
     }
 }
