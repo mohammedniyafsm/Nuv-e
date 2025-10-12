@@ -1,12 +1,14 @@
 import Input from './ui/Input';
 import { ArrowIcon } from './icons/ArrowIcon';
+import Git from './icons/Git';
 
 function FooterAbove() {
   return (
     <main>
-      {/* Background Section */}
+      {/* ────── Background Section ────── */}
       <div className="relative bg-[url('./public/images/1k.jpg')] bg-cover bg-[center_50%] h-[900px] w-full">
         <div className="absolute py-20 bg-[#232323] h-[750px] w-[550px] top-[300px] right-20 bottom-0 z-0">
+
           {/* Headline */}
           <div className="font-neogrotesk-bold text-center text-6xl text-secondary">
             <h1>HEAR MORE</h1>
@@ -53,7 +55,7 @@ function FooterAbove() {
         </div>
       </div>
 
-      {/* Footer Section */}
+      {/* ────── Footer Section ────── */}
       <div className="bg-white w-full h-[460px]">
         <div className="flex gap-28 px-20 py-10">
           {/* Explore */}
@@ -94,7 +96,7 @@ function FooterAbove() {
           </div>
 
           {/* Developer Credit */}
-          <div className="px-16 py-8">
+          <div className="px-16 py-8 flex items-center gap-2">
             <h1 className="text-[#a0a0a0] text-sm">
               designed and developed by{' '}
               <a
@@ -106,6 +108,7 @@ function FooterAbove() {
                 @n1yaf_
               </a>
             </h1>
+            <a href="https://github.com/mohammedniyafsm"  target="_blank" > <Git  /></a>
           </div>
         </div>
       </div>
