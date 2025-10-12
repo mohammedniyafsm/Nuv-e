@@ -1,3 +1,4 @@
+import FooterAbove from "../components/FooterAbove";
 import Landing from "../components/Landing";
 import Navabr from "../components/Navbar";
 import Section from "../components/Section";
@@ -8,6 +9,7 @@ function Home() {
       <Navabr />
       <Landing/>
       <Section/>
+      <FooterAbove/>
     </>
   )
 }
