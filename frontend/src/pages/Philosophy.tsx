@@ -1,3 +1,4 @@
+import Git from '../components/icons/Git'
 import Navbar from '../components/Navbar'
 
 function Philosophy() {
@@ -99,6 +100,63 @@ function Philosophy() {
             the lasting trail, every drop is crafted .</h1>
         </div>
 
+      </div>
+
+      <div className="bg-white w-full h-[460px]">
+        <div className="flex gap-28 px-20 py-10">
+          {/* Explore */}
+          <div className="flex flex-col gap-2 text-[#3b3b3b] font-neogrotesk-ultralight text-sm">
+            <h1 className="font-neogroteskessalt-light text-xs text-[#a0a0a0]">EXPLORE</h1>
+            <h1>Shop</h1>
+            <h1>Philosophy</h1>
+            <h1>Gallery</h1>
+            <h1>Journal</h1>
+            <h1>Sign Up / Login</h1>
+          </div>
+
+          {/* Follow Us */}
+          <div className="flex flex-col gap-2 text-[#3b3b3b] font-neogrotesk-ultralight text-sm">
+            <h1 className="font-neogroteskessalt-light text-xs text-[#a0a0a0]">FOLLOW US</h1>
+            <h1>Instagram</h1>
+            <h1>Facebook</h1>
+          </div>
+
+          {/* Contact Us */}
+          <div className="flex flex-col gap-2 text-[#3b3b3b] font-neogrotesk-ultralight text-sm">
+            <h1 className="font-neogroteskessalt-light text-xs text-[#a0a0a0]">CONTACT US</h1>
+            <a href="mailto:nuvee@gmail.com" className="hover:underline">nuvee@gmail.com</a>
+            <span>1111–2222–3333</span>
+          </div>
+        </div>
+
+        {/* Footer Bottom */}
+        <div className="flex justify-between items-end">
+          {/* Logo & Tagline */}
+          <div className="px-20 py-12">
+            <img className="h-14 w-28" src="./public/images/logo.png" alt="Nuvee Logo" />
+            <p className="text-[#a0a0a0] text-[10px]">
+              Clean, Conscious, Clinical Perfume! <br />
+              Honest products that truly work
+            </p>
+            <p className="text-[#3b3b3b] text-[10px] mt-4">© 2025 Nuvee, All Rights Reserved</p>
+          </div>
+
+          {/* Developer Credit */}
+          <div className="px-16 py-8 flex items-center gap-2">
+            <h1 className="text-[#a0a0a0] text-sm">
+              designed and developed by{' '}
+              <a
+                href="https://x.com/n1yaf_/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="underline cursor-pointer text-[#3b3b3b]"
+              >
+                @n1yaf_
+              </a>
+            </h1>
+            <a href="https://github.com/mohammedniyafsm"  target="_blank" > <Git  /></a>
+          </div>
+        </div>
       </div>
     </>
   )
