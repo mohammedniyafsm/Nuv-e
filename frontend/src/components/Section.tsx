@@ -1,14 +1,34 @@
-import React from "react";
-
+import { useRef } from "react";
 import RightArrow from "./icons/RightArrow";
 import LeftArrowScroll from "./icons/LeftArrowScroll";
 import RightArrowScroll from "./icons/RightArrowScroll";
-
 import Card from "./ui/Card";
 
+const CARD_WIDTH = 350;
+const VISIBLE_CARDS = 3;
+
 function Section() {
+  const scrollRef = useRef<HTMLDivElement>(null);
+  const cards = [1, 2, 3, 4, 5];
+
+  const handleScroll = (direction: "left" | "right") => {
+    const scrollContainer = scrollRef.current;
+    if (!scrollContainer) return;
+
+    const scrollAmount = CARD_WIDTH * VISIBLE_CARDS;
+    const newScrollLeft =
+      direction === "right"
+        ? scrollContainer.scrollLeft + scrollAmount
+        : scrollContainer.scrollLeft - scrollAmount;
+
+    scrollContainer.scrollTo({
+      left: newScrollLeft,
+      behavior: "smooth",
+    });
+  };
+
   return (
-    <div className="flex w-screen min-h-screen bg-white">
+    <div className="flex w-screen min-h-screen bg-white overflow-hidden">
       {/* ---------- Sidebar Filters ---------- */}
       <aside className="w-[350px] mt-32">
         <div className="flex flex-col px-16 py-20 mt-20">
@@ -52,7 +72,7 @@ function Section() {
       </aside>
 
       {/* ---------- Main Content ---------- */}
-      <main className="flex-grow px-20 py-20">
+      <main className="flex-grow px-12 py-20 overflow-hidden">
         {/* Header Section */}
         <div className="flex justify-between items-center">
           {/* Title */}
@@ -70,22 +90,40 @@ function Section() {
 
           {/* Scroll Arrows */}
           <div className="flex items-center gap-6 mt-32">
-            <button className="flex items-center justify-center w-[50px] h-[50px] bg-[#D9D9D9] rounded-full">
+            <button
+              onClick={() => handleScroll("left")}
+              className="flex items-center justify-center w-[50px] h-[50px] bg-[#D9D9D9] rounded-full hover:bg-primary hover:text-white transition"
+            >
               <LeftArrowScroll className="w-4 h-4" />
             </button>
-            <button className="flex items-center justify-center w-[50px] h-[50px] bg-[#D9D9D9] rounded-full">
+            <button
+              onClick={() => handleScroll("right")}
+              className="flex items-center justify-center w-[50px] h-[50px] bg-[#D9D9D9] rounded-full hover:bg-primary hover:text-white transition"
+            >
               <RightArrowScroll className="w-4 h-4" />
             </button>
           </div>
         </div>
 
         {/* Cards Section */}
-        <div className="flex flex-row gap-4 mt-10 ml-6">
-          <Card />
-          <Card />
-          <Card />
+        <div className="relative mt-10">
+          <div
+            ref={scrollRef}
+            className="flex gap-6 overflow-x-hidden scroll-smooth"
+            style={{
+              width: `${CARD_WIDTH * VISIBLE_CARDS + (VISIBLE_CARDS - 1) * 24}px`,
+            }}
+          >
+           {cards.map((_, index) => (
+          <div key={index} className="flex-shrink-0 w-[350px]">
+            <Card />
+          </div>
+        ))}
+          </div>
         </div>
       </main>
+
+
     </div>
   );
 }
