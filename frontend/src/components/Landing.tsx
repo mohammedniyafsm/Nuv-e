@@ -4,8 +4,7 @@ import ArrowCurve from "./icons/arrow";
 
 function Landing() {
     useGSAP(()=>{
-        gsap.fromTo('#meet',{  y : 30, opacity : '0%'},{  opacity : '100%',  y: '0%', delay :0.4, ease : 'circ.in'   })
-        gsap.fromTo('#our',{  y : 30, opacity : '0%'},{  opacity : '100%',  y: '0%', delay :0.6, ease : 'circ.in'   })
+        gsap.from('#mainn h1',{  y : 30, opacity : 0,stagger : 1})
 
         gsap.fromTo('#box',{  y : 30, opacity : '0%'},{  opacity : '100%',  y: '0%', delay :0.6, ease : 'circ.in'   })
         gsap.fromTo('#box-heading',{  y : 30, opacity : '0%'},{  opacity : '100%',  y: '0%', delay :0.7, ease : 'back.in'   })
@@ -30,8 +29,11 @@ function Landing() {
                     <ArrowCurve/>
                 </div>
 
-                <div className="absolute top-8 left-6 md:top-20 md:left-26">
-                    <h1  className="text-4xl md:text-6xl font-neogrotesk-sc-bold text-primary flex col"><div id="meet">MEET</div> <div id="our" className="pl-2"> OUR</div></h1>
+                <div className="absolute top-8 left-6 md:top-20 md:left-26 ">
+                    <div id="mainn"  className="text-4xl md:text-6xl font-neogrotesk-sc-bold text-primary flex col">
+                        <h1 >MEET</h1>
+                        <h1 className="pl-2"> OUR</h1>
+                    </div>
                 </div>
                 <div id="" className="absolute right-3 md:right-20 bottom-10">
                     <h1 className="text-3xl md:text-7xl font-ITCGaramondStd-BkCondIta text-primary"> <span id="complete">complete</span> <br /> <span className="pl-6 md:pl-20" id="fragrance" >fragrance</span> <br /><span className="pl-16 md:pl-40" id="lineup">lineup</span><br /> </h1>
