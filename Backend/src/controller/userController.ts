@@ -54,11 +54,11 @@ export const loginUser = async (req: Request, res: Response): Promise<void> => {
 
         const token = generateToken(user._id.toString(), user.role);
 
-        res.cookie("acess_token",token,{
-            httpOnly : true,
-            secure : false
+        res.cookie("acess_token", token, {
+            httpOnly: true,
+            secure: false
         })
-        .status(200).json({message: "Logged in successfully"});
+            .status(200).json({ message: "Logged in successfully" });
         return;
     } catch (error) {
         if (error instanceof ZodError) {
@@ -78,34 +78,46 @@ export const loginUser = async (req: Request, res: Response): Promise<void> => {
 
 export const sendOtp = async (req: Request, res: Response): Promise<void> => {
     try {
-        const { email } = req.body;
+        const _id = req.user.id;
 
-        const user = await User.findOne({ email });
+        const user = await User.findOne({ _id }, { email: 1 ,lastOtpSentAt: 1 });
         if (!user) {
             res.status(400).json({ message: "User Not Found" });
             return;
         }
-
         const now = new Date();
-        if (user.lastOtpSentAt && (now.getTime() - user.lastOtpSentAt.getTime()) < 2 * 60 * 1000) {
+        const RESEND_COOLDOWN = 5 * 60 * 1000; // 5 minutes in milliseconds
+
+        if (
+            user.lastOtpSentAt &&
+            (now.getTime() - user.lastOtpSentAt.getTime()) < RESEND_COOLDOWN
+        ) {
             const waitTime = Math.ceil(
-                (2 * 60 * 1000 - (now.getTime() - user.lastOtpSentAt.getTime())) / 1000
+                (RESEND_COOLDOWN - (now.getTime() - user.lastOtpSentAt.getTime())) / 1000
             );
-            res.status(429).json({ message: `Please wait ${waitTime} seconds before requesting a new OTP` });
+
+            res.status(429)
+                .json({
+                    message: `Please wait ${waitTime} seconds before requesting a new OTP`
+                });
             return;
         }
 
+
         const otp = await generateOtp();
         const otpToken = await generateOtpToken(otp);
-        await sendOtpEmail(email, otp);
+        await sendOtpEmail(user.email, otp);
 
         await User.findOneAndUpdate(
-            { email },
+            { email: user.email },
             { lastOtpSentAt: now, }
         );
-
-        res.status(200).json({ message: "OTP Sent Successfully", otpToken });
-
+        res.cookie("otp_token", otpToken, {
+            httpOnly: true,
+            secure: false
+        })
+            .status(200).json({ message: "OTP Sent Successfully" });
+        return;
     } catch (error) {
         console.log(error);
         res.status(500).json({ message: "Server Error", error });
@@ -115,7 +127,8 @@ export const sendOtp = async (req: Request, res: Response): Promise<void> => {
 
 export const verifyOtp = async (req: Request, res: Response): Promise<void> => {
     try {
-        const { otpToken, otp } = req.body;
+        const { otp } = req.body;
+        const otpToken = req.cookies.otp_token;
         const userId = req.user.id;
         const otp_secret_key = process.env.OTP_SECRET_KEY as string;
         if (otpToken) {
@@ -127,7 +140,7 @@ export const verifyOtp = async (req: Request, res: Response): Promise<void> => {
                 return;
             }
             else {
-                await User.findByIdAndUpdate({_id : userId}, { isVerified: true });
+                await User.findByIdAndUpdate({ _id: userId }, { isVerified: true });
                 res.status(200).json({ message: "Verifyied" });
                 return;
             }
@@ -195,9 +208,9 @@ export const forgotPassword = async (req: Request, res: Response): Promise<void>
         }
         const otp = await generateOtp();
         const otptoken = generateOtpToken(otp);
-        await ForgotPasswordOtpEmail(email,otp);
-        await User.findByIdAndUpdate( user._id ,{lastOtpSentAt : new Date()});
-        res.status(200).json({message : "OTP sent to your email successfully",otptoken})
+        await ForgotPasswordOtpEmail(email, otp);
+        await User.findByIdAndUpdate(user._id, { lastOtpSentAt: new Date() });
+        res.status(200).json({ message: "OTP sent to your email successfully", otptoken })
     } catch (error) {
         res.status(500).json({ message: "Server Error", error });
         return;
@@ -243,32 +256,32 @@ export const getUserProfile = async (req: Request, res: Response): Promise<void>
 }
 
 
-export const updateUserProfile = async (req:Request,res: Response):Promise<void>=>{
+export const updateUserProfile = async (req: Request, res: Response): Promise<void> => {
     try {
         const userID = req.user.id;
-        const {username ,email} = req.body;
-        console.log(username,email)
-        const updateData = await User.findByIdAndUpdate(userID,{ username, email},
-          {  new : true,}
+        const { username, email } = req.body;
+        console.log(username, email)
+        const updateData = await User.findByIdAndUpdate(userID, { username, email },
+            { new: true, }
         )
-        res.status(200).json({message : "User Data Updated",updateData});
+        res.status(200).json({ message: "User Data Updated", updateData });
         return;
     } catch (error) {
-        res.status(500).json({message : "Server Error",error});
+        res.status(500).json({ message: "Server Error", error });
         return;
     }
 }
 
-export const logoutUser = async (req:Request,res: Response) :Promise<void> =>{
+export const logoutUser = async (req: Request, res: Response): Promise<void> => {
     try {
-        res.clearCookie("acess_token",{
-            httpOnly : true,
-            secure : false,
+        res.clearCookie("acess_token", {
+            httpOnly: true,
+            secure: false,
         })
-        res.json({message : "Logged Out Successfully"});
+        res.json({ message: "Logged Out Successfully" });
         return;
     } catch (error) {
-        res.status(500).json({message : "Server Error",error});
+        res.status(500).json({ message: "Server Error", error });
         return;
     }
 }
