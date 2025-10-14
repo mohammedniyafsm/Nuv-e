@@ -1,16 +1,25 @@
-import React from 'react'
 
 interface ButtonProps {
-    name : String,
-    className? : String,
+  name: string;
+  className?: string;
+  onClick?: () => void;
+  type?: "button" | "submit" | "reset";
 }
 
-function Button({name,className="" }:ButtonProps) {
+function Button({ name, className = "", onClick, type = "button" }: ButtonProps) {
   return (
-    <div className={`h-14 w-44 bg-[#3B3B3B] rounded-4xl flex justify-center items-center ${className}`}>
-      <h1 className='font-neogroteskessalt-light text-white'>{name}</h1>
-    </div>
-  )
+    <button
+      type={type}
+      onClick={onClick}
+      className={`rounded-4xl flex justify-center items-center 
+                  font-neogroteskessalt-light text-white 
+                  bg-[#3B3B3B] px-6 py-3 
+                  transition-all duration-300 
+                  hover:bg-[#2b2b2b] active:scale-95 ${className}`}
+    >
+      {name}
+    </button>
+  );
 }
 
-export default Button
+export default Button;

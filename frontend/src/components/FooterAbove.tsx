@@ -22,7 +22,7 @@ function FooterAbove() {
           </div>
 
           {/* Email Input */}
-          <div className="flex justify-center mt-10">
+          <div className="flex justify-center mt-10 px-16">
             <Input
               className="w-[450px] h-1 text-xs text-[rgba(172,163,163,0.93)]"
               type="text"

@@ -3,6 +3,7 @@ import RightArrow from "./icons/RightArrow";
 import LeftArrowScroll from "./icons/LeftArrowScroll";
 import RightArrowScroll from "./icons/RightArrowScroll";
 import Card from "./ui/Card";
+import { useNavigate } from "react-router-dom";
 
 const CARD_WIDTH = 350;
 const VISIBLE_CARDS = 3;
@@ -10,6 +11,8 @@ const VISIBLE_CARDS = 3;
 function Section() {
   const scrollRef = useRef<HTMLDivElement>(null);
   const cards = [1, 2, 3, 4, 5];
+
+  const navigate = useNavigate();
 
   const handleScroll = (direction: "left" | "right") => {
     const scrollContainer = scrollRef.current;
@@ -115,7 +118,7 @@ function Section() {
             }}
           >
            {cards.map((_, index) => (
-          <div key={index} className="flex-shrink-0 w-[350px]">
+          <div key={index} className="flex-shrink-0 w-[350px]" onClick={()=>navigate('/product')}>
             <Card />
           </div>
         ))}

@@ -1,10 +1,12 @@
-import React from 'react'
+import { Navigate, useNavigate } from 'react-router-dom'
 import Bag from '../icons/bag'
 import FavorateOff from '../icons/FavorateOff'
 
 function Card() {
+
+    const navigate = useNavigate();
     return (
-        <div className='bg-[#ECC9CA] rounded-2xl w-[340px] h-[426px] px-4 py-4'>
+        <div className='bg-[#ECC9CA] rounded-2xl w-[340px] h-[426px] px-4 py-4 ' onClick={()=>{ navigate('/product')}}>
 
             <div className=" flex justify-between items-center">
                 <div className='h-[29px] w-[130px] rounded-[40px] bg-[#FFFFFF] flex justify-center items-center'>

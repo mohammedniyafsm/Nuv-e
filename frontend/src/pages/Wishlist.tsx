@@ -10,14 +10,6 @@ function Wishlist() {
       <WishlistCard/>
       <WishlistCard/>
       <WishlistCard/>
-      <WishlistCard/>
-      <WishlistCard/>
-      <WishlistCard/>
-      <WishlistCard/>
-      <WishlistCard/>
-      <WishlistCard/>
-      <WishlistCard/>
-      <WishlistCard/>
     </div>
     
     </>

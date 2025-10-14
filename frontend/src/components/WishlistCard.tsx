@@ -1,9 +1,15 @@
-import FavorateOff from './icons/FavorateOff'
+import { useNavigate } from 'react-router-dom'
+import FavorateOn from './icons/FavorateOn'
 import Bag from './icons/bag'
 
+
+
 function WishlistCard() {
+
+    const navigate = useNavigate();
+
   return (
-    <div className='px-6 py-2'>
+    <div className='px-6 py-2' onClick={()=>{navigate('/product')}}>
               <div className='bg-[#ECC9CA] rounded-2xl w-[330px] h-[426px] px-4 py-4'>
 
             <div className=" flex justify-between items-center">
@@ -12,7 +18,7 @@ function WishlistCard() {
                 </div>
                 <div className="flex gap-2">
                     <div className="bg-[#FFFFFF] rounded-full h-6 w-6 flex items-center justify-center">
-                       <FavorateOff className='text-[#D4969B] h-3 w-3' />
+                       <FavorateOn className='text-[#D4969B] h-3 w-3' />
                     </div>
                     <div className="bg-[#FFFFFF] rounded-full h-6 w-6 flex items-center justify-center">
                        <Bag className='text-[#D4969B] h-6 w-4.5' />
