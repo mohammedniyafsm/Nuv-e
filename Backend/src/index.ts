@@ -5,15 +5,16 @@ import { connectDB } from "./config/db";
 import userRoute from "./routes/user";
 import adminRoute from "./routes/admin";
 import cors  from "cors"
+import cookieParser from "cookie-parser"; 
 
 const app = express();
 connectDB();
 
 app.use(express.json());
-app.use('/api', userRoute);
-app.use('/api', adminRoute);
+app.use(cookieParser());
 
 const FRONTEND_URL = process.env.FRONTEND_URL;
+
 
 const corsOption = {
     origin: FRONTEND_URL,
@@ -21,7 +22,12 @@ const corsOption = {
     credentials: true,
 };
 
-app.use(cors(corsOption))
+app.use(cors(corsOption));
+
+
+app.use('/api', userRoute);
+app.use('/api', adminRoute);
+
 
 app.use('/', (req: Request, res: Response) => {
     res.send("Server Running....")
