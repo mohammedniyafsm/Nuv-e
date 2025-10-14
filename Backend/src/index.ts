@@ -4,14 +4,12 @@ dotenv.config();
 import { connectDB } from "./config/db";
 import userRoute from "./routes/user";
 import adminRoute from "./routes/admin";
-const cookieParser = from("cookie-parser");
 import cors  from "cors"
 
 const app = express();
 connectDB();
 
 app.use(express.json());
-app.use(cookieParser());
 app.use('/api', userRoute);
 app.use('/api', adminRoute);
 
@@ -23,7 +21,7 @@ const corsOption = {
     credentials: true,
 };
 
-app.use(cors({corsOption}))
+app.use(cors(corsOption))
 
 app.use('/', (req: Request, res: Response) => {
     res.send("Server Running....")
