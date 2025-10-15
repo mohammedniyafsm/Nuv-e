@@ -1,24 +1,97 @@
+import axios from "axios";
+import { useState } from "react";
+import toast from "react-hot-toast";
 
 function UserSetting() {
+  const [password, setPassword] = useState({
+    CurrentPassword: "",
+    NewPassword: "",
+    ConfirmPassword: "",
+  });
+
+  const handleSubmit = async () => {
+    const { CurrentPassword, NewPassword, ConfirmPassword } = password;
+
+    if (!CurrentPassword || !NewPassword || !ConfirmPassword) {
+      toast.error("Fill the form completely");
+      return;
+    }
+
+    if (NewPassword !== ConfirmPassword) {
+      toast.error("Passwords don't match");
+      return;
+    }
+
+    try {
+      const response = await axios.post(
+        `${import.meta.env.VITE_BACKEND_URL}/api/auth/password`,
+        {
+          oldPassword: CurrentPassword,
+          newPassword: NewPassword,
+        },
+        {
+          withCredentials: true,
+        }
+      );
+      console.log(response)
+      toast.success("Password changed successfully");
+    } catch (error) {
+      console.log(error)
+      toast.error(error?.response?.data?.message || "Something went wrong");
+    }
+  };
+
   return (
-            <section className="bg-white w-full rounded-2xl mt-10 border border-[#dbdada] px-6 py-8 transition-all duration-500">
-              <h1 className="font-neogrotesk-regular">Change Password</h1>
+    <section className="bg-white w-full rounded-2xl mt-10 border border-[#dbdada] px-6 py-8 transition-all duration-500">
+      <h1 className="font-neogrotesk-regular">Change Password</h1>
 
-              {["Current Password", "New Password", "Confirm Password"].map((label, idx) => (
-                <div key={idx} className="mt-4">
-                  <label className="font-neogrotesk-regular">{label}</label>
-                  <input
-                    className="w-full mt-2 text-sm bg-[#ececf0] rounded-xl font-neogrotesk-ultralight h-9 px-4"
-                    type="password"
-                  />
-                </div>
-              ))}
+      {/* Current Password */}
+      <div className="mt-4">
+        <label className="font-neogrotesk-regular">Current Password</label>
+        <input
+          className="w-full mt-2 text-sm bg-[#ececf0] rounded-xl font-neogrotesk-ultralight h-9 px-4"
+          type="password"
+          value={password.CurrentPassword}
+          onChange={(e) =>
+            setPassword({ ...password, CurrentPassword: e.target.value })
+          }
+        />
+      </div>
 
-              <button className="bg-black h-8 w-full text-white font-neogrotesk-regular rounded-xl mt-4">
-                Update Password
-              </button>
-            </section>
-  )
+      {/* New Password */}
+      <div className="mt-4">
+        <label className="font-neogrotesk-regular">New Password</label>
+        <input
+          className="w-full mt-2 text-sm bg-[#ececf0] rounded-xl font-neogrotesk-ultralight h-9 px-4"
+          type="password"
+          value={password.NewPassword}
+          onChange={(e) =>
+            setPassword({ ...password, NewPassword: e.target.value })
+          }
+        />
+      </div>
+
+      {/* Confirm Password */}
+      <div className="mt-4">
+        <label className="font-neogrotesk-regular">Confirm Password</label>
+        <input
+          className="w-full mt-2 text-sm bg-[#ececf0] rounded-xl font-neogrotesk-ultralight h-9 px-4"
+          type="password"
+          value={password.ConfirmPassword}
+          onChange={(e) =>
+            setPassword({ ...password, ConfirmPassword: e.target.value })
+          }
+        />
+      </div>
+
+      <button
+        onClick={handleSubmit}
+        className="bg-black h-8 w-full text-white font-neogrotesk-regular rounded-xl mt-4"
+      >
+        Update Password
+      </button>
+    </section>
+  );
 }
 
-export default UserSetting
+export default UserSetting;
