@@ -77,8 +77,8 @@ function AdminLogin() {
                 <div className="flex justify-center">
                     <p className="font-neogrotesk-regular text-[#8E8888] md:mt-4 mt-2 px-2 md:px-[440px] text-center">
                         <span className="block text-[9px] md:text-base">
-                            By accessing your Nuvée Account you can track and manage your orders
-                            and also save multiple addresses.
+                            Access the Nuvée Admin Dashboard to manage products, users, and orders efficiently.
+                            
                         </span>
                     </p>
                 </div>
@@ -112,10 +112,7 @@ function AdminLogin() {
                 </div>
 
                 {/* Footer */}
-                <div className="flex items-center flex-col mt-16">
-                    <h1 className='text-[#8E8888] font-neogrotesk-regular'> Don’t Have an Account Already ?</h1>
-                    <h1 className='underline font-neogroteskessalt-light cursor-pointer' onClick={()=>{navigate('/signup')}}>Sign Up</h1>
-                </div>
+               
             </div>
         </div>
     );
