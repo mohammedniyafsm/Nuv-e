@@ -27,6 +27,8 @@ export const addItemToCart = async (req: Request, res: Response): Promise<void> 
                 item.quantity += product.quantity;
             }
         })
+        cart.coupon = undefined;
+        cart.discountAmount = 0;
         await cart.save();
         res.status(200).json({ message: "Product added to Cart", cart });
         return;
@@ -42,7 +44,7 @@ export const updateCartItem = async (req: Request, res: Response): Promise<void>
         const userId = req.user.id;
         const id = req.params.itemId; ///Cart item id 
         const { quantity } = req.body;
-        const cart = await Cart.findOne({ userId });
+        const cart = await Cart.findOne({ userId }).populate('items.productId');
         if (!cart) {
             res.status(404).json({ message: "Item not found" });
             return;
@@ -98,7 +100,7 @@ export const clearCart = async (req: Request, res: Response): Promise<void> => {
 export const getCart = async (req: Request, res: Response): Promise<void> => {
     try {
         const userId = req.user.id;
-        const cart = await Cart.findOne({ userId });
+        const cart = await Cart.findOne({ userId }).populate('items.productId');
         if (!cart) {
             res.status(400).json({ message: "Cart Not Found" });
             return;

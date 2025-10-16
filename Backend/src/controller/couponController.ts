@@ -1,7 +1,5 @@
 import { Request, Response } from "express";
 import { Coupon } from "../models/Coupon";
-import XOAuth2 from "nodemailer/lib/xoauth2";
-import User from "../models/User";
 import { Cart } from "../models/Cart";
 import { Types } from "mongoose";
 
@@ -65,77 +63,122 @@ export const deleteCoupon = async (req: Request, res: Response): Promise<void> =
 }
 
 
-export const applyCoupon = async (req: Request, res: Response): Promise<void> => {
+export const updateCoupon = async (req: Request, res: Response): Promise<void> => {
     try {
-        const userId = req.user.id;
-        const { code } = req.body;
+        const { couponId } = req.params;
+        const updateData = req.body;
 
-        const coupon = await Coupon.findOne({ code });
-        if (!coupon) {
-            res.status(404).json({ message: "Coupon Not Found" });
+        if (updateData.code) {
+            const existing = await Coupon.findOne({ code: updateData.code, _id: { $ne: couponId } });
+            if (existing) {
+                res.status(400).json({ message: "Coupon code already in use" });
+                return;
+            }
+        }
+
+        const updatedCoupon = await Coupon.findByIdAndUpdate(
+            couponId,
+            { $set: updateData },
+            { new: true, runValidators: true }
+        );
+
+        if (!updatedCoupon) {
+            res.status(404).json({ message: "Coupon not found" });
             return;
         }
-        if (coupon.expiryDate && coupon.expiryDate < new Date()) {
-            res.status(400).json({ message: "Coupon Expired " });
-            return;
-        }
 
-        const cart = await Cart.findOne({ userId });
-        if (!cart || cart.items.length == 0) {
-            res.status(400).json({ message: "Cart Not Found " });
-            return;
-        }
-
-        let cartTotal = cart.items.reduce((total, item) => total += item.quantity * item.price, 0)
-        if (coupon.minCartAmount && coupon.minCartAmount > cartTotal) {
-            res.status(400).json({ message: `Cart must be atleast ${coupon.minCartAmount} to use this Coupon ` })
-        }
-
-        let usageRecord = coupon.userUsed.find((user) => user.userId.toString() === userId);
-        if (usageRecord && Number(usageRecord) > coupon.maxUsagePerUser) {
-            res.status(400).json({ message: "Coupon usage limit reached for this user" });
-            return;
-        }
-        let discount = coupon.discountAmount;
-        if (coupon.discountPercentage) {
-            discount = (cartTotal * coupon.discountPercentage) / 100;
-        }
-
-        cart.totalAfterDiscount = cartTotal - discount;
-
-        cart.coupon = {
-            code: coupon.code,
-            discountAmount: discount
-        }
-        await cart.save();
-
-        if (usageRecord) {
-            usageRecord.timesUsed += 1;
-        } else {
-            coupon.userUsed.push({ userId: new Types.ObjectId(userId), timesUsed: 1 })
-        }
-        await coupon.save();
-
-        res.status(200).json({ message: "Coupon Appiled Succesfully" });
-        return;
+        res.status(200).json({ message: "Coupon updated successfully", coupon: updatedCoupon });
     } catch (error) {
         console.error(error);
         res.status(500).json({ message: "Server Error", error });
     }
-}
+};
+
+export const applyCoupon = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const userId = req.user.id;
+    const { code } = req.body;
+
+    const coupon = await Coupon.findOne({ code })
+    if (!coupon) {
+      res.status(404).json({ message: "Coupon not found" });
+      return;
+    }
+
+    if (coupon.expiryDate && coupon.expiryDate < new Date()) {
+      res.status(400).json({ message: "Coupon expired" });
+      return;
+    }
+
+    const cart = await Cart.findOne({ userId }).populate("items.productId");;
+    if (!cart || cart.items.length === 0) {
+      res.status(400).json({ message: "Cart not found or empty" });
+      return;
+    }
+
+    const subtotal = cart.items.reduce(
+      (total, item) => total + item.quantity * item.price,
+      0
+    );
+
+    if (coupon.minCartAmount && subtotal < coupon.minCartAmount) {
+      res.status(400).json({
+        message: `Cart must be at least ₹${coupon.minCartAmount} to use this coupon`,
+      });
+      return;
+    }
+
+    const usageRecord = coupon.userUsed.find(
+      (u) => u.userId.toString() === userId
+    );
+    if (usageRecord && usageRecord.timesUsed >= coupon.maxUsagePerUser) {
+      res.status(400).json({ message: "Coupon usage limit reached" });
+      return;
+    }
+
+    let discount = coupon.discountAmount;
+    if (coupon.discountPercentage) {
+      discount = (subtotal * coupon.discountPercentage) / 100;
+    }
+
+    if (discount > subtotal) discount = subtotal;
+
+    cart.subtotal = subtotal;
+    cart.discountAmount = discount;
+    cart.totalAmount = subtotal - discount;
+    cart.coupon = {
+      code: coupon.code,
+      discountAmount: discount,
+      discountPercentage: coupon.discountPercentage,
+      minCartAmount: coupon.minCartAmount,
+    };
+
+    await cart.save();
+
+    await coupon.save();
+
+    res.status(200).json({
+      message: "Coupon applied successfully",
+      cart,
+    });
+  } catch (error) {
+    console.error("Error applying coupon:", error);
+    res.status(500).json({ message: "Server error", error });
+  }
+};
 
 
 export const removeCoupon = async (req: Request, res: Response): Promise<void> => {
     try {
         const userId = req.user.id;
-        const cart = await Cart.findOne({ userId });
+        const cart = await Cart.findOne({ userId }).populate("items.productId");
         if (!cart) {
             res.status(400).json({ message: "Cart not found" });
             return;
         }
 
         cart.coupon = undefined;
-        cart.totalAfterDiscount = undefined;
+        cart.discountAmount = 0;
         await cart.save();
 
         res.status(200).json({ message: "Coupon removed", cart });

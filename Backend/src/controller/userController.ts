@@ -223,6 +223,7 @@ export const updatePassword = async (req: Request, res: Response): Promise<void>
         const { oldPassword, newPassword } = req.body;
         const user = await User.findOne({ _id: id });
         if (!user) {
+            console.log(id);
             res.status(400).json({ message: "User Not Found" });
             return;
         }

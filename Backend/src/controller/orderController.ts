@@ -70,7 +70,7 @@ export const cancelOrder = async (req: Request, res: Response): Promise<void> =>
 
 export const getAllOrders = async (req: Request, res: Response): Promise<void> => {
     try {
-        const orders = await Order.find();
+        const orders = await Order.find().populate('userId');
         res.status(200).json({ orders });
         return;
     } catch (error) {

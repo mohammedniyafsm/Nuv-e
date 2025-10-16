@@ -6,11 +6,12 @@ export const addProduct = async (req: Request, res: Response): Promise<void> => 
     try {
         const { name, category, size, price, discount, stock, description, images } = req.body;
         const newProduct = await Product.create({ name, category, size, price, discount, stock, description, images });
-
+        console.log(newProduct);
         res.status(200).json({ message: "Product Added Successfully", newProduct });
         return;
     } catch (error) {
         res.status(500).json({ message: "Server Error", error });
+        console.log(error);
         return;
     }
 }

@@ -3,7 +3,7 @@ import { adminProtect, protect, userProtect } from "../middleware/Auth";
 import { addProduct, deleteProduct, getAdminProducts, getProductByIdAdmin, updateProduct } from "../controller/productController";
 import { adminProfile, getAllUsers, getPresignedUrl, getUserById, loginAdmin, sendOtp, signupAdmin, updateUserStatus, verifyOtp } from "../controller/adminController";
 import { bulkUpdateOrderStatus, deleteOrder, getAllOrders, getOrderByIdAdmin, updateOrderStatus } from "../controller/orderController";
-import { createCoupon, deleteCoupon, getCoupons } from "../controller/couponController";
+import { createCoupon, deleteCoupon, getCoupons, updateCoupon } from "../controller/couponController";
 
 const router = express.Router();
 
@@ -40,5 +40,7 @@ router.get('/admin/orders/:id',adminProtect,protect,getOrderByIdAdmin);
 router.post("/admin/create", adminProtect,protect, createCoupon);
 router.get("/admin/all", adminProtect,protect, getCoupons);
 router.delete("/admin/:couponId", adminProtect,protect, deleteCoupon);
+router.put("/admin/:couponId", adminProtect, protect, updateCoupon);
+
 
 export default router;

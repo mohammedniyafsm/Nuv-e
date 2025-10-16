@@ -13,7 +13,7 @@ export const userProtect = async (req: Request, res: Response, next: NextFunctio
         //     return;
         // }
         // const token = AuthHeader.split(" ")[1];
-        const token = req.cookies.acess_token;
+        const token = req.cookies.acess_token; 
         if(!token){
             res.status(404).json({ message : "Token Not Found"});
             return;
@@ -67,7 +67,7 @@ export const protect = async(req:Request,res:Response,next:NextFunction) :Promis
         if(!req.admin || req.admin.role !== "admin"){
             res.status(401).json({message : "Unauthorised"});
             return ;
-        }
+        }0
         next();
     } catch (error) {
         res.status(500).json({message : "Server Error",error})

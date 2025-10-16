@@ -61,7 +61,7 @@ router.put('/orders/:id/return',userProtect,returnOrder );
 
 
 router.post("/apply", userProtect, applyCoupon);
-router.post("/remove", userProtect, removeCoupon);
+router.delete("/remove", userProtect, removeCoupon);
 
 
 export default router;

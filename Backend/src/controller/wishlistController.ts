@@ -8,7 +8,7 @@ import { Types } from "mongoose";
 export const getWishlist = async (req: Request, res: Response): Promise<void> => {
     try {
         const userId = req.user.id;
-        const wishlist = await WishList.findOne({ userId });
+        const wishlist = await WishList.findOne({ userId }).populate("products") ;
         if (!wishlist) {
             res.status(404).json({ message: "Wishlist Not Found" });
             return;

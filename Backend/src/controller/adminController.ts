@@ -157,8 +157,8 @@ export const getUserById = async (req: Request, res: Response): Promise<void> =>
 export const updateUserStatus = async (req: Request, res: Response): Promise<void> => {
     try {
         const id = req.params.id;
-        const status = req.body;
-        const update = await User.findByIdAndUpdate(id, status, {
+        const { status } = req.body;
+        const update = await User.findByIdAndUpdate(id, {status}, {
             new: true,
             runValidators: true,
         })
