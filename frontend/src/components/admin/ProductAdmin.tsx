@@ -22,6 +22,7 @@ function ProductAdmin() {
   const [images, setImages] = useState<File[]>([]);
   const [add, setAdd] = useState(false);
   const [editProduct, setEditProduct] = useState<any>(null); // state for editing
+  const [search ,setSearch] = useState("");
 
   const [productNew, setNewProduct] = useState({
     name: "",
@@ -109,6 +110,11 @@ function ProductAdmin() {
     setAdd(true);
   };
 
+  const filterProduct = product.products.filter((f)=>
+   f.name.toLowerCase().includes(search.toLowerCase()) || 
+   f.category.toLowerCase().includes(search.toLowerCase())    
+  )
+
   return (
     <section className="px-12 py-4">
       {!add && (
@@ -125,10 +131,19 @@ function ProductAdmin() {
               <h1 className="text-md font-neogrotesk-regular">Add Product</h1>
             </div>
           </div>
+             <div className="w-full">
+          <input
+            className="mt-6 bg-white px-6 h-10 w-full rounded-xl"
+            type="text"
+            placeholder="Search Users..."
+            value={search}
+            onChange={e => setSearch(e.target.value)}
+          />
+        </div>
 
           <div className="flex flex-wrap gap-8 py-10">
-            {product.products?.length > 0 ? (
-              product.products.map((item) => (
+            {filterProduct?.length > 0 ? (
+              filterProduct.map((item) => (
                 <div key={item._id} className="w-96 py-4 px-4 rounded-xl bg-white">
                   <img className="h-80 w-[400px] rounded-xl" src="" alt="" />
                   <div className="flex justify-between py-4">
@@ -163,17 +178,7 @@ function ProductAdmin() {
         <section className="bg-white mt-8 rounded-2xl px-10 py-8 w-full">
           <div className="flex justify-between items-center mb-8">
             <h1 className="text-lg font-neogrotesk-regular">{editProduct ? "Edit Product" : "Add New Product"}</h1>
-            {/* <button
-              onClick={() => {
-                setAdd(false);
-                setEditProduct(null);
-                setNewProduct({ name: "", category: "", size: "", price: "", discount: "", stock: "", description: "" });
-                setImages([]);
-              }}
-              className="text-sm border border-gray-300 px-4 py-2 rounded-xl hover:bg-gray-100 transition-all"
-            >
-              Cancel
-            </button> */}
+           
           </div>
 
           <div className="grid grid-cols-3 gap-6">
