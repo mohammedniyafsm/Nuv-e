@@ -2,7 +2,6 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 
-// Define TypeScript types
 interface IUser {
   _id: string;
   username: string;
@@ -22,6 +21,7 @@ function OrderAdmin() {
   const [orders, setOrders] = useState<IOrder[]>([]);
   const [selectedOrders, setSelectedOrders] = useState<string[]>([]);
   const [bulkStatus, setBulkStatus] = useState<string>("");
+  const [search,setSearch] = useState("");
 
   // Fetch orders from backend
   const fetchOrders = async () => {
@@ -128,6 +128,12 @@ function OrderAdmin() {
     );
   };
 
+  const filterOrder = orders.filter((f)=>
+    f.userId.username.toLowerCase().includes(search.toLowerCase()) ||
+    f._id.toLowerCase().includes(search.toLowerCase()) ||
+    f.placedAt.toLowerCase().includes(search.toLowerCase())
+  )
+
   return (
     <section className="px-8 py-1">
       <div className="mt-10">
@@ -140,6 +146,7 @@ function OrderAdmin() {
             className="bg-white px-6 h-10 w-full rounded-xl"
             type="text"
             placeholder="Search Orders..."
+            onChange={(e)=>setSearch(e.target.value)}
           />
           <select
             className="border border-gray-300 px-2 py-1 bg-white rounded-md"
@@ -184,7 +191,7 @@ function OrderAdmin() {
             <h1 className="ml-8">Actions</h1>
           </div>
 
-          {orders.map((item) => (
+          {filterOrder.map((item) => (
             <div
               key={item._id}
               className="flex items-center border-b pb-3 text-sm border-[#dbdada] pt-2"
