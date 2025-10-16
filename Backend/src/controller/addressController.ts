@@ -36,6 +36,7 @@ export const addAddress = async (req: Request, res: Response): Promise<void> => 
         });
     } catch (error) {
         res.status(500).json({ message: "Server Error", error });
+        console.log(error);
     }
 };
 
