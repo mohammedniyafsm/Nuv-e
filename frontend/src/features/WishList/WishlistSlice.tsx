@@ -1,0 +1,108 @@
+import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import { deleteWishlist, getWishList, moveWishlistTOCart, postWishlist } from "./WishListApi";
+
+
+interface WishListI {
+    _id?: string;
+    name: string;
+    category: string;
+    size?: string;
+    price: number;
+    images: { url: string; alt: string; _id: string }[];
+}
+
+
+interface WishListState {
+    _id: string;
+    userId: string;
+    products: WishListI[];
+    loading: boolean;
+    error: string | null;
+}
+
+
+
+export const WishLists = createAsyncThunk(
+    '/wishlist/getWishlist', async () => {
+        return await getWishList();
+    }
+)
+
+export const addWishlist = createAsyncThunk(
+    '/wishlist/addWishlist', async (productId: string) => {
+        return await postWishlist(productId);
+    }
+)
+
+export const removeWishlist = createAsyncThunk(
+    '/wishlist/removeWishlist', async (productId: string) => {
+        return await deleteWishlist(productId);
+    }
+)
+
+export const WishListMoveCart = createAsyncThunk(
+    '/wishlist/moveWishlistTOCart', async (productId: string) => {
+        return await moveWishlistTOCart(productId);
+    }
+)
+
+const initialState: WishListState = {
+    _id: "",
+    userId: "",
+    products: [],
+    loading: false,
+    error: null
+}
+
+
+const WishlistSlice = createSlice({
+    name: "wishlist",
+    initialState,
+    reducers: {},
+    extraReducers: (builder) => {
+        builder
+            .addCase(WishLists.pending, (state) => {
+                state.loading = true
+            })
+            .addCase(WishLists.fulfilled, (state, action) => {
+                state.loading = false;
+                state._id = action.payload._id;
+                state.userId = action.payload.userId;
+                state.products = action.payload.products;
+            })
+            .addCase(WishLists.rejected, (state, action) => {
+                state.loading = false;
+                state.error = action.error.message || "Failed to fetch wishlist";
+            })
+
+        builder
+            .addCase(addWishlist.pending, (state) => {
+                state.loading = true;
+            })
+            .addCase(addWishlist.fulfilled, (state, action) => {
+                state.loading = false;
+                state.products = action.payload.products;
+            })
+            .addCase(addWishlist.rejected, (state, action) => {
+                state.loading = false;
+                state.error = action.error.message || "Failed to add to wishlist";
+            })
+
+        builder
+            .addCase(removeWishlist.pending, (state) => {
+                state.loading = true;
+            })
+            .addCase(removeWishlist.fulfilled, (state, action) => {
+                state.loading = false;
+                state.products = action.payload.products;
+            })
+            .addCase(removeWishlist.rejected, (state, action) => {
+                state.loading = false;
+                state.error = action.error.message || "Failed to remove from wishlist";
+            })
+    }
+})
+
+export default WishlistSlice.reducer;
+
+
