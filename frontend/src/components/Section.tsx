@@ -1,34 +1,27 @@
-import { useRef } from "react";
 import RightArrow from "./icons/RightArrow";
-import LeftArrowScroll from "./icons/LeftArrowScroll";
-import RightArrowScroll from "./icons/RightArrowScroll";
-import Card from "./ui/Card";
-import { useNavigate } from "react-router-dom";
-
-const CARD_WIDTH = 350;
-const VISIBLE_CARDS = 3;
+import DynamicSection from "./DynamicSection";
+import { useState } from "react";
 
 function Section() {
-  const scrollRef = useRef<HTMLDivElement>(null);
-  const cards = [1, 2, 3, 4, 5];
-
-  const navigate = useNavigate();
-
-  const handleScroll = (direction: "left" | "right") => {
-    const scrollContainer = scrollRef.current;
-    if (!scrollContainer) return;
-
-    const scrollAmount = CARD_WIDTH * VISIBLE_CARDS;
-    const newScrollLeft =
-      direction === "right"
-        ? scrollContainer.scrollLeft + scrollAmount
-        : scrollContainer.scrollLeft - scrollAmount;
-
-    scrollContainer.scrollTo({
-      left: newScrollLeft,
-      behavior: "smooth",
-    });
-  };
+  const [products] = useState([
+    {
+      category: "SIGNATURE COLLECTION",
+      title: "Nuvée Signature",
+      subtitle: "For Every Mood  ",
+      subtitle2: "Moment"
+    },
+    {
+      category: "BLOOM ESSENCE",
+      title: "Nuvée Luxury",
+      subtitle: "Experience Timeless",
+      subtitle2: "Comfort,"
+    },
+    // {
+    //   category: "MODERN COLLECTION",
+    //   title: "Modern Minimal",
+    //   subtitle: "Style in Simplicity,",
+    // },
+  ]);
 
   return (
     <div className="flex w-screen min-h-screen bg-white overflow-hidden">
@@ -39,94 +32,32 @@ function Section() {
             FILTERS
           </h1>
 
-          {/* Filter: Range */}
-          <div className="mt-6">
-            <div className="flex justify-between items-center">
-              <span className="text-[10px] text-[#bda0a0] font-neogroteskessalt-light">
-                RANGE
-              </span>
-              <RightArrow className="text-primary" />
+          {["RANGE", "TYPE", "COLLECTION"].map((label, index) => (
+            <div key={index} className="mt-6">
+              <div className="flex justify-between items-center">
+                <span className="text-[10px] text-[#bda0a0] font-neogroteskessalt-light">
+                  {label}
+                </span>
+                <RightArrow className="text-primary" />
+              </div>
+              <hr className="mt-2 text-[#CBB9B9]" />
             </div>
-            <hr className="mt-2 text-[#CBB9B9]" />
-          </div>
-
-          {/* Filter: Type */}
-          <div className="mt-4">
-            <div className="flex justify-between items-center">
-              <span className="text-[10px] text-[#bda0a0] font-neogroteskessalt-light">
-                TYPE
-              </span>
-              <RightArrow className="text-primary" />
-            </div>
-            <hr className="mt-2 text-[#CBB9B9]" />
-          </div>
-
-          {/* Filter: Collection */}
-          <div className="mt-4">
-            <div className="flex justify-between items-center">
-              <span className="text-[10px] text-[#bda0a0] font-neogroteskessalt-light">
-                COLLECTION
-              </span>
-              <RightArrow className="text-primary" />
-            </div>
-            <hr className="mt-2 text-[#CBB9B9]" />
-          </div>
+          ))}
         </div>
       </aside>
 
       {/* ---------- Main Content ---------- */}
-      <main className="flex-grow px-12 py-20 overflow-hidden">
-        {/* Header Section */}
-        <div className="flex justify-between items-center">
-          {/* Title */}
-          <div className="mt-16 ml-6">
-            <h1 className="text-3xl text-[#d6d0d0] font-neogrotesk-regular">
-              For Every Mood <span className="font-[Georgia]">&</span> Moment,
-            </h1>
-            <div className="w-[239px]">
-              <h2 className="text-[38px] leading-none text-primary font-ITCGaramondStd-BkCondIta">
-                Nuvée Signature
-              </h2>
-              <hr className="w-[210px] border-t-[3.5px] border-[#D8D8D8]" />
-            </div>
-          </div>
-
-          {/* Scroll Arrows */}
-          <div className="flex items-center gap-6 mt-32">
-            <button
-              onClick={() => handleScroll("left")}
-              className="flex items-center justify-center w-[50px] h-[50px] bg-[#D9D9D9] rounded-full hover:bg-primary hover:text-white transition"
-            >
-              <LeftArrowScroll className="w-4 h-4" />
-            </button>
-            <button
-              onClick={() => handleScroll("right")}
-              className="flex items-center justify-center w-[50px] h-[50px] bg-[#D9D9D9] rounded-full hover:bg-primary hover:text-white transition"
-            >
-              <RightArrowScroll className="w-4 h-4" />
-            </button>
-          </div>
-        </div>
-
-        {/* Cards Section */}
-        <div className="relative mt-10">
-          <div
-            ref={scrollRef}
-            className="flex gap-6 overflow-x-hidden scroll-smooth"
-            style={{
-              width: `${CARD_WIDTH * VISIBLE_CARDS + (VISIBLE_CARDS - 1) * 24}px`,
-            }}
-          >
-           {cards.map((_, index) => (
-          <div key={index} className="flex-shrink-0 w-[350px]" onClick={()=>navigate('/product')}>
-            <Card />
-          </div>
+      <div className="flex flex-col flex-grow mt-14 pb-28">
+        {products.map((s, index) => (
+          <DynamicSection
+            key={index}
+            category={s.category}
+            title={s.title}
+            subtitle={s.subtitle}
+            subtitle2={s.subtitle2}
+          />
         ))}
-          </div>
-        </div>
-      </main>
-
-
+      </div>
     </div>
   );
 }
