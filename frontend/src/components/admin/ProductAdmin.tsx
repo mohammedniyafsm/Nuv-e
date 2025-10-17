@@ -145,7 +145,7 @@ function ProductAdmin() {
             {filterProduct?.length > 0 ? (
               filterProduct.map((item) => (
                 <div key={item._id} className="w-96 py-4 px-4 rounded-xl bg-white">
-                  <img className="h-80 w-[400px] rounded-xl" src="" alt="" />
+                  <img className="h-80 w-[400px] rounded-xl" src={item.images[0].url} alt="" />
                   <div className="flex justify-between py-4">
                     <h1>{item.name}</h1>
                     <button className="h-6 w-20 rounded-md bg-green-200 text-green-800 text-xs">{item.status}</button>
