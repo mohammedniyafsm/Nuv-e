@@ -18,33 +18,33 @@ function Landing() {
           
     },[])
     return (
-        <div className="h-screen w-screen pt-20 bg-nuvee-gradient">
+        <div className="h-[450px]  md:h-screen w-full pt-20 bg-nuvee-gradient">
             <div className="relative h-full w-full ">
 
-                <div className="absolute bottom-0 md:left-1/2 md:-translate-x-1/2 z-0  img-fade-top  ">
-                    <img className=" h-[500px] img-fade-right " src="./public/images/hero1.png" alt="" />
+                <div className="absolute sm:left-1/2 sm:-translate-x-1/2 bottom-0 xl:left-1/2 xl:-translate-x-1/2 z-0  img-fade-top  ">
+                    <img className="h-[300px]  xl:h-[500px] img-fade-right " src="./public/images/hero1.png" alt="" />
                 </div>
 
-                <div className="hidden md:block absolute top-16 left-110">
+                <div className=" absolute hidden md:hidden lg:block lg:left-40 lg:top-24 xl:block  xl:top-16 xl:left-110">
                     <ArrowCurve/>
                 </div>
 
-                <div className="absolute top-8 left-6 md:top-20 md:left-26 ">
-                    <div id="mainn"  className="text-4xl md:text-6xl font-neogrotesk-sc-bold text-primary flex col">
+                <div className="absolute top-8 md:top-24 md:left-10 left-6 xl:top-20 xl:left-26 ">
+                    <div id="mainn"  className="text-3xl md:text-5xl xl:text-6xl font-neogrotesk-sc-bold text-primary flex col">
                         <h1 >MEET</h1>
                         <h1 className="pl-2"> OUR</h1>
                     </div>
                 </div>
-                <div id="" className="absolute right-3 md:right-20 bottom-10">
-                    <h1 className="text-3xl md:text-7xl font-ITCGaramondStd-BkCondIta text-primary"> <span id="complete">complete</span> <br /> <span className="pl-6 md:pl-20" id="fragrance" >fragrance</span> <br /><span className="pl-16 md:pl-40" id="lineup">lineup</span><br /> </h1>
+                <div id="" className="absolute right-1 bottom-2 xl:right-20 md:bottom-10">
+                    <h1 className="text-3xl sm:text-5xl  xl:text-7xl font-ITCGaramondStd-BkCondIta text-primary"> <span id="complete " className="pl-2 sm:pl-0">complete</span> <br /> <span className="pl-6 xl:pl-20" id="fragrance" >fragrance</span> <br /><span className="pl-16 xl:pl-40" id="lineup">lineup</span><br /> </h1>
                 </div>
 
-                <div id="box" className="hidden md:block absolute left-24 bottom-20 bg-secondary rounded-4xl  h-[340px] w-[300px] ">
-                    <div className="px-8 py-6">
-                        <h1 id="box-heading" className=" text-4xl text-primary"><span className="font-neogrotesk-regular">UnderStand</span><br /><span className="font-neogrotesk-regular">Your</span><span className="font-ITCGaramondStd-BkCondIta"> Essence</span></h1>
+                <div id="box" className="hidden md:block absolute md:left-6 md:bottom- xl:left-24 bottom-20 bg-secondary rounded-4xl md:h-[260px] md:w-[250px]  xl:h-[340px] xl:w-[300px] ">
+                    <div className="md:py-3 px-8 xl:px-8 xl:py-6 ">
+                        <h1 id="box-heading" className="md:text-2xl xl:text-4xl text-primary"><span className="font-neogrotesk-regular">UnderStand</span><br /><span className="font-neogrotesk-regular">Your</span><span className="font-ITCGaramondStd-BkCondIta"> Essence</span></h1>
                     </div>
                     <div  className="">
-                        <h1 id="box-text" className="font-neogroteskessalt-light text-[12px] pl-8 text-light">
+                        <h1 id="box-text" className="font-neogroteskessalt-light md:text-[10px] xl:text-[12px] pl-8 text-light">
                             Fragrance is not just about the scent  you <br />
                             wear, it’s about the story it tells. Discover <br />
                             how Nuvée perfumes elevate your mood,<br />
@@ -52,7 +52,7 @@ function Landing() {
                             full collection and find the scent that <br />
                             truly defines you.</h1>
                     </div>
-                    <div id="box-button" className="mx-8 my-4 h-[45px] w-[241px] bg-primary flex justify-center items-center rounded-4xl">
+                    <div id="box-button" className="mx-8 my-4 md:w-[190px] md:h-[40px] xl:h-[45px] xl:w-[241px] bg-primary flex justify-center items-center rounded-4xl">
                         <h1  className="font-neogroteskessalt-light text-secondary text-xs ">EXPLORE NOW</h1>
                     </div>
                 </div>
