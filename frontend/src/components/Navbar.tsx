@@ -84,7 +84,7 @@ function Navbar() {
         </div>
 
         {/* Desktop Icons */}
-        <div className="bg-[#333333] w-20 h-8 md:w-28 sm:h-10 rounded-[5rem] flex items-center justify-center px-2 relative hidden sm:flex">
+        <div className="bg-[#333333] w-20 h-8 md:w-28 sm:h-10 rounded-[5rem] items-center justify-center px-2 relative hidden sm:flex">
           {username?.trim() ? (
             <>
               <Link to="/cart" className="relative">
