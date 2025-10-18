@@ -36,7 +36,7 @@ const categoryBg: Record<string, string> = {
   "BLOOM ESSENCE": "#CBC6D8",
 };
 
-function Card({ name, price, _id, category, images }: CardProps) {
+function Card1({ name, price, _id, category, images }: CardProps) {
   const dispatch = useDispatch<AppDispatch>();
   const navigate = useNavigate();
 
@@ -90,18 +90,18 @@ function Card({ name, price, _id, category, images }: CardProps) {
 
   return (
     <div
-      className="rounded-2xl w-[250px] h-[290px] md:w-[340px] md:h-[426px] px-4 py-4 cursor-pointer transition-transform hover:scale-[1.02]"
+      className="rounded-2xl w-[195px] h-[290px] md:w-[340px] md:h-[426px] px-4 py-4 cursor-pointer transition-transform hover:scale-[1.02]"
       style={{ backgroundColor: bgColor }}
     >
       {/* ===== Top Section ===== */}
-      <div className="flex justify-between items-center">
+      <div className="flex justify-between items-center gap-2">
         <div className="h-6 w-28 md:h-[29px] md:w-[130px] rounded-[40px] bg-white flex justify-center items-center">
           <h1 className="text-black font-neogroteskessalt-light text-[7px] md:text-[8px]">
             {category}
           </h1>
         </div>
 
-        <div className="flex gap-2">
+        <div className="flex gap-1 md:gap-2">
           {/* Wishlist Icon */}
           <button
             className="bg-white rounded-full h-7 w-7 md:h-8 md:w-8 flex items-center justify-center hover:bg-gray-100 transition-colors"
@@ -148,9 +148,9 @@ function Card({ name, price, _id, category, images }: CardProps) {
       </div>
 
       {/* ===== Product Info Section ===== */}
-      <div className="flex justify-between items-end gap-2 mt-2">
+      <div className="flex justify-between items-end gap-2 mt-8 md:mt-2">
         <div className="flex-1 min-w-0">
-          <h1 className="font-neogroteskessalt-light text-[10px] md:text-xs truncate">
+          <h1 className="font-neogroteskessalt-light text-[8px] md:text-xs truncate">
             {name}
           </h1>
           <h1 className="font-neogroteskessalt-light text-[9px] md:text-[10px] text-gray-600 truncate">
@@ -165,4 +165,4 @@ function Card({ name, price, _id, category, images }: CardProps) {
   );
 }
 
-export default Card;
+export default Card1;
