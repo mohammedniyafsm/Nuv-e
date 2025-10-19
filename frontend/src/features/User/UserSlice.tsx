@@ -17,16 +17,21 @@ const initialState: UserState = {
   error: null,
 };
 
+
+// GET USER PROFILE 
 export const fetchUser = createAsyncThunk("user/fetchUser", async () => {
   return await getUserAPI();
 });
 
+// UPDATE USER PROFILE
 export const updateUser = createAsyncThunk(
   "user/updateUser",
   async (data: { username: string; email: string }) => {
     return await updateUserAPI(data);
   }
 );
+
+
 
 export const UserSlice = createSlice({
   name: "user",
@@ -40,7 +45,7 @@ export const UserSlice = createSlice({
   },
   extraReducers: (builder) => {
     builder
-      // FETCH USER
+      // ==================== FETCH USER DATA ====================
       .addCase(fetchUser.pending, (state) => {
         state.loading = true;
       })
@@ -55,7 +60,7 @@ export const UserSlice = createSlice({
         state.error = action.error.message || "Failed to fetch user";
       })
 
-      // UPDATE USER
+      // ==================== UPDATE USER DATA ====================
       .addCase(updateUser.pending, (state) => {
         state.loading = true;
       })

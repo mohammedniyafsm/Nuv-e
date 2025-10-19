@@ -1,12 +1,12 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-import { addCoupon, getCart, postCart, putCart, removeCart, removeCoupon } from "./CartApi";
+import { addCoupon, getCart, postCart, putCart, removeCartItemApi, removeCoupon, clearCart } from "./CartApi";
 
 interface ICouponApplied {
   code: string;
   discountAmount: number;
 }
 
-interface CartItem {
+export interface CartItem {
   _id: string;
   productId: string;
   quantity: number;
@@ -14,12 +14,12 @@ interface CartItem {
   subtotal: number;
 }
 
-interface CartState {
+export interface CartState {
   _id: string;
   userId: string;
   items: CartItem[];
-  subtotal?: number;
-  discountAmount?: number;
+  subtotal: number;
+  discountAmount: number;
   totalAmount: number;
   coupon?: ICouponApplied;
   loading: boolean;
@@ -38,60 +38,70 @@ const initialState: CartState = {
   error: null,
 };
 
-
-
-export const Carts = createAsyncThunk("cart/getCart", async () => {
+//  GET CART
+export const Carts = createAsyncThunk<CartState>("cart/getCart", async () => {
   const data = await getCart();
   return data;
 });
 
-export const addCart = createAsyncThunk(
+
+//  ADD CART
+export const addCart = createAsyncThunk<CartState, { productId: string; quantity: number; price: number }>(
   "cart/addCart",
-  async (product: { productId: string; quantity: number; price: number }) => {
+  async (product) => {
     const data = await postCart(product);
     return data;
   }
 );
 
-export const deleteCart = createAsyncThunk(
+//  DELETE CART
+export const deleteCart = createAsyncThunk<CartState, string>(
   "cart/deleteCart",
-  async (itemId: string) => {
-    const data = await removeCart(itemId);
+  async (itemId) => {
+    const data = await removeCartItemApi(itemId);
     return data;
   }
 );
 
-export const updateCart = createAsyncThunk(
+//  CLEAR CART
+export const clearCartAction = createAsyncThunk<CartState>(
+  "cart/clearCart",
+  async () => {
+    const data = await clearCart();
+    return data;
+  }
+);
+
+//  UPDATE CART
+export const updateCart = createAsyncThunk<CartState, { itemId: string; quantity: number }>(
   "cart/updateCart",
-  async ({ itemId, quantity }: { itemId: string; quantity: number }) => {
+  async ({ itemId, quantity }) => {
     const data = await putCart(itemId, quantity);
     return data;
   }
 );
 
-export const applyCouponAction = createAsyncThunk(
-  '/cart/coupon/add',
-  async (code: string, { rejectWithValue }) => {
+//  ADD COUPON TO  CART
+export const applyCouponAction = createAsyncThunk<CartState, string>(
+  "/cart/coupon/add",
+  async (code, { rejectWithValue }) => {
     try {
       const data = await addCoupon(code);
       return data;
     } catch (err: any) {
-      console.log(err)
-      return rejectWithValue(
-        err?.response?.data?.message || "Failed to apply coupon"
-      );
+      return rejectWithValue(err?.response?.data?.message || "Failed to apply coupon");
     }
   }
 );
 
-
-export const removeCouponAction = createAsyncThunk(
-  '/cart/coupon/remove', async () => {
+//  REMOVE COUPON FROM  CART
+export const removeCouponAction = createAsyncThunk<CartState>(
+  "/cart/coupon/remove",
+  async () => {
     const data = await removeCoupon();
     return data;
   }
-)
-
+);
 
 
 export const CartSlice = createSlice({
@@ -100,116 +110,88 @@ export const CartSlice = createSlice({
   reducers: {},
   extraReducers: (builder) => {
     builder
-      // Get Cart
-      .addCase(Carts.pending, (state) => {
-        state.loading = true;
-      })
+      // ==================== GET CART ====================
+      .addCase(Carts.pending, (state) => {state.loading = true; })
       .addCase(Carts.fulfilled, (state, action) => {
         state.loading = false;
         state.error = null;
-        state._id = action.payload._id;
-        state.userId = action.payload.userId;
-        state.items = action.payload.items || [];
-        state.subtotal = action.payload.subtotal || 0;
-        state.discountAmount = action.payload.discountAmount || 0;
-        state.totalAmount = action.payload.totalAmount || 0;
-        state.coupon = action.payload.coupon || undefined;
+        Object.assign(state, action.payload);
       })
       .addCase(Carts.rejected, (state, action) => {
         state.loading = false;
         state.error = action.error.message || "Failed to fetch cart";
       })
 
-      // Add to Cart
-      .addCase(addCart.pending, (state) => {
-        state.loading = true;
-      })
+      // ==================== ADD CART ====================
+      .addCase(addCart.pending, (state) => { state.loading = true; })
       .addCase(addCart.fulfilled, (state, action) => {
         state.loading = false;
         state.error = null;
-        state.items = action.payload.items || [];
-        state.subtotal = action.payload.subtotal || 0;
-        state.discountAmount = action.payload.discountAmount || 0;
-        state.totalAmount = action.payload.totalAmount || 0;
-
+        Object.assign(state, action.payload);
       })
       .addCase(addCart.rejected, (state, action) => {
         state.loading = false;
         state.error = action.error.message || "Failed to add to cart";
       })
 
-      // Delete Cart Item
-      .addCase(deleteCart.pending, (state) => {
-        state.loading = true;
-      })
+      // ==================== DELETE CART ====================
+      .addCase(deleteCart.pending, (state) => { state.loading = true; })
       .addCase(deleteCart.fulfilled, (state, action) => {
         state.loading = false;
         state.error = null;
-        state.items = action.payload.items || [];
-        state.subtotal = action.payload.subtotal || 0;
-        state.discountAmount = action.payload.discountAmount || 0;
-        state.totalAmount = action.payload.totalAmount || 0;
+        Object.assign(state, action.payload);
       })
       .addCase(deleteCart.rejected, (state, action) => {
         state.loading = false;
         state.error = action.error.message || "Failed to delete item";
       })
 
-      // Update Quantity
-      .addCase(updateCart.pending, (state) => {
-        state.loading = true;
+      // ==================== CLEAR CART ====================
+      .addCase(clearCartAction.pending, (state) => { state.loading = true; })
+      .addCase(clearCartAction.fulfilled, (state) => {
+        state.loading = false;
+        state.error = null;
+        state.items = []
+        state.subtotal = 0,
+        state.discountAmount = 0,
+        state.totalAmount = 0,
+        state.coupon = undefined
       })
+      .addCase(clearCartAction.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.error.message || "Failed to clear cart";
+      })
+
+      // ==================== UPDATE CART ====================
+      .addCase(updateCart.pending, (state) => { state.loading = true; })
       .addCase(updateCart.fulfilled, (state, action) => {
         state.loading = false;
         state.error = null;
-        state.items = action.payload.items || [];
-        state.subtotal = action.payload.subtotal || 0;
-        state.discountAmount = action.payload.discountAmount || 0;
-        state.totalAmount = action.payload.totalAmount || 0;
+        Object.assign(state, action.payload);
       })
       .addCase(updateCart.rejected, (state, action) => {
         state.loading = false;
         state.error = action.error.message || "Failed to update cart";
       })
 
-
-    
-      .addCase(applyCouponAction.pending, (state) => {
-        state.loading = true;
-        state.error = null;
-      })
+      // ==================== ADD COUPON TO CART ====================
+      .addCase(applyCouponAction.pending, (state) => { state.loading = true; state.error = null; })
       .addCase(applyCouponAction.fulfilled, (state, action) => {
         state.loading = false;
         state.error = null;
-
-        state.items = action.payload.items || [];
-        state.subtotal = action.payload.subtotal || 0;
-        state.discountAmount = action.payload.discountAmount || 0;
-        state.totalAmount = action.payload.totalAmount || 0;
-        state.coupon = action.payload.coupon || undefined;
+        Object.assign(state, action.payload);
       })
       .addCase(applyCouponAction.rejected, (state, action) => {
         state.loading = false;
-        console.log(action.payload)
-        state.error = action.payload as string 
+        state.error = action.payload as string;
       })
 
-    // Remove Coupon
-    
-      .addCase(removeCouponAction.pending, (state) => {
-        state.loading = true;
-        state.error = null;
-      })
+      // ==================== REMOVE COUPON FROM CART ====================
+      .addCase(removeCouponAction.pending, (state) => { state.loading = true; state.error = null; })
       .addCase(removeCouponAction.fulfilled, (state, action) => {
         state.loading = false;
         state.error = null;
-
-        state.items = action.payload.items || [];
-        state.subtotal = action.payload.subtotal || 0;
-        state.discountAmount = action.payload.discountAmount || 0;
-        state.totalAmount = action.payload.totalAmount || 0;
-
-        // Remove coupon
+        Object.assign(state, action.payload);
         state.coupon = undefined;
       })
       .addCase(removeCouponAction.rejected, (state, action) => {

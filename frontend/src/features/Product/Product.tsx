@@ -29,7 +29,7 @@ interface ProductState {
     error: string | null;
 }
 
-
+//  GET ALL PRODUCT
 export const allProduct = createAsyncThunk(
     "product/getAllProduct",
     async () => {
@@ -53,17 +53,15 @@ export const productSlice = createSlice({
     reducers: {},
     extraReducers: (builder) => {
         builder
-            // Pending
+    // ==================== GET  PRODUCTS ====================
             .addCase(allProduct.pending, (state) => {
                 state.loading = true;
                 state.error = null;
             })
-            // Fulfilled
             .addCase(allProduct.fulfilled, (state, action) => {
                 state.loading = false;
                 state.products = action.payload;
             })
-            // Rejected
             .addCase(allProduct.rejected, (state, action) => {
                 state.loading = false;
                 state.error = action.error.message || "Failed to fetch products";

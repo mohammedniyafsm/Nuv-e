@@ -21,25 +21,28 @@ interface WishListState {
 }
 
 
-
+// POST USER WISHLIST
 export const WishLists = createAsyncThunk(
     '/wishlist/getWishlist', async () => {
         return await getWishList();
     }
 )
 
+// POST USER WISHLIST
 export const addWishlist = createAsyncThunk(
     '/wishlist/addWishlist', async (productId: string) => {
         return await postWishlist(productId);
     }
 )
 
+// POST USER WISHLIST
 export const removeWishlist = createAsyncThunk(
     '/wishlist/removeWishlist', async (productId: string) => {
         return await deleteWishlist(productId);
     }
 )
 
+// POST USER WISHLIST
 export const WishListMoveCart = createAsyncThunk(
     '/wishlist/moveWishlistTOCart', async (productId: string) => {
         return await moveWishlistTOCart(productId);
@@ -61,6 +64,7 @@ const WishlistSlice = createSlice({
     reducers: {},
     extraReducers: (builder) => {
         builder
+      // ==================== FETCH USER WISHLIST ====================
             .addCase(WishLists.pending, (state) => {
                 state.loading = true
             })
@@ -76,6 +80,7 @@ const WishlistSlice = createSlice({
             })
 
         builder
+       // ==================== ADD  USER WISHLIST ====================
             .addCase(addWishlist.pending, (state) => {
                 state.loading = true;
             })
@@ -89,6 +94,7 @@ const WishlistSlice = createSlice({
             })
 
         builder
+              // ==================== REMOVE USER WISHLIST ====================
             .addCase(removeWishlist.pending, (state) => {
                 state.loading = true;
             })

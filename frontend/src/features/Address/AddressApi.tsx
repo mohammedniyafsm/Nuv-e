@@ -1,5 +1,4 @@
 import axios from "axios";
-
 const BASE_URL = import.meta.env.VITE_BACKEND_URL;
 
 // Get all user addresses
@@ -27,7 +26,6 @@ export const deleteAddress = async ( id : string) => {
 };
 
 //UPDATE ADDRESS 
-
 export const updateAddress = async ( id : string,update :object)=>{
     const response = await axios.put(`${BASE_URL}/api/user/address/${id}`,update,{
         withCredentials : true,
