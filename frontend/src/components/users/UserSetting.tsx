@@ -1,6 +1,7 @@
 import axios from "axios";
 import { useState } from "react";
 import toast from "react-hot-toast";
+import { Link } from "react-router-dom";
 
 function UserSetting() {
   const [password, setPassword] = useState({
@@ -35,9 +36,17 @@ function UserSetting() {
       );
       console.log(response)
       toast.success("Password changed successfully");
-    } catch (error) {
-      console.log(error)
-      toast.error(error?.response?.data?.message || "Something went wrong");
+      setPassword({
+        CurrentPassword: "",
+        NewPassword: "",
+        ConfirmPassword: "",
+      })
+    } catch (err) {
+      if (axios.isAxiosError(err)) {
+        toast.error(err.response?.data?.message || "Something went wrong");
+      } else {
+        toast.error("Something went wrong");
+      }
     }
   };
 
@@ -90,6 +99,9 @@ function UserSetting() {
       >
         Update Password
       </button>
+      <div className="flex justify-center">
+        <Link to="/forgotPassword" className="text-sm underline py-2">Forgot Password</Link >
+      </div>
     </section>
   );
 }
