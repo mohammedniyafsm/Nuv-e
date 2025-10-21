@@ -7,12 +7,14 @@ interface User {
   username: string;
   role: string;
   isVerified: boolean;
+  status: string;
 }
 
 interface AuthState {
   user: User | null;
   loggedIn: boolean;
   loading: boolean;
+  status: string | null;
 }
 
 export const useAuth = () => {
@@ -20,23 +22,28 @@ export const useAuth = () => {
     user: null,
     loggedIn: false,
     loading: true,
+    status: null,
   });
 
   const checkAuth = async () => {
     try {
-      const response = await axios(`${import.meta.env.VITE_BACKEND_URL}/api/logged`, {
-        withCredentials : true,
-      });
+      const { data } = await axios.get(
+        `${import.meta.env.VITE_BACKEND_URL}/api/logged`,
+        { withCredentials: true }
+      );
 
-      
-
-      if (response.data.loggedIn && response.data.user) {
-        setAuth({ user: response.data.user, loggedIn: true, loading: false });
+      if (data.loggedIn && data.user) {
+        setAuth({
+          user: data.user,
+          loggedIn: true,
+          loading: false,
+          status: data.user.status, // ✅ safer
+        });
       } else {
-        setAuth({ user: null, loggedIn: false, loading: false });
+        setAuth({ user: null, loggedIn: false, loading: false, status: null });
       }
     } catch (err) {
-      setAuth({ user: null, loggedIn: false, loading: false });
+      setAuth({ user: null, loggedIn: false, loading: false, status: null });
     }
   };
 
@@ -46,4 +53,3 @@ export const useAuth = () => {
 
   return { ...auth, checkAuth };
 };
-

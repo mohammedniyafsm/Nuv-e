@@ -10,13 +10,14 @@ interface IOrder {
     paymentStatus: string,
     orderStatus: string,
     trackingId?: string,
+    discountAmount: number,
+    subtotal: number,
     totalAmount: number,
     placedAt: Date,
 }
 
 interface IOrderItem {
     productId: Types.ObjectId;
-    name: string;
     quantity: number;
     price: number;
     subtotal: number;
@@ -26,10 +27,6 @@ const OrderItemSchema = new Schema<IOrderItem>({
     productId: {
         type: Schema.Types.ObjectId,
         ref: "Product",
-        required: true,
-    },
-    name: {
-        type: String,
         required: true,
     },
     quantity: {
@@ -78,6 +75,14 @@ const OrderSchema = new Schema<IOrder>({
     trackingId: {
         type: String,
     },
+    discountAmount: {
+        type: Number,
+        default: 0,
+    },
+    subtotal: {
+        type: Number,
+        default: 0,
+    },
     totalAmount: {
         type: Number,
         default: 0,
@@ -97,7 +102,8 @@ OrderSchema.pre('save', function (next){
         item.subtotal = item.quantity * item.price;
         total += item.subtotal;
     });
-    orders.totalAmount = total;
+    orders.subtotal = total;
+    orders.totalAmount = this.subtotal-this.discountAmount
     next();
 })
 

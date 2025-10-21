@@ -4,8 +4,8 @@ dotenv.config();
 import { connectDB } from "./config/db";
 import userRoute from "./routes/user";
 import adminRoute from "./routes/admin";
-import cors  from "cors"
-import cookieParser from "cookie-parser"; 
+import cors from "cors"
+import cookieParser from "cookie-parser";
 
 const app = express();
 connectDB();
@@ -15,7 +15,6 @@ app.use(cookieParser());
 
 const FRONTEND_URL = process.env.FRONTEND_URL;
 
-
 const corsOption = {
     origin: FRONTEND_URL,
     methods: "GET,POST,PUT,DELETE,PATCH,HEAD",
@@ -23,10 +22,8 @@ const corsOption = {
 };
 
 app.use(cors(corsOption));
-
-
-app.use('/api', userRoute);
-app.use('/api', adminRoute);
+app.use('/api', userRoute); // user Route
+app.use('/api', adminRoute); //admin Route
 
 
 app.use('/', (req: Request, res: Response) => {

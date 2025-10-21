@@ -5,105 +5,106 @@ function Philosophy() {
   return (
     <>
 
-      <div className='bg-[#F2F2F2] w-screen h-screen'>
+      <div className='bg-[#F2F2F2] w-screen min-h-screen flex flex-col'>
         <Navbar />
-        <div className="pt-30 px-12">
-          <div className="">
-            <h1 className='text-8xl text-[#2E2E2E]'>
-              <span className='font-ITCGaramondStd-BkIta text-[110px]'>Be </span>
+        <div className="relative flex-grow px-4 sm:px-8 md:px-12 lg:px-16">
+          <div className="pt-8 sm:pt-16 md:pt-24 lg:pt-30">
+            <h1 className='text-4xl mt-10 sm:mt-0 sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl text-[#2E2E2E]'>
+              <span className='font-ITCGaramondStd-BkIta text-[1.2em]'>Be </span>
               <span className='font-neogroteskessalt-boldit'>Eternal</span>
             </h1>
           </div>
           
-          <div className="absolute top-15 left-[380px] ">
-            <img  className='h-[700px] ' src="./public/images/mask.png" alt="" />
+          <div className="absolute inset-0 flex justify-center ml-8 sm:ml-0 items-center md:left-[20%] lg:left-[180px] md:top-0 lg:top-15">
+            <img className='h-auto max-h-[80vh] md:h-[500px] lg:h-[700px] w-auto' src="./public/images/mask.png" alt="Mask" />
           </div>
 
-          <div className="absolute bottom-4 right-14">
-            <h1 className='text-8xl text-[#2E2E2E]'>
-              <span className='font-ITCGaramondStd-BkIta text-[110px]'>Be </span>
+          <div className="absolute bottom-18 sm:bottom-4 right-4 sm:right-8 md:right-14 text-right">
+            <h1 className='text-4xl  sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl text-[#2E2E2E]'>
+              <span className='font-ITCGaramondStd-BkIta text-[1.2em]'>Be </span>
               <span className='font-neogroteskessalt-boldit'>Nuvée</span>
             </h1>
           </div>
-          <div className="absolute bottom-14">
-            <p className='text-[#9C8080] font-neogroteskessalt-light text-xs'>Fragrance is more than scent — it is essence. <br />
+          <div className="absolute bottom-4 left-4 sm:left-8 md:bottom-14 md:left-0 lg:left-6">
+            <p className='text-[#9C8080] font-neogroteskessalt-light text-[8px] sm:text-xs md:text-xs max-w-xs md:max-w-md'>
+              Fragrance is more than scent — it is essence. <br />
               At Nuvée, we craft perfumes that awaken <br />
-              confidence, beauty, and timeless allure.</p>
+              confidence, beauty, and timeless allure.
+            </p>
           </div>
         </div>
       </div>
 
-      <div className="bg-[#F2F2F2] w-screen h-screen flex pt-42  ">
+      <div className="bg-[#F2F2F2] w-screen min-h-screen flex flex-col md:flex-row items-center justify-between px-4 sm:px-8 md:px-12 lg:px-20 pt-8 md:pt-24 lg:pt-42">
 
-        <div className="flex justify-center px-20">
-          <div className="flex flex-col pl-22">
-
-            <div className="">
-              <h1 className='font-neogrotesk-regular text-center text-4xl text-[#2E2E2E]'>We craft perfumes <br />
-                that truly resonate—no <br />
-                <span className='font-ITCGaramondStd-BkCondIta'>compromises !</span>
-              </h1>
-            </div>
-            <div className="flex flex-col items-center mt-10">
-              <img src="./public/images/sp2.jpg" className='h-72 w-52 pb-5 rounded-4xl' alt="" />
-              <h1 className='font-neogroteskessalt-light text-xs text-[#9C8080] w-[360px] text-center'> Drawing on over 30 years of expertise in natural essences and
-                the art of fragrance, we blend authentic ingredients with modern
-                mastery to  create scents that are pure, memorable,
-                and responsibly made. </h1>
-            </div>
-          </div>
+        <div className="flex flex-col items-center md:items-start text-center md:text-left max-w-md lg:max-w-lg">
+          <h1 className='font-neogrotesk-regular text-center text-2xl sm:text-3xl md:text-4xl text-[#2E2E2E] mb-6 md:mb-10'>
+            We craft perfumes <br />
+            that truly resonate—no <br />
+            <span className='font-ITCGaramondStd-BkCondIta'>compromises !</span>
+          </h1>
+          <img src="./public/images/sp2.jpg" className='h-48  sm:h-60 md:h-72 w-auto rounded-3xl md:rounded-4xl mb-4 md:mb-5 lg:ml-16' alt="Perfume detail" />
+          <p className='font-neogroteskessalt-light text-xs text-center sm:text-xs text-[#9C8080] max-w-[80%] md:max-w-[310px]'>
+            Drawing on over 30 years of expertise in natural essences and
+            the art of fragrance, we blend authentic ingredients with modern
+            mastery to create scents that are pure, memorable,
+            and responsibly made.
+          </p>
         </div>
 
-
-        <div className="absolute right-0 ">
-          <img src="./public/images/philo2.png " className='h-[564px]  ' alt="" />
+        <div className="hidden md:block relative md:w-1/2 lg:right-0 lg:w-auto">
+          <img src="./public/images/philo2.png" className='h-auto max-h-[80vh] md:h-[400px] lg:h-[564px] w-auto' alt="Philosophy image" />
         </div>
       </div>
 
-      <div className="bg-[#F2F2F2] h-screen w-screen">
-        <div className="text-5xl text-[#2E2E2E] pt-40 pl-22">
-          <h1 className='font-neogroteskessalt-light'>Pure Ingredients, <br /> <span className='font-ITCGaramondStd-BkIta '>Radical</span>  Transparency</h1>
-        </div>
+      <div className="bg-[#F2F2F2] w-screen min-h-screen flex flex-col justify-center px-4 sm:px-8 md:px-12 lg:px-16 pt-16 md:pt-32 lg:pt-40">
+        <h1 className='text-3xl sm:text-4xl md:text-5xl text-[#2E2E2E] font-neogroteskessalt-light mb-8 md:mb-96 lg:pl-22'>
+          Pure Ingredients, <br /> <span className='font-ITCGaramondStd-BkIta'>Radical</span> Transparency
+        </h1>
 
-        <div className="flex gap-4 text-[#9C8080] w-[667px] text-sm absolute right-12 pt-80">
-          <h1>We craft our perfumes with only the finest,
+        <div className="flex flex-col md:flex-row gap-4 md:gap-8 text-[#9C8080] text-xs md:text-base max-w-full md:max-w-[667px] lg:absolute lg:right-12 lg:pt-80">
+          <p className='flex-1'>
+            We craft our perfumes with only the finest,
             proven essences — sourced responsibly,
             blended in harmony, and always free from
-            synthetic shortcuts and harmfuladditives.
-          </h1>
-          <h1>With nothing to hide and no black boxes, we 
+            synthetic shortcuts and harmful additives.
+          </p>
+          <p className='flex-1'>
+            With nothing to hide and no black boxes, we 
             believe you deserve to know exactly what 
             goes into every scent. From the first note to 
-            the lasting trail, every drop is crafted .</h1>
+            the lasting trail, every drop is crafted.
+          </p>
         </div>
-
       </div>
 
-      <div className="w-screen h-screen">
-        <img src="./public/images/1k.jpg" className='h-screen w-screen' alt="" />
+      <div className="w-screen min-h-[50vh] md:h-screen">
+        <img src="./public/images/1k.jpg" className='h-full w-full object-cover' alt="Full screen image" />
       </div>
 
-      <div className="bg-[#F2F2F2] h-screen w-screen">
-        <div className="text-5xl text-[#2E2E2E] pt-40 pl-22 flex justify-end px-10">
-          <h1 className='font-neogroteskessalt-light text-end'>Thoughtful Packaging, <br /> <span className='font-ITCGaramondStd-BkIta '>Sustainably </span>  Made.</h1>
-        </div>
+      <div className="bg-[#F2F2F2] w-screen min-h-screen flex flex-col justify-center px-4 sm:px-8 md:px-12 lg:px-16 pt-16 md:pt-32 lg:pt-40">
+        <h1 className='text-3xl sm:text-4xl md:text-5xl text-[#2E2E2E] font-neogroteskessalt-light mb-8 md:mb-12 text-left md:text-right lg:pr-10'>
+          Thoughtful Packaging, <br /> <span className='font-ITCGaramondStd-BkIta'>Sustainably</span> Made.
+        </h1>
 
-        <div className="flex gap-4 text-[#9C8080] w-[667px] text-sm justify-start px-10  pt-80">
-          <h1>We craft our perfumes with only the finest,
+        <div className="flex flex-col md:flex-row gap-4 md:gap-8 text-[#9C8080] text-xs md:text-base max-w-full md:max-w-[667px] lg:mb-10 lg:pt-80">
+          <p className='flex-1'>
+            We craft our perfumes with only the finest,
             proven essences — sourced responsibly,
             blended in harmony, and always free from
-            synthetic shortcuts and harmfuladditives.
-          </h1>
-          <h1>With nothing to hide and no black boxes, we 
+            synthetic shortcuts and harmful additives.
+          </p>
+          <p className='flex-1'>
+            With nothing to hide and no black boxes, we 
             believe you deserve to know exactly what 
             goes into every scent. From the first note to 
-            the lasting trail, every drop is crafted .</h1>
+            the lasting trail, every drop is crafted.
+          </p>
         </div>
-
       </div>
 
-      <div className="bg-white w-full h-[460px]">
-        <div className="flex gap-28 px-20 py-10">
+      <div className="bg-white w-full min-h-[300px] md:h-auto py-8 md:py-10">
+        <div className="flex flex-col md:flex-row gap-8 md:gap-28 px-4 sm:px-8 md:px-20">
           {/* Explore */}
           <div className="flex flex-col gap-2 text-[#3b3b3b] font-neogrotesk-ultralight text-sm">
             <h1 className="font-neogroteskessalt-light text-xs text-[#a0a0a0]">EXPLORE</h1>
@@ -130,11 +131,11 @@ function Philosophy() {
         </div>
 
         {/* Footer Bottom */}
-        <div className="flex justify-between items-end">
+        <div className="flex flex-col md:flex-row justify-between items-start md:items-end mt-8 md:mt-0 px-4 sm:px-8 md:px-20">
           {/* Logo & Tagline */}
-          <div className="px-20 py-12">
-            <img className="h-14 w-28" src="./public/images/logo.png" alt="Nuvee Logo" />
-            <p className="text-[#a0a0a0] text-[10px]">
+          <div className="py-6 md:py-12">
+            <img className="h-10 md:h-14 w-auto" src="./public/images/logo.png" alt="Nuvee Logo" />
+            <p className="text-[#a0a0a0] text-[10px] mt-2">
               Clean, Conscious, Clinical Perfume! <br />
               Honest products that truly work
             </p>
@@ -142,7 +143,7 @@ function Philosophy() {
           </div>
 
           {/* Developer Credit */}
-          <div className="px-16 py-8 flex items-center gap-2">
+          <div className="py-6 md:py-8 flex items-center gap-2">
             <h1 className="text-[#a0a0a0] text-sm">
               designed and developed by{' '}
               <a
@@ -154,7 +155,9 @@ function Philosophy() {
                 @n1yaf_
               </a>
             </h1>
-            <a href="https://github.com/mohammedniyafsm"  target="_blank" > <Git  /></a>
+            <a href="https://github.com/mohammedniyafsm" target="_blank" rel="noopener noreferrer">
+              <Git />
+            </a>
           </div>
         </div>
       </div>

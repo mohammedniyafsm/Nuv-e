@@ -5,7 +5,7 @@ interface MailOptions {
     subject: string;
     text: string;
 }
-
+//NODEMAILER ACCOUNT AUTH
 export const transporter = nodemailer.createTransport({
     service: "gmail",
     auth: {
@@ -14,6 +14,8 @@ export const transporter = nodemailer.createTransport({
     },
 });
 
+
+// SEND OTP TO USER EMAIL TO VERIFY USER
 export const sendOtpEmail = async (to: string, otp: number): Promise<void> => {
     const mailOptions: MailOptions = {
         to,
@@ -33,6 +35,8 @@ export const sendOtpEmail = async (to: string, otp: number): Promise<void> => {
     }
 };
 
+
+// SEND OTP TO USER FORGOT PASSWORD RECOVERY
 export const ForgotPasswordOtpEmail = async (to: string, otp: number): Promise<void> => {
     const mailOptions: MailOptions = {
         to,

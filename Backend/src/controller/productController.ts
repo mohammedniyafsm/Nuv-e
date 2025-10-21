@@ -2,6 +2,7 @@ import { Request, Response } from "express";
 import { Product } from "../models/Product";
 
 
+// ADD PRODUCT
 export const addProduct = async (req: Request, res: Response): Promise<void> => {
     try {
         const { name, category, size, price, discount, stock, description, images } = req.body;
@@ -16,7 +17,7 @@ export const addProduct = async (req: Request, res: Response): Promise<void> => 
     }
 }
 
-
+// GET ALL PRODUCTS
 export const getAdminProducts = async (req: Request, res: Response): Promise<void> => {
     try {
         const products = await Product.find();
@@ -28,7 +29,7 @@ export const getAdminProducts = async (req: Request, res: Response): Promise<voi
     }
 }
 
-
+//UPDATE PRODUCT DETAILS
 export const updateProduct = async (req: Request, res: Response): Promise<void> => {
     try {
         const id = req.params.id;
@@ -45,6 +46,7 @@ export const updateProduct = async (req: Request, res: Response): Promise<void> 
     }
 }
 
+//DELETE PRODUCT
 export const deleteProduct = async (req: Request, res: Response): Promise<void> => {
     try {
         const id = req.params.id;
@@ -57,7 +59,7 @@ export const deleteProduct = async (req: Request, res: Response): Promise<void> 
     }
 }
 
-
+//GET PRODUCT BY ID
 export const getProductByIdAdmin = async (req: Request, res: Response): Promise<void> => {
     try {
         const id = req.params.id;
@@ -75,7 +77,7 @@ export const getProductByIdAdmin = async (req: Request, res: Response): Promise<
     }
 }
 
-//Public get all product
+// GET ALL PRODUCTS (PUBLIC)
 export const getAllProducts = async (req: Request, res: Response): Promise<void> => {
     try {
         const products = await Product.find();
@@ -86,6 +88,7 @@ export const getAllProducts = async (req: Request, res: Response): Promise<void>
     }
 }
 
+//GET PRODUCT BY ID (PUBLIC)
 export const getProductById = async (req: Request, res: Response): Promise<void> => {
     try {
         const id = req.params.id;
@@ -101,7 +104,7 @@ export const getProductById = async (req: Request, res: Response): Promise<void>
     }
 }
 
-//user/products/search?query=keyword
+// GET PRODUCT BY QUERY SEARCH    --user/products/search?query=keyword
 export const searchProducts = async (req: Request, res: Response): Promise<void> => {
     try {
         const searchQuery = req.query.search as string;
@@ -120,7 +123,7 @@ export const searchProducts = async (req: Request, res: Response): Promise<void>
     }
 }
 
-///user/products/filter?category=perfume&priceMin=1000&priceMax=5000
+/// FILTER THE PRODUCTS ------ user/products/filter?category=perfume&priceMin=1000&priceMax=5000
 export const filterProducts = async (req: Request, res: Response): Promise<void> => {
     try {
         const { category, priceMin, priceMax } = req.query;
@@ -143,7 +146,7 @@ export const filterProducts = async (req: Request, res: Response): Promise<void>
     }
 }
 
-///user/products?page=1&limit=10&sort=price
+///GET PRODUCT IN PAGINATION ---- user/products?page=1&limit=10&sort=price
 export const getPaginatedProducts = async (req: Request, res: Response): Promise<void> => {
     try {
         const { page, limit, sort } = req.query;

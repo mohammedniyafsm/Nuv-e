@@ -53,11 +53,13 @@ function Navbar() {
     >
       <div className="flex justify-between items-center">
         <div>
+          <Link to="/">
           <img
             className="w-12 h-6 md:w-24 md:h-12"
             src="/images/logo.png"
             alt="Logo"
           />
+          </Link>
         </div>
 
         <div className="hidden sm:block">

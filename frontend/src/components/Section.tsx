@@ -22,9 +22,9 @@ function Section() {
   ]);
 
   return (
-    <div className="md:flex w-full min-h-screen bg-white scroll-smooth overflow-x-hidden">
+    <div className="md:flex  w-full min-h-screen bg-white scroll-smooth ">
       {/* ---------- Sidebar Filters ---------- */}
-      <aside className="hidden md:w-[350px] md:xl:mt-32 xl:block flex-shrink-0">
+      <aside className="xl:sticky xl:top-0 xl:left-0 hidden md:w-[350px] md:xl:mt-32 xl:block flex-shrink-0">
         <div className="sticky md:top-10 md:left-0 md:flex md:flex-col md:px-16 md:py-20 md:mt-20">
           <h1 className="md:text-sm text-[#b2a0a0] font-neogrotesk-sc-bold">
             FILTERS

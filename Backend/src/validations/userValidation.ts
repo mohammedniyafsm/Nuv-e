@@ -1,5 +1,6 @@
 import { parseAsync, z } from "zod";
 
+//user Signup Validation Using Zod
 export const signupSchema = z.object({
     username: z
         .string()
@@ -20,6 +21,8 @@ export const signupSchema = z.object({
     status: z.enum(['active', 'inactive', 'banned']).default('active'),
 })
 
+
+//user Signup Validation Using Zod
 export const loginSchema = z.object({
     email: z
         .string()

@@ -102,7 +102,7 @@ function Login() {
                             onChange={handleChange}
                             className="text-xs md:text-base h-10 w-72 md:px-10 px-4 md:h-16 md:w-[550px]"
                         />
-                        <h1 className='text-[#3B3B3B] font-neogroteskessalt-light underline'>Forgot Password</h1>
+                        <h1 onClick={()=>navigate('/forgotpassword')} className='text-[#3B3B3B] cursor-pointer font-neogroteskessalt-light underline'>Forgot Password</h1>
                         <Button
                             type="submit"
                             name="LOGIN"

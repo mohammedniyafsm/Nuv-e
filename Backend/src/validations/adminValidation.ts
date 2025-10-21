@@ -1,5 +1,6 @@
 import { z } from "zod";
 
+//admin Signup Validation Using Zod
 export const adminSignupSchema = z.object({
     username: z
         .string()
@@ -16,6 +17,8 @@ export const adminSignupSchema = z.object({
     role: z.literal("admin").default("admin"),
 });
 
+
+//admin Login Validation Using Zod
 export const adminLoginSchema = z.object({
     email: z
         .string()

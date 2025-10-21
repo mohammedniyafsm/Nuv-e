@@ -2,7 +2,7 @@ import { Request, Response } from "express";
 import Address from "../models/Address";
 
 
-
+// GET ADDRESS (USER)
 export const getAddresses = async (req: Request, res: Response): Promise<void> => {
     try {
         const userId = req.user.id;
@@ -19,6 +19,7 @@ export const getAddresses = async (req: Request, res: Response): Promise<void> =
     }
 }
 
+// ADD ADDRESS (USER)
 export const addAddress = async (req: Request, res: Response): Promise<void> => {
     try {
         const userId = req.user.id;
@@ -40,7 +41,7 @@ export const addAddress = async (req: Request, res: Response): Promise<void> => 
     }
 };
 
-
+// UPDATE ADDRESS (USER)
 export const updateAddress = async (req: Request, res: Response): Promise<void> => {
     try {
         const id = req.params.id;  // address _id
@@ -76,7 +77,7 @@ export const updateAddress = async (req: Request, res: Response): Promise<void> 
     }
 };
 
-
+// DELTE ADRESS (USER)
 export const deleteAddress = async (req: Request, res: Response): Promise<void> => {
     try {
         const id = req.params.id; //address Id

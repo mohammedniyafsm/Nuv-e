@@ -2,6 +2,7 @@ import { Request, Response } from "express";
 import { Cart } from "../models/Cart";
 
 
+// ADD TO CART (USERS)
 export const addItemToCart = async (req: Request, res: Response): Promise<void> => {
     try {
         const userId = req.user.id;
@@ -39,6 +40,7 @@ export const addItemToCart = async (req: Request, res: Response): Promise<void> 
     }
 }
 
+// UPDATE THE CART (USERS)
 export const updateCartItem = async (req: Request, res: Response): Promise<void> => {
     try {
         const userId = req.user.id;
@@ -66,6 +68,7 @@ export const updateCartItem = async (req: Request, res: Response): Promise<void>
     }
 }
 
+// REMOVE THE ITEM FROM CART (USERS)
 export const removeCartItem = async (req: Request, res: Response): Promise<void> => {
     try {
         const id = req.params.itemId;
@@ -85,6 +88,7 @@ export const removeCartItem = async (req: Request, res: Response): Promise<void>
     }
 }
 
+// CLEAR CART (DELETE EVERYTHING FROM CART) -- (USERS)
 export const clearCart = async (req: Request, res: Response): Promise<void> => {
     try {
         const userId = req.user.id;
@@ -97,6 +101,7 @@ export const clearCart = async (req: Request, res: Response): Promise<void> => {
 
 }
 
+// GET ALL CART ITEMS (USERS)
 export const getCart = async (req: Request, res: Response): Promise<void> => {
     try {
         const userId = req.user.id;

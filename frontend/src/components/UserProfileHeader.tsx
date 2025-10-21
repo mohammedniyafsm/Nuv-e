@@ -22,7 +22,7 @@ function UserProfileHeader() {
         <div className="">
           <img className='h-20 w-20 rounded-full' src="./public/images/1k.jpg" alt="" />
         </div>
-        <div className="font-neogrotesk-ultralight">
+        <div className="">
           <h1 >{username}</h1>
           <h1 className='text-[#8a7a7aed]'>{email}</h1>
           <h1 className='text-[#8a7a7aed]'>Member since March 2024</h1>

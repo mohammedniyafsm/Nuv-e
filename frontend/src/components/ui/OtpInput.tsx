@@ -1,4 +1,4 @@
-import React, { useRef } from 'react';
+import React, { useRef } from "react";
 
 interface OtpInputProps {
   length: number;
@@ -10,25 +10,33 @@ function OtpInput({ length, value, setValue }: OtpInputProps) {
   const inputsRef = useRef<HTMLInputElement[]>([]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>, idx: number) => {
-    const val = e.target.value.replace(/[^0-9]/g, ''); // only numbers
-    if (!val) return;
-
+    const val = e.target.value.replace(/[^0-9]/g, ""); // only digits
     const newValue = [...value];
-    newValue[idx] = val[0];
+    newValue[idx] = val ? val[0] : "";
     setValue(newValue);
 
-    // move to next input
-    if (idx < length - 1) {
+    if (val && idx < length - 1) {
       inputsRef.current[idx + 1]?.focus();
     }
   };
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>, idx: number) => {
-    if (e.key === 'Backspace' && !value[idx] && idx > 0) {
+    if (e.key === "Backspace") {
+      e.preventDefault();
       const newValue = [...value];
-      newValue[idx - 1] = '';
-      setValue(newValue);
+
+      if (value[idx]) {
+        // delete current value
+        newValue[idx] = "";
+        setValue(newValue);
+      } else if (idx > 0) {
+        // move to previous
+        inputsRef.current[idx - 1]?.focus();
+      }
+    } else if (e.key === "ArrowLeft" && idx > 0) {
       inputsRef.current[idx - 1]?.focus();
+    } else if (e.key === "ArrowRight" && idx < length - 1) {
+      inputsRef.current[idx + 1]?.focus();
     }
   };
 
@@ -39,10 +47,12 @@ function OtpInput({ length, value, setValue }: OtpInputProps) {
           key={idx}
           type="text"
           maxLength={1}
-          value={value[idx] || ''}
+          value={value[idx] || ""}
           onChange={(e) => handleChange(e, idx)}
           onKeyDown={(e) => handleKeyDown(e, idx)}
-          ref={(el) => (inputsRef.current[idx] = el!)}
+          ref={(el) => {
+            if (el) inputsRef.current[idx] = el;
+          }}
           className="h-16 w-16 border rounded-2xl text-center font-neogrotesk-sc-bold text-2xl focus:outline-none focus:ring-2 focus:ring-green-500"
         />
       ))}

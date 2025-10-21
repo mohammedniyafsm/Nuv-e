@@ -1,10 +1,13 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
+import { useNavigate } from "react-router-dom";
 
 interface IUser {
   _id: string;
   username: string;
+  // add email if you have it on the backend
+  email?: string;
 }
 
 interface IOrder {
@@ -21,17 +24,20 @@ function OrderAdmin() {
   const [orders, setOrders] = useState<IOrder[]>([]);
   const [selectedOrders, setSelectedOrders] = useState<string[]>([]);
   const [bulkStatus, setBulkStatus] = useState<string>("");
-  const [search,setSearch] = useState("");
+  const [search, setSearch] = useState("");
+  const navigate = useNavigate();
 
-  // Fetch orders from backend
+
+  // ────── FETCH ORDERS ──────
   const fetchOrders = async () => {
     try {
-      const response = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/api/admin/orders`, {
-        withCredentials: true,
-      });
-      setOrders(response.data.orders);
-    } catch (error) {
-      console.error(error);
+      const { data } = await axios.get(
+        `${import.meta.env.VITE_BACKEND_URL}/api/admin/orders`,
+        { withCredentials: true }
+      );
+      setOrders(data.orders);
+    } catch (err) {
+      console.error(err);
       toast.error("Failed to fetch orders.");
     }
   };
@@ -40,7 +46,7 @@ function OrderAdmin() {
     fetchOrders();
   }, []);
 
-  // Update single order status
+  // ────── SINGLE UPDATE ──────
   const handleUpdateStatus = async (orderId: string, newStatus: string) => {
     try {
       await axios.put(
@@ -49,196 +55,247 @@ function OrderAdmin() {
         { withCredentials: true }
       );
       setOrders((prev) =>
-        prev.map((order) =>
-          order._id === orderId ? { ...order, orderStatus: newStatus } : order
+        prev.map((o) =>
+          o._id === orderId ? { ...o, orderStatus: newStatus } : o
         )
       );
-      toast.success("Order status updated!");
-    } catch (error) {
-      console.error(error);
-      toast.error("Failed to update order status.");
+      toast.success("Status updated");
+    } catch (err) {
+      console.error(err);
+      toast.error("Failed to update");
     }
   };
 
-  // Bulk update
+  // ────── BULK UPDATE ──────
   const handleBulkUpdate = async () => {
-    if (selectedOrders.length === 0 || !bulkStatus) {
-      toast.error("Select orders and status first!");
+    if (!selectedOrders.length || !bulkStatus) {
+      toast.error("Select orders & status first");
       return;
     }
     try {
-      const response = await axios.put(
+      const { data } = await axios.put(
         `${import.meta.env.VITE_BACKEND_URL}/api/admin/orders/bulk-update`,
         { orderIds: selectedOrders, status: bulkStatus },
         { withCredentials: true }
       );
-      toast.success(`${response.data.modifiedCount} orders updated!`);
-      // Update locally
+      toast.success(`${data.modifiedCount} orders updated`);
       setOrders((prev) =>
-        prev.map((order) =>
-          selectedOrders.includes(order._id)
-            ? { ...order, orderStatus: bulkStatus }
-            : order
+        prev.map((o) =>
+          selectedOrders.includes(o._id)
+            ? { ...o, orderStatus: bulkStatus }
+            : o
         )
       );
       setSelectedOrders([]);
       setBulkStatus("");
-    } catch (error) {
-      console.error(error);
-      toast.error("Failed to bulk update orders.");
+    } catch (err) {
+      console.error(err);
+      toast.error("Bulk update failed");
     }
   };
 
-  // Format date
-  const formatDate = (dateStr: string) =>
-    new Date(dateStr).toLocaleString("en-GB", {
+  // ────── HELPERS ──────
+  const formatDate = (d: string) =>
+    new Date(d).toLocaleString("en-GB", {
       day: "2-digit",
       month: "short",
       year: "numeric",
     });
 
-  // Map order status to button color
-  const getStatusColor = (status: string) => {
-    switch (status) {
-      case "Pending":
-        return "bg-yellow-200 text-yellow-800";
-      case "Processing":
-        return "bg-blue-200 text-blue-800";
-      case "Shipped":
-        return "bg-purple-200 text-purple-800";
-      case "Out for Delivery":
-        return "bg-orange-200 text-orange-800";
-      case "Delivered":
-        return "bg-green-200 text-green-800";
-      case "Cancelled":
-        return "bg-red-200 text-red-800";
-      case "Returned":
-        return "bg-gray-200 text-gray-800";
-      default:
-        return "bg-gray-200 text-gray-800";
-    }
+  const getStatusColor = (s: string) => {
+    const map: Record<string, string> = {
+      Pending: "bg-yellow-200 text-yellow-800",
+      Processing: "bg-blue-200 text-blue-800",
+      Shipped: "bg-purple-200 text-purple-800",
+      "Out for Delivery": "bg-orange-200 text-orange-800",
+      Delivered: "bg-green-200 text-green-800",
+      Cancelled: "bg-red-200 text-red-800",
+      Returned: "bg-gray-200 text-gray-800",
+    };
+    return map[s] || "bg-gray-200 text-gray-800";
   };
 
-  // Toggle checkbox selection
-  const toggleSelect = (orderId: string) => {
+  const toggleSelect = (id: string) => {
     setSelectedOrders((prev) =>
-      prev.includes(orderId)
-        ? prev.filter((id) => id !== orderId)
-        : [...prev, orderId]
+      prev.includes(id) ? prev.filter((i) => i !== id) : [...prev, id]
     );
   };
 
-  const filterOrder = orders.filter((f)=>
-    f.userId.username.toLowerCase().includes(search.toLowerCase()) ||
-    f._id.toLowerCase().includes(search.toLowerCase()) ||
-    f.placedAt.toLowerCase().includes(search.toLowerCase())
-  )
+  // ────── FILTER ──────
+  const filtered = orders.filter(
+    (o) =>
+      o.userId.username.toLowerCase().includes(search.toLowerCase()) ||
+      o._id.toLowerCase().includes(search.toLowerCase()) ||
+      o.placedAt.toLowerCase().includes(search.toLowerCase())
+  );
 
   return (
-    <section className="px-8 py-1">
-      <div className="mt-10">
-        <h1 className="text-xl font-neogrotesk-bold">Orders</h1>
-        <h1 className="text-[#6b6b6b] font-neogrotesk-ultralight pt-2">
+    <section className="px-4 py-6 md:px-8">
+      {/* ── PAGE TITLE ── */}
+      <header className="mb-8">
+        <h1 className="text-2xl font-neogrotesk-bold">Orders</h1>
+        <p className="text-[#6b6b6b] font-neogrotesk-ultralight">
           View and manage all customer orders
-        </h1>
-        <div className="w-full mt-6 flex gap-4">
-          <input
-            className="bg-white px-6 h-10 w-full rounded-xl"
-            type="text"
-            placeholder="Search Orders..."
-            onChange={(e)=>setSearch(e.target.value)}
-          />
-          <select
-            className="border border-gray-300 px-2 py-1 bg-white rounded-md"
-            value={bulkStatus}
-            onChange={(e) => setBulkStatus(e.target.value)}
-          >
-            <option value="">Bulk Update Status</option>
-            <option value="Pending">Pending</option>
-            <option value="Processing">Processing</option>
-            <option value="Shipped">Shipped</option>
-            <option value="Out for Delivery">Out for Delivery</option>
-            <option value="Delivered">Delivered</option>
-            <option value="Cancelled">Cancelled</option>
-            <option value="Returned">Returned</option>
-          </select>
-          <button
-            className="bg-black text-white  px-4 rounded-md"
-            onClick={handleBulkUpdate}
-          >
-            <h1 className="">Update Selected</h1>
-          </button>
-        </div>
+        </p>
+      </header>
+
+      {/* ── SEARCH + BULK ── */}
+      <div className="flex flex-col gap-4 mb-6 md:flex-row md:items-center">
+        <input
+          type="text"
+          placeholder="Search orders..."
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+          className="w-full xl:w-[75%] rounded-xl bg-white px-4 py-2 shadow-sm focus:outline-none focus:ring-2 focus:ring-black"
+        />
+        <select
+          value={bulkStatus}
+          onChange={(e) => setBulkStatus(e.target.value)}
+          className="rounded-md border border-gray-300 bg-white px-3 py-2 text-sm"
+        >
+          <option value="">Bulk Update Status</option>
+          {[
+            "Pending",
+            "Processing",
+            "Shipped",
+            "Out for Delivery",
+            "Delivered",
+            "Cancelled",
+            "Returned",
+          ].map((s) => (
+            <option key={s} value={s}>
+              {s}
+            </option>
+          ))}
+        </select>
+        <button
+          onClick={handleBulkUpdate}
+          className="rounded-md bg-black px-4 py-2 text-white transition hover:bg-gray-800"
+        >
+          Update Selected
+        </button>
       </div>
 
-      <section className="mt-6 pb-10">
-        <div className="bg-white rounded-2xl border border-[#dbdada] px-10">
-          <div className="py-6">
-            <h1 className="font-neogrotesk-regular text-[#6d6363]">
-              Recent Orders
-            </h1>
+      {/* ── TABLE ── */}
+      <div className="overflow-x-auto rounded-2xl border border-[#dbdada] bg-white">
+        {/* Sticky Header */}
+        <div className="sticky top-0 grid grid-cols-[min-content_140px_160px_110px_110px_90px_130px_110px_130px] gap-2 bg-white px-4 py-3 text-sm font-neogrotesk-semibold text-[#6d6363] border-b border-[#dbdada]">
+          <div className="flex items-center">
+            <input
+              type="checkbox"
+              onChange={(e) => {
+                if (e.target.checked) {
+                  setSelectedOrders(filtered.map((o) => o._id));
+                } else {
+                  setSelectedOrders([]);
+                }
+              }}
+              checked={
+                filtered.length > 0 &&
+                filtered.every((o) => selectedOrders.includes(o._id))
+              }
+              className="rounded"
+            />
           </div>
+          <div>Order ID</div>
+          <div>Customer</div>
+          <div>Payment</div>
+          <div>Date</div>
+          <div>Total</div>
+          <div>Order Status</div>
+          <div>Payment Status</div>
+          <div>Actions</div>
+        </div>
 
-          <div className="flex gap-[50px] font-neogrotesk-regular border-b pb-3 pl-2 border-[#dbdada] items-center">
-            <h1>Select</h1>
-            <h1 className="ml-4">Order ID</h1>
-            <h1 className="ml-22">Customer</h1>
-            <h1 className="ml-10">Payment</h1>
-            <h1 className="ml-6">Date</h1>
-            <h1 className="ml-4">Total</h1>
-            <h1 className="ml-10">Order Status</h1>
-            <h1 className="ml-10">Payment Status</h1>
-            <h1 className="ml-8">Actions</h1>
-          </div>
-
-          {filterOrder.map((item) => (
-            <div
-              key={item._id}
-              className="flex items-center border-b pb-3 text-sm border-[#dbdada] pt-2"
-            >
+        {/* Rows */}
+        {filtered.map((order) => (
+          <div 
+            key={order._id}
+            className="grid grid-cols-[min-content_140px_160px_110px_110px_90px_130px_110px_130px_130px] gap-2 border-b border-[#dbdada] px-4 py-3 text-sm"
+          >
+            {/* Checkbox */}
+            <div className="flex items-center">
               <input
                 type="checkbox"
-                checked={selectedOrders.includes(item._id)}
-                onChange={() => toggleSelect(item._id)}
-                className="ml-2"
+                checked={selectedOrders.includes(order._id)}
+                onChange={() => toggleSelect(order._id)}
+                className="rounded"
               />
-              <h1 className="ml-12">{item._id}</h1>
-              <h1 className="ml-12">{item.userId.username}</h1>
-              <h1 className="ml-12">{item.paymentMethod}</h1>
-              <h1 className="ml-20">{formatDate(item.placedAt)}</h1>
-              <h1 className="ml-14">{item.totalAmount}</h1>
+            </div>
 
-              <button
-                className={`h-6 w-28 rounded-md ml-22 text-xs font-medium ${getStatusColor(
-                  item.orderStatus
+            {/* Order ID */}
+            <div className="truncate font-mono text-xs">{order._id}</div>
+
+            {/* Customer – name + email */}
+            <div className="flex flex-col">
+              <span className="font-medium">{order.userId.username}</span>
+              {order.userId.email && (
+                <span className="text-xs text-[#9c9c9c]">
+                  {order.userId.email}
+                </span>
+              )}
+            </div>
+
+            {/* Payment Method */}
+            <div className="capitalize">{order.paymentMethod}</div>
+
+            {/* Date */}
+            <div className="text-xs">{formatDate(order.placedAt)}</div>
+
+            {/* Total */}
+            <div>₹{order.totalAmount.toFixed(2)}</div>
+
+            {/* Order Status Badge */}
+            <div>
+              <span
+                className={`inline-block rounded-md px-2 py-1 text-xs font-medium ${getStatusColor(
+                  order.orderStatus
                 )}`}
               >
-                {item.orderStatus}
-              </button>
-
-              <button className="h-6 w-20 rounded-md bg-green-200 ml-26 text-green-800 text-xs">
-                {item.paymentStatus}
-              </button>
-
-              <select
-                onChange={(e) =>
-                  handleUpdateStatus(item._id, e.target.value)
-                }
-                className="ml-20 border px-2 py-1 rounded-md"
-                value={item.orderStatus}
-              >
-                <option value="Pending">Pending</option>
-                <option value="Processing">Processing</option>
-                <option value="Shipped">Shipped</option>
-                <option value="Out for Delivery">Out for Delivery</option>
-                <option value="Delivered">Delivered</option>
-                <option value="Cancelled">Cancelled</option>
-                <option value="Returned">Returned</option>
-              </select>
+                {order.orderStatus}
+              </span>
             </div>
-          ))}
-        </div>
-      </section>
+
+            {/* Payment Status Badge */}
+            <div>
+              <span className="inline-block rounded-md bg-green-200 px-2 py-1 text-xs font-medium text-green-800">
+                {order.paymentStatus}
+              </span>
+            </div>
+
+            {/* Action Select */}
+            <div className="flex  gap-2">
+              <select
+                value={order.orderStatus}
+                onChange={(e) => handleUpdateStatus(order._id, e.target.value)}
+                className="w-full rounded border px-2 py-1 text-xs focus:outline-none focus:ring-2 focus:ring-black"
+              >
+                {[
+                  "Pending",
+                  "Processing",
+                  "Shipped",
+                  "Out for Delivery",
+                  "Delivered",
+                  "Cancelled",
+                  "Returned",
+                ].map((s) => (
+                  <option key={s} value={s}>
+                    {s}
+                  </option>
+                ))}
+              </select>
+            <div onClick={()=>navigate(`/admin/orders/${order._id}`)} className="bg-black text-amber-50 w-20 h-10 flex justify-center items-center rounded-xl"> View</div>
+            </div>
+          </div>
+        ))}
+      </div>
+
+      {/* Empty state */}
+      {filtered.length === 0 && (
+        <p className="mt-6 text-center text-gray-500">
+          {search ? "No orders match your search." : "No orders found."}
+        </p>
+      )}
     </section>
   );
 }

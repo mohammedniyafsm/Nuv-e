@@ -43,7 +43,6 @@ export const deleteAddresss = createAsyncThunk("address/deleteAddress", async (i
 });
 
 // UPDATE address 
-
 export const updatedAddress = createAsyncThunk("/address/updateAddress", async ({ id, update }: { id: string; update: object })=>{
     return await updateAddress(id,update)
 });
@@ -104,7 +103,6 @@ export const addressSlice = createSlice({
       });
 
       // ==================== UPDATE ADDRESS ====================
-
       builder
       .addCase(updatedAddress.pending,(state)=>{
         state.loading = true

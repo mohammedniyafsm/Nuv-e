@@ -12,6 +12,8 @@ import { PutObjectCommand } from "@aws-sdk/client-s3";
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner"
 import s3Client from "../utils/s3Client";
 
+
+// ADMIN SIGNUP 
 export const signupAdmin = async (req: Request, res: Response): Promise<void> => {
     try {
         const validateData = adminSignupSchema.parse(req.body);
@@ -42,6 +44,7 @@ export const signupAdmin = async (req: Request, res: Response): Promise<void> =>
     }
 }
 
+// ADMIN LOGIN
 export const loginAdmin = async (req: Request, res: Response): Promise<void> => {
     try {
         const validateData = adminLoginSchema.parse(req.body);
@@ -57,7 +60,7 @@ export const loginAdmin = async (req: Request, res: Response): Promise<void> => 
             return;
         }
         const token = generateToken(existingUser._id.toString(), existingUser.role);
-        res.cookie("acess_token", token, {
+        res.cookie("admin_token", token, {
             httpOnly: true,
             secure: true
         })
@@ -77,7 +80,7 @@ export const loginAdmin = async (req: Request, res: Response): Promise<void> => 
     }
 }
 
-
+// SEND OTP (ADMIN)
 export const sendOtp = async (req: Request, res: Response): Promise<void> => {
     try {
         const { email } = req.body;
@@ -91,6 +94,22 @@ export const sendOtp = async (req: Request, res: Response): Promise<void> => {
     }
 }
 
+// ADMIN LOGOUT 
+export const Logout = async (req:Request,res:Response): Promise<void> =>{
+    try {
+        res.clearCookie("admin_token",{
+            httpOnly :true,
+            secure : false
+        })
+        res.json({message : "Logged Out Successfully"});
+        return;
+    } catch (error) {
+        res.status(500).json({ message: "Server Error", error });
+        return;
+    }
+}
+
+// VERIFY OTP (ADMIN)
 export const verifyOtp = async (req: Request, res: Response): Promise<void> => {
     try {
         const { otpToken, otp } = req.body;
@@ -112,6 +131,7 @@ export const verifyOtp = async (req: Request, res: Response): Promise<void> => {
     }
 }
 
+// ADMIN PROFILE
 export const adminProfile = async (req: Request, res: Response): Promise<void> => {
     try {
         const id = req.admin.id;
@@ -121,15 +141,18 @@ export const adminProfile = async (req: Request, res: Response): Promise<void> =
             return;
         }
 
-        res.status(200).json(userData);
-        return;
+        res.status(200).json({ userData,
+            _id: userData._id,
+            email: userData.email,
+            role: userData.role, // ← make sure this is "admin"
+        }); return;
     } catch (error) {
         res.status(500).json({ message: "Server Error", error });
         return;
     }
 }
 
-
+// GET ALL USERS LIST
 export const getAllUsers = async (req: Request, res: Response): Promise<void> => {
     try {
         const users = await User.find().select("-password");
@@ -141,7 +164,7 @@ export const getAllUsers = async (req: Request, res: Response): Promise<void> =>
     }
 }
 
-
+// GET SPECIFIC USER BY ID
 export const getUserById = async (req: Request, res: Response): Promise<void> => {
     try {
         const id = req.params.id;
@@ -154,11 +177,12 @@ export const getUserById = async (req: Request, res: Response): Promise<void> =>
     }
 }
 
+// UPDATE USER STATUS (BLOCK OR UN BLOCK USER)
 export const updateUserStatus = async (req: Request, res: Response): Promise<void> => {
     try {
         const id = req.params.id;
         const { status } = req.body;
-        const update = await User.findByIdAndUpdate(id, {status}, {
+        const update = await User.findByIdAndUpdate(id, { status }, {
             new: true,
             runValidators: true,
         })
@@ -170,7 +194,7 @@ export const updateUserStatus = async (req: Request, res: Response): Promise<voi
     }
 }
 
-
+// GET PRESIGNED URL FOR ADDING IMAGES TO S3 BUCKET
 export const getPresignedUrl = async (req: Request, res: Response): Promise<void> => {
     try {
         const filename = req.query.filename as string;
@@ -189,9 +213,9 @@ export const getPresignedUrl = async (req: Request, res: Response): Promise<void
             ContentType: contentType
         })
 
-        const url = await getSignedUrl(s3Client, command,{ expiresIn: 60 });
+        const url = await getSignedUrl(s3Client, command, { expiresIn: 60 });
         res.json({ url, key, cloudfrontUrl: `https://${process.env.CLOUDFRONT_DOMAIN}/${key}` });
-        return ;
+        return;
     } catch (error) {
         res.status(500).json({ message: "Server Error ", error });
         return;

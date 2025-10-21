@@ -4,11 +4,11 @@ import { Cart } from "../models/Cart";
 import { Product } from "../models/Product";
 import { Types } from "mongoose";
 
-
+//GET USER WISHLIST
 export const getWishlist = async (req: Request, res: Response): Promise<void> => {
     try {
         const userId = req.user.id;
-        const wishlist = await WishList.findOne({ userId }).populate("products") ;
+        const wishlist = await WishList.findOne({ userId }).populate("products");
         if (!wishlist) {
             res.status(404).json({ message: "Wishlist Not Found" });
             return;
@@ -20,6 +20,7 @@ export const getWishlist = async (req: Request, res: Response): Promise<void> =>
     }
 }
 
+//ADD TO WISHLIST
 export const addToWishlist = async (req: Request, res: Response): Promise<void> => {
     try {
         const userId = req.user.id;
@@ -32,7 +33,7 @@ export const addToWishlist = async (req: Request, res: Response): Promise<void> 
             { userId },
             { $addToSet: { products: productId } },
             { new: true, upsert: true }
-        );
+        ).populate('products');
         res.status(200).json({ message: "Added to Wishlist", wishlist });
     } catch (error) {
         console.error("Wishlist error:", error);
@@ -40,7 +41,7 @@ export const addToWishlist = async (req: Request, res: Response): Promise<void> 
     }
 };
 
-
+//REMOVE FROM WISHLIST
 export const removeFromWishlist = async (req: Request, res: Response): Promise<void> => {
     try {
         const id = req.params.productId;
@@ -49,14 +50,16 @@ export const removeFromWishlist = async (req: Request, res: Response): Promise<v
             { userId },
             { $pull: { "products": id } },
             { new: true, upsert: true }
-        )
-        res.status(200).json({ message: "Product removed from Wishlist" });
+        ).populate('products')
+        res.status(200).json({ message: "Product removed from Wishlist", update });
         return;
     } catch (error) {
+        console.log(error);
         res.status(500).json({ message: "Server Error", error })
     }
 }
 
+//MOVE WISHLIST TO CART
 export const moveWishlistToCart = async (req: Request, res: Response): Promise<void> => {
     try {
         const userId = req.user.id;
@@ -74,11 +77,11 @@ export const moveWishlistToCart = async (req: Request, res: Response): Promise<v
             // No cart yet → create one with this product
             cart = await Cart.findOneAndUpdate(
                 { userId },
-                { 
-                    $set: { 
-                        userId, 
-                        items: [{ productId: product._id, quantity: 1, price: product.price }] 
-                    } 
+                {
+                    $set: {
+                        userId,
+                        items: [{ productId: product._id, quantity: 1, price: product.price }]
+                    }
                 },
                 { new: true, upsert: true }
             );

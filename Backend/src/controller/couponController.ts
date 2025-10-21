@@ -3,7 +3,7 @@ import { Coupon } from "../models/Coupon";
 import { Cart } from "../models/Cart";
 import { Types } from "mongoose";
 
-
+// CREATE COUPON (ADMIN)
 export const createCoupon = async (req: Request, res: Response): Promise<void> => {
     try {
         const { code, discountAmount, discountPercentage, minCartAmount, maxUsagePerUser, expiryDate } = req.body;
@@ -30,6 +30,7 @@ export const createCoupon = async (req: Request, res: Response): Promise<void> =
     }
 }
 
+//GET COUPONS (ADMIN)
 export const getCoupons = async (req: Request, res: Response): Promise<void> => {
     try {
         const coupon = await Coupon.find();
@@ -45,6 +46,7 @@ export const getCoupons = async (req: Request, res: Response): Promise<void> => 
     }
 }
 
+// DELETE COUPON (ADMIN)
 export const deleteCoupon = async (req: Request, res: Response): Promise<void> => {
     try {
         const id = req.params.couponId;
@@ -62,7 +64,7 @@ export const deleteCoupon = async (req: Request, res: Response): Promise<void> =
     }
 }
 
-
+// UPDATE COUPON (ADMIN)
 export const updateCoupon = async (req: Request, res: Response): Promise<void> => {
     try {
         const { couponId } = req.params;
@@ -94,6 +96,7 @@ export const updateCoupon = async (req: Request, res: Response): Promise<void> =
     }
 };
 
+// APPLY COUPON TO CART (USERS)
 export const applyCoupon = async (req: Request, res: Response): Promise<void> => {
   try {
     const userId = req.user.id;
@@ -167,7 +170,7 @@ export const applyCoupon = async (req: Request, res: Response): Promise<void> =>
   }
 };
 
-
+// REMOVE COUPON FROM CART (USERS)
 export const removeCoupon = async (req: Request, res: Response): Promise<void> => {
     try {
         const userId = req.user.id;

@@ -6,6 +6,7 @@ import toast from "react-hot-toast";
 import { useDispatch, useSelector } from "react-redux";
 import { allProduct } from "../../features/Product/Product";
 import type { AppDispatch, RootState } from "../../app/store";
+import { useNavigate } from "react-router-dom";
 
 function ProductAdmin() {
   const dispatch = useDispatch<AppDispatch>();
@@ -19,10 +20,12 @@ function ProductAdmin() {
 
   const product = useSelector((state: RootState) => state.product);
 
+  const navigate = useNavigate();
+
   const [images, setImages] = useState<File[]>([]);
   const [add, setAdd] = useState(false);
-  const [editProduct, setEditProduct] = useState<any>(null); // state for editing
-  const [search ,setSearch] = useState("");
+  const [editProduct, setEditProduct] = useState<any>(null);
+  const [search, setSearch] = useState("");
 
   const [productNew, setNewProduct] = useState({
     name: "",
@@ -46,7 +49,9 @@ function ProductAdmin() {
   const uploadImagesToS3 = async () => {
     const uploadPromises = images.map(async (file) => {
       const { data } = await axios.get(
-        `${import.meta.env.VITE_BACKEND_URL}/api/admin/s3-presign?filename=${encodeURIComponent(file.name)}&contentType=${file.type}`,
+        `${import.meta.env.VITE_BACKEND_URL}/api/admin/s3-presign?filename=${encodeURIComponent(
+          file.name
+        )}&contentType=${file.type}`,
         { withCredentials: true }
       );
       await fetch(data.url, { method: "PUT", headers: { "Content-Type": file.type }, body: file });
@@ -56,15 +61,19 @@ function ProductAdmin() {
   };
 
   const handleDelete = async (id: string) => {
-    await axios.delete(`${import.meta.env.VITE_BACKEND_URL}/api/admin/products/${id}`, { withCredentials: true });
+    await axios.delete(`${import.meta.env.VITE_BACKEND_URL}/api/admin/products/${id}`, {
+      withCredentials: true,
+    });
     toast.success("Product Deleted Successfully!");
     dispatch(allProduct());
   };
 
-  // Submit handler for Add & Edit
   const handleSubmit = async () => {
     try {
-      const imageUrls = images.length > 0 ? await uploadImagesToS3() : editProduct?.images.map((img: any) => img.url);
+      const imageUrls =
+        images.length > 0
+          ? await uploadImagesToS3()
+          : editProduct?.images.map((img: any) => img.url);
 
       const productData = {
         ...productNew,
@@ -72,7 +81,6 @@ function ProductAdmin() {
       };
 
       if (editProduct) {
-        // Update existing product
         await axios.put(
           `${import.meta.env.VITE_BACKEND_URL}/api/admin/products/${editProduct._id}`,
           productData,
@@ -80,14 +88,23 @@ function ProductAdmin() {
         );
         toast.success("Product Updated Successfully!");
       } else {
-        // Add new product
-        await axios.post(`${import.meta.env.VITE_BACKEND_URL}/api/admin/products`, productData, { withCredentials: true });
+        await axios.post(`${import.meta.env.VITE_BACKEND_URL}/api/admin/products`, productData, {
+          withCredentials: true,
+        });
         toast.success("Product Added Successfully!");
       }
 
       setAdd(false);
       setEditProduct(null);
-      setNewProduct({ name: "", category: "", size: "", price: "", discount: "", stock: "", description: "" });
+      setNewProduct({
+        name: "",
+        category: "",
+        size: "",
+        price: "",
+        discount: "",
+        stock: "",
+        description: "",
+      });
       setImages([]);
       dispatch(allProduct());
     } catch (error) {
@@ -110,59 +127,81 @@ function ProductAdmin() {
     setAdd(true);
   };
 
-  const filterProduct = product.products.filter((f)=>
-   f.name.toLowerCase().includes(search.toLowerCase()) || 
-   f.category.toLowerCase().includes(search.toLowerCase())    
-  )
+  const filterProduct = product.products.filter(
+    (f) =>
+      f.name.toLowerCase().includes(search.toLowerCase()) ||
+      f.category.toLowerCase().includes(search.toLowerCase())
+  );
 
   return (
-    <section className="px-12 py-4">
+    <section className="px-4 sm:px-6 md:px-12 py-4 w-full">
       {!add && (
         <>
-          <div className="flex justify-between items-center py-4">
-            <div className="pt-8">
-              <h1 className="text-lg font-neogrotesk-regular">Products</h1>
-              <h1 className="text-[#6b6b6b]">Manage your product inventory</h1>
+          <div className="flex flex-col sm:flex-row justify-between sm:items-center py-4 gap-4">
+            <div>
+              <h1 className="text-lg sm:text-xl font-neogrotesk-regular">Products</h1>
+              <h1 className="text-[#6b6b6b] text-sm sm:text-base">
+                Manage your product inventory
+              </h1>
             </div>
-            <div
-              onClick={() => { setAdd(true); setEditProduct(null); }}
-              className="bg-black w-36 h-10 flex justify-center items-center rounded-xl text-white cursor-pointer"
+            <button
+              onClick={() => {
+                setAdd(true);
+                setEditProduct(null);
+              }}
+              className="bg-black w-full sm:w-36 h-10 rounded-xl text-white font-neogrotesk-regular hover:opacity-80 transition-all"
             >
-              <h1 className="text-md font-neogrotesk-regular">Add Product</h1>
-            </div>
+              Add Product
+            </button>
           </div>
-             <div className="w-full">
-          <input
-            className="mt-6 bg-white px-6 h-10 w-full rounded-xl"
-            type="text"
-            placeholder="Search Users..."
-            value={search}
-            onChange={e => setSearch(e.target.value)}
-          />
-        </div>
 
-          <div className="flex flex-wrap gap-8 py-10">
+          <div className="w-full">
+            <input
+              className="mt-6 bg-white px-6 h-10 w-full rounded-xl border border-gray-200 focus:outline-none"
+              type="text"
+              placeholder="Search Products..."
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+            />
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 py-10">
             {filterProduct?.length > 0 ? (
               filterProduct.map((item) => (
-                <div key={item._id} className="w-96 py-4 px-4 rounded-xl bg-white">
-                  <img className="h-80 w-[400px] rounded-xl" src={item.images[0].url} alt="" />
-                  <div className="flex justify-between py-4">
-                    <h1>{item.name}</h1>
-                    <button className="h-6 w-20 rounded-md bg-green-200 text-green-800 text-xs">{item.status}</button>
+                <div onClick={()=>navigate(`/product/${item._id}`) }
+                  key={item._id}
+                  className="w-full bg-white rounded-xl shadow-sm border border-[#dbdada] p-4 flex flex-col justify-between"
+                >
+                  <img
+                    className="h-64 sm:h-72 w-full object-cover rounded-xl"
+                    src={item.images[0].url}
+                    alt={item.name}
+                  />
+                  <div className="flex justify-between items-center pt-4">
+                    <h1 className="font-medium">{item.name}</h1>
+                    <button className="h-6 w-20 rounded-md bg-green-200 text-green-800 text-xs">
+                      {item.status}
+                    </button>
                   </div>
-                  <h1 className="text-[#6b6b6b]">{item.category}</h1>
-                  <div className="flex justify-between items-center">
-                    <div className="my-4">
-                      <h1>Stock : {item.stock}</h1>
-                      <h1>${item.price}</h1>
+                  <h1 className="text-[#6b6b6b] text-sm">{item.category}</h1>
+                  <div className="flex justify-between items-center mt-4">
+                    <div>
+                      <h1 className="text-sm">Stock: {item.stock}</h1>
+                      <h1 className="text-sm font-semibold">₹{item.price}</h1>
                     </div>
-                    <div className="flex gap-4">
-                      <div onClick={() => handleEdit(item)} className="h-8 w-8 rounded-md border border-[#b7b5b5] flex justify-center items-center cursor-pointer">
+                    <div className="flex gap-3">
+                      <button
+                        onClick={() => handleEdit(item)}
+                        className="h-8 w-8 rounded-md border border-gray-300 flex justify-center items-center hover:bg-gray-100"
+                      >
                         <Edit />
-                      </div>
-                      <div onClick={() => handleDelete(item._id)} className="h-8 w-8 rounded-md border border-[#b7b5b5] flex justify-center items-center">
+                      </button>
+                      <button
+                        onClick={() => handleDelete(item._id)}
+                        className="h-8 w-8 rounded-md border border-gray-300 flex justify-center items-center hover:bg-red-100"
+                      >
                         <Delete className="h-4 w-4" />
-                      </div>
+                      </button>
                     </div>
                   </div>
                 </div>
@@ -175,14 +214,14 @@ function ProductAdmin() {
       )}
 
       {(add || editProduct) && (
-        <section className="bg-white mt-8 rounded-2xl px-10 py-8 w-full">
-          <div className="flex justify-between items-center mb-8">
-            <h1 className="text-lg font-neogrotesk-regular">{editProduct ? "Edit Product" : "Add New Product"}</h1>
-           
+        <section className="bg-white mt-8 rounded-2xl px-6 sm:px-8 md:px-10 py-8 w-full">
+          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-3">
+            <h1 className="text-lg sm:text-xl font-neogrotesk-regular">
+              {editProduct ? "Edit Product" : "Add New Product"}
+            </h1>
           </div>
 
-          <div className="grid grid-cols-3 gap-6">
-            {/* Product fields */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
             <div>
               <label className="block text-sm mb-1">Product Name</label>
               <input
@@ -249,7 +288,8 @@ function ProductAdmin() {
                 className="w-full px-4 py-2 rounded-xl bg-[#ececf0] text-sm focus:outline-none"
               />
             </div>
-            <div className="col-span-3">
+
+            <div className="col-span-1 sm:col-span-2 md:col-span-3">
               <label className="block text-sm mb-1">Description</label>
               <textarea
                 name="description"
@@ -260,7 +300,8 @@ function ProductAdmin() {
                 className="w-full px-4 py-2 rounded-xl bg-[#ececf0] text-sm focus:outline-none"
               ></textarea>
             </div>
-            <div className="col-span-3">
+
+            <div className="col-span-1 sm:col-span-2 md:col-span-3">
               <label className="block text-sm mb-1">Upload Images</label>
               <input
                 onChange={handleFileChange}
@@ -271,12 +312,20 @@ function ProductAdmin() {
             </div>
           </div>
 
-          <div className="flex justify-end gap-4 mt-10">
+          <div className="flex flex-col sm:flex-row justify-end gap-4 mt-8">
             <button
               onClick={() => {
                 setAdd(false);
                 setEditProduct(null);
-                setNewProduct({ name: "", category: "", size: "", price: "", discount: "", stock: "", description: "" });
+                setNewProduct({
+                  name: "",
+                  category: "",
+                  size: "",
+                  price: "",
+                  discount: "",
+                  stock: "",
+                  description: "",
+                });
                 setImages([]);
               }}
               className="border border-gray-300 px-6 py-2 rounded-xl text-sm hover:bg-gray-100 transition-all"
