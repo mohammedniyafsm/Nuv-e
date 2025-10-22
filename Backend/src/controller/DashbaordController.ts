@@ -8,7 +8,7 @@ import mongoose from "mongoose";
 function startOfDaysAgo(days: number) {
   const d = new Date();
   d.setHours(0,0,0,0);
-  d.setDate(d.getDate() - (days - 1)); // inclusive
+  d.setDate(d.getDate() - (days - 1)); 
   return d;
 }
 function startOfMonth() {
@@ -66,7 +66,7 @@ export const getAdminDashboard = async (req: Request, res: Response) => {
         { $unwind: { path: "$product", preserveNullAndEmptyArrays: true } },
         { $project: { productName: "$product.name", totalQty: 1, revenue: 1 } }
       ]),
-      
+
       Order.aggregate([
         { $match: { paymentStatus: "Paid", placedAt: { $gte: startOfDaysAgo(30) } } },
         {
