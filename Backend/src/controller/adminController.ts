@@ -155,7 +155,7 @@ export const adminProfile = async (req: Request, res: Response): Promise<void> =
 // GET ALL USERS LIST
 export const getAllUsers = async (req: Request, res: Response): Promise<void> => {
     try {
-        const users = await User.find().select("-password");
+        const users = await User.find().select("-password").sort({createdAt : -1});
         res.status(200).json(users);
         return;
     } catch (error) {

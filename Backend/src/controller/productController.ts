@@ -80,7 +80,7 @@ export const getProductByIdAdmin = async (req: Request, res: Response): Promise<
 // GET ALL PRODUCTS (PUBLIC)
 export const getAllProducts = async (req: Request, res: Response): Promise<void> => {
     try {
-        const products = await Product.find();
+        const products = await Product.find().sort({createdAt : -1});
         res.status(200).json(products);
     } catch (error) {
         res.status(500).json({ message: "Server Error", error });

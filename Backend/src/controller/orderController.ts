@@ -140,7 +140,7 @@ export const bulkUpdateOrderStatus = async (req: Request, res: Response): Promis
 // GET ALL ORDERS (ADMIN)
 export const getAllOrders = async (req: Request, res: Response): Promise<void> => {
     try {
-        const orders = await Order.find().populate('userId');
+        const orders = await Order.find().populate('userId').sort({placedAt: -1});
         res.status(200).json({ orders });
         return;
     } catch (error) {
@@ -253,71 +253,4 @@ export const getOrderByIdAdmin = async (req: Request, res: Response): Promise<vo
   }
 };
 
-
-// Admin dashboard
-// export const getAdminDashboard = async (req: Request, res: Response) => {
-//     try {
-//         // Total Orders
-//         const totalOrders = await Order.countDocuments();
-
-//         // Total Sales (only completed/paid orders)
-//         const totalSalesAgg = await Order.aggregate([
-//             { $match: { status: "completed" } },
-//             { $group: { _id: null, total: { $sum: "$totalAmount" } } }
-//         ]);
-//         const totalSales = totalSalesAgg[0]?.total || 0;
-
-//         // Revenue Stats by Month
-//         const monthlyRevenue = await Order.aggregate([
-//             { $match: { status: "completed" } },
-//             {
-//                 $group: {
-//                     _id: { month: { $month: "$createdAt" }, year: { $year: "$createdAt" } },
-//                     revenue: { $sum: "$totalPrice" }
-//                 }
-//             },
-//             { $sort: { "_id.year": -1, "_id.month": -1 } }
-//         ]);
-
-//         // Top Products (by number of orders)
-//         const topProducts = await Order.aggregate([
-//             { $unwind: "$items" },
-//             {
-//                 $group: {
-//                     _id: "$items.productId",
-//                     totalSold: { $sum: "$items.quantity" }
-//                 }
-//             },
-//             { $sort: { totalSold: -1 } },
-//             { $limit: 5 },
-//             {
-//                 $lookup: {
-//                     from: "products",
-//                     localField: "_id",
-//                     foreignField: "_id",
-//                     as: "product"
-//                 }
-//             },
-//             { $unwind: "$product" },
-//             {
-//                 $project: {
-//                     _id: 0,
-//                     productId: "$product._id",
-//                     name: "$product.name",
-//                     totalSold: 1
-//                 }
-//             }
-//         ]);
-
-//         res.json({
-//             totalOrders,
-//             totalSales,
-//             monthlyRevenue,
-//             topProducts
-//         });
-//     } catch (error) {
-//         console.error(error);
-//         res.status(500).json({ message: "Dashboard data fetch failed" });
-//     }
-// };
 

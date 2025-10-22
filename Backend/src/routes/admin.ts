@@ -4,6 +4,7 @@ import { addProduct, deleteProduct, getAdminProducts, getProductByIdAdmin, updat
 import { adminProfile, getAllUsers, getPresignedUrl, getUserById, loginAdmin, Logout, sendOtp, signupAdmin, updateUserStatus, verifyOtp } from "../controller/adminController";
 import { bulkUpdateOrderStatus, deleteOrder, getAllOrders, getOrderByIdAdmin, updateOrderStatus } from "../controller/orderController";
 import { createCoupon, deleteCoupon, getCoupons, updateCoupon } from "../controller/couponController";
+import { getAdminDashboard, getRevenueByPeriod } from "../controller/DashbaordController";
 
 const router = express.Router();
 
@@ -40,5 +41,10 @@ router.post("/admin/create", adminProtect, protect, createCoupon); // Create a n
 router.get("/admin/all", adminProtect, protect, getCoupons); // Get all coupons
 router.delete("/admin/:couponId", adminProtect, protect, deleteCoupon); // Delete coupon by ID
 router.put("/admin/:couponId", adminProtect, protect, updateCoupon); // Update coupon by ID
+
+
+router.get("/admin/dashboard", adminProtect, protect, getAdminDashboard);
+router.get("/admin/revenue",  adminProtect,protect, getRevenueByPeriod);
+
 
 export default router;
