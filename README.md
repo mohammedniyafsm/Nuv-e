@@ -2,13 +2,13 @@
 # Nuvée
 
 
-📖 Introduction 
+## 📖 Introduction 
 ###
 Nuvee is a cloud-powered perfume e-commerce project where users can browse, search, and purchase perfumes seamlessly. It features secure authentication, fast performance, and scalable deployment using AWS services.
  
 
-🛠️ Technologies Used
-###
+# 🛠️ Technologies Used
+#
 
 - MERN Stack
 - TypeScript
@@ -29,7 +29,7 @@ Nuvee is a cloud-powered perfume e-commerce project where users can browse, sear
 
 #
 
-🚀 Getting Started 🧭 Cloning the Repository
+# 🚀 Getting Started 🧭 Cloning the Repository
 ###
 
 To clone the repository locally:
@@ -97,9 +97,11 @@ The project will start on your configured ports, typically:
 Frontend: http://localhost:5173
 Backend: http://localhost:3000
 ```
+#
 💳 Payment Integration
 
 Nuvee integrates Razorpay for fast and secure payments. Ensure your Razorpay credentials are set correctly in both .env files before running the app.
+#
 
 ☁️ Cloud Deployment
 
@@ -110,10 +112,10 @@ AWS S3 stores product images.
 AWS CloudFront serves static assets via CDN for faster load times.
 
 CI/CD pipelines ensure smooth automated deployment and updates.
+#
 
-
-🤝 Contribution Guide
-###
+# 🤝 Contribution Guide
+#
 I hearty welcome contributions! Please follow these steps:
 
 - Fork the repository
