@@ -1,4 +1,3 @@
-import React from 'react'
 import RightArrow from './icons/RightArrow'
 
 function Filter() {

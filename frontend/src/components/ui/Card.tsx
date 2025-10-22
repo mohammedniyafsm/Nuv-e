@@ -136,7 +136,7 @@ function Card({ name, price, _id, category, images }: CardProps) {
         <img
           onClick={() => navigate(`/product/${_id}`)}
           className="absolute w-[140px] md:w-[280px] object-contain transition-opacity duration-300 opacity-100 group-hover:opacity-0 cursor-pointer"
-          src= "./images/product1.png"
+          src= { images[0].url || "./images/product1.png"}
           alt={name}
         />
         <img

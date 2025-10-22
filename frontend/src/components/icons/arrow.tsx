@@ -4,9 +4,9 @@ import {useGSAP } from "@gsap/react";
 
 
 function ArrowCurve() {
-  const pathRef = useRef(null);
-
-  useGSAP(() => {
+const pathRef = useRef<SVGPathElement | null>(null);
+useGSAP(() => {
+  if (pathRef.current) {
     const length = pathRef.current.getTotalLength();
 
     gsap.fromTo(
@@ -16,12 +16,13 @@ function ArrowCurve() {
         strokeDashoffset: length,
       },
       {
-        strokeDashoffset: 0,      
+        strokeDashoffset: 0,
         duration: 2,
         ease: "power2.inOut",
       }
     );
-  }, []);
+  }
+}, []);
 
   return (
     <svg className="h-[230px] w-96 md:w-[800px] md:h-[300px] "  viewBox="0 0 924 362" fill="none" xmlns="http://www.w3.org/2000/svg">

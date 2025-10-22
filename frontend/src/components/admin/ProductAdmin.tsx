@@ -77,7 +77,7 @@ function ProductAdmin() {
 
       const productData = {
         ...productNew,
-        images: imageUrls.map((url) => ({ url })),
+        images: imageUrls.map((url : any) => ({ url })),
       };
 
       if (editProduct) {
@@ -168,11 +168,11 @@ function ProductAdmin() {
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 py-10">
             {filterProduct?.length > 0 ? (
               filterProduct.map((item) => (
-                <div onClick={()=>navigate(`/product/${item._id}`) }
+                <div 
                   key={item._id}
                   className="w-full bg-white rounded-xl shadow-sm border border-[#dbdada] p-4 flex flex-col justify-between"
                 >
-                  <img
+                  <img onClick={()=>navigate(`/product/${item._id}`) }
                     className="h-64 sm:h-72 w-full object-cover rounded-xl"
                     src={item.images[0].url}
                     alt={item.name}

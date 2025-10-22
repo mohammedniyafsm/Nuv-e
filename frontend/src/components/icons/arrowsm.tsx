@@ -3,23 +3,25 @@ import { gsap } from "gsap";
 import { useGSAP } from "@gsap/react";
 
 function ArrowCurve2() {
-  const pathRef = useRef(null);
+  const pathRef = useRef<SVGPathElement | null>(null);
 
   useGSAP(() => {
-    const length = pathRef.current.getTotalLength();
+    if (pathRef.current) {
+      const length = pathRef.current.getTotalLength();
 
-    gsap.fromTo(
-      pathRef.current,
-      {
-        strokeDasharray: length,
-        strokeDashoffset: length,
-      },
-      {
-        strokeDashoffset: 0,
-        duration: 2,
-        ease: "power2.inOut",
-      }
-    );
+      gsap.fromTo(
+        pathRef.current,
+        {
+          strokeDasharray: length,
+          strokeDashoffset: length,
+        },
+        {
+          strokeDashoffset: 0,
+          duration: 2,
+          ease: "power2.inOut",
+        }
+      );
+    }
   }, []);
 
   return (

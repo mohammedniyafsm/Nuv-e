@@ -1,4 +1,3 @@
-import React from 'react';
 
 function Return30({ className = '', svgClass = '' }) {
   return (

@@ -78,7 +78,7 @@ function WishlistCard({ _id, name, category, size, price, images }: WishListI) {
         >
           <img
             className="absolute w-[140px] lg:w-[280px] object-contain transition-opacity duration-300 opacity-100 group-hover:opacity-0"
-            src= "./images/product1.png"
+            src= { images[0].url  || "./images/product1.png"}
             alt={name}
           />
           <img

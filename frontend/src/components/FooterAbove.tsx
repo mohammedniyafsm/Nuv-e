@@ -27,6 +27,8 @@ function FooterAbove() {
             <Input
               className="h-8 w-42 text-[12px] sm:w-64 sm:h-12 px-4 sm:mt-4 md:w-[450px] md:h-16 md:px- md:text-xs  lg:w-[450px] lg:h-16 lg:px-4 lg:text-xs text-[rgba(172,163,163,0.93)]"
               type="text"
+              name='email'
+              value=''
               placeholder="ENTER YOUR EMAIL"
             />
           </div>

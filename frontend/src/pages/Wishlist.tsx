@@ -49,7 +49,7 @@ function Wishlist() {
         {products.map((s) => (
           <WishlistCard
             key={s._id}
-            _id={s._id}
+            _id={s._id || " "}
             name={s.name}
             category={s.category}
             price={s.price}

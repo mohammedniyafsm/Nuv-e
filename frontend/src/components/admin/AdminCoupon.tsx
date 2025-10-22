@@ -262,38 +262,38 @@ function AdminCoupon() {
             </h1>
           </div>
 
-          <div className="flex font-neogrotesk-regular border-b pb-3 border-[#dbdada]">
-            <div className="flex gap-20 pl-8 text-center">
+          <div className="flex  font-neogrotesk-regular border-b pb-3 border-[#dbdada]">
+            <div className="flex  pl-22  text-center">
               <h1>Code</h1>
-              <h1 className="pl-10">Discount</h1>
-              <h1>Min. Cart Amount</h1>
+              <h1 className="pl-42">Discount</h1>
+              <h1 className="pl-28">Min. Cart Amount</h1>
             </div>
-            <div className="flex gap-14 pl-10">
+            <div className="flex pl-14 ">
               <h1>Max Usage/User</h1>
-              <h1>Expires</h1>
-              <h1 className="ml-26">Actions</h1>
+              <h1 className="pl-22">Expires</h1>
+              <h1 className="pl-48">Actions</h1>
             </div>
           </div>
 
           {filtered.map((coupon) => (
             <div
               key={coupon._id}
-              className="flex border-b pl-4 pb-3 text-sm border-[#dbdada] pt-2 text-center"
+              className="flex justify-around  border-b  pb-3 text-sm border-[#dbdada] pt-2 text-center"
             >
               <h1 className="bg-[#ede8e8] h-8 flex px-2 rounded-lg items-center">
                 {coupon.code}
               </h1>
-              <h1 className="ml-28">
+              <h1 className="">
                 {coupon.discountPercentage
                   ? `${coupon.discountPercentage}%`
                   : `₹${coupon.discountAmount}`}
               </h1>
-              <h1 className="ml-38">{coupon.minCartAmount || "—"}</h1>
-              <h1 className="pl-42">{coupon.maxUsagePerUser}</h1>
-              <h1 className="ml-30">
+              <h1 className="">{coupon.minCartAmount || "—"}</h1>
+              <h1 className="">{coupon.maxUsagePerUser}</h1>
+              <h1 className="">
                 {new Date(coupon.expiryDate).toLocaleDateString()}
               </h1>
-              <div className="flex gap-4 ml-30">
+              <div className="flex gap-4 ">
                 <button
                   onClick={() => handleEdit(coupon)}
                   className="h-6 w-14 rounded-md border hover:bg-gray-100 border-[#b8a9a9] text-xs"

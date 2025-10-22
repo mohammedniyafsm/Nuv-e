@@ -21,6 +21,11 @@ import ForgotPassword from "./pages/ForgotPassword";
 import ForgotVerification from "./pages/ForgotVerification";
 import Changepassword from "./pages/Changepassword";
 import AdminOrderDetail from "./pages/OrderDetails";
+import DashboardAdmin from "./components/admin/Dashboard";
+import OrderAdmin from "./components/admin/OrderAdmin";
+import ProductAdmin from "./components/admin/ProductAdmin";
+import AdminCoupon from "./components/admin/AdminCoupon";
+import AllUser from "./components/admin/AllUser";
 
 function App() {
   return (
@@ -53,10 +58,16 @@ function App() {
         <Route path='/admin' element={<AdminLogin />} />
 
         <Route element={<AdminRoute />}>
-          <Route path="/dashboard" element={<AdminDashboard />} />
+          <Route path="/dashboard" element={<AdminDashboard />}>
+            <Route index element={<DashboardAdmin />} />
+            <Route path="orders"  element={<OrderAdmin />} />
+            <Route path="products" element={<ProductAdmin />} />
+            <Route path="coupons" element={<AdminCoupon />} />
+            <Route path="users" element={<AllUser />} />
+          </Route>
           <Route path="/admin/orders/:id" element={<AdminOrderDetail />} />
         </Route>
-        
+
       </Routes>
     </BrowserRouter>
   )

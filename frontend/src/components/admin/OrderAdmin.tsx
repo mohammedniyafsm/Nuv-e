@@ -284,8 +284,8 @@ function OrderAdmin() {
                   </option>
                 ))}
               </select>
-            <div onClick={()=>navigate(`/admin/orders/${order._id}`)} className="bg-black text-amber-50 w-20 h-10 flex justify-center items-center rounded-xl"> View</div>
             </div>
+            <div onClick={()=>navigate(`/admin/orders/${order._id}`)} className="bg-black text-amber-50 w-20 h-10 flex justify-center items-center rounded-xl"> View</div>
           </div>
         ))}
       </div>
