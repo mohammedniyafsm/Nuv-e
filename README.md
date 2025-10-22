@@ -1,110 +1,105 @@
-Nuvée
 
-Nuvee is a perfume-based e-commerce platform built using the MERN stack with modern cloud integrations and payment gateways.
-It allows users to explore premium perfumes, make secure purchases, and enjoy a smooth shopping experience with AWS cloud hosting, Razorpay integration, and automated CI/CD pipelines.
+# Nuvée
 
-📖 Introduction
 
-Nuvee is a cloud-powered perfume e-commerce project where users can browse, search, and purchase perfumes seamlessly.
-It features secure authentication, fast performance, and scalable deployment using AWS services.
+📖 Introduction 
+###
+Nuvee is a cloud-powered perfume e-commerce project where users can browse, search, and purchase perfumes seamlessly. It features secure authentication, fast performance, and scalable deployment using AWS services.
+ 
 
 🛠️ Technologies Used
+###
 
-MongoDB – Database for storing product and user data
+- MERN Stack
+- TypeScript
 
-Express.js – Backend web framework
+- Tailwind CSS 
 
-React.js – Frontend user interface
+- Nodemailer 
 
-Node.js – Server-side runtime
+- Razorpay 
 
-TypeScript – For strong typing and maintainability
+- AWS S3 – For storing product images
 
-Tailwind CSS – For responsive UI styling
+- AWS EC2 – For cloud hosting
 
-Nodemailer – For email notifications and OTP delivery
+- AWS CloudFront (CDN) – For faster global content delivery
 
-Razorpay – For secure online payments
+- CI/CD – Automated build and deployment pipeline
 
-AWS S3 – For storing product images
+#
 
-AWS EC2 – For cloud hosting
-
-AWS CloudFront (CDN) – For faster global content delivery
-
-CI/CD – Automated build and deployment pipeline
-
-🚀 Getting Started
-🧭 Cloning the Repository
+🚀 Getting Started 🧭 Cloning the Repository
+###
 
 To clone the repository locally:
-
-git clone https://github.com/mohammedniyafsm/Nuv-e.git
+```markdown
+git clone https://github.com/mohammedniyafsm/Nuv-e.git 
 cd Nuv-e
+```
 
 📦 Installation
 
-This project contains both frontend and backend folders.
-Install dependencies for each part as shown below:
+This project contains both frontend and backend folders. Install dependencies for each part as shown below:
 
-# Install backend dependencies
-cd backend
+Install backend dependencies
+```
+cd backend 
 npm install
+```
 
-# Install frontend dependencies
-cd ../frontend
+Install frontend dependencies
+```
+cd ../frontend 
 npm install
+```
 
 ⚙️ Configuration
 
-Create .env files in both backend and frontend directories.
-Use the following environment variable structure:
+Create .env files in both backend and frontend directories. Use the following environment variable structure:
 
-🖥️ Frontend .env
-VITE_BACKEND_URL=
-VITE_RAZORPAY_KEY_ID=
+🖥️ Frontend .env 
+```
+VITE_BACKEND_URL= 
+VITE_RAZORPAY_KEY_ID= 
 VITE_RAZORPAY_SECRET=
-
+```
 ⚙️ Backend .env
-PORT=
-MONGODB_URL=
+```
+PORT= MONGODB_URL=
 JWT_SECRET_KEY=
 OTP_SECRET_KEY=
-
-EMAIL_USER=
+EMAIL_USER= 
 EMAIL_PASS=
-
-REGION=
-ACCESS_KEY_ID=
-SECRET_ACCESS_KEY=
-BUCKET_NAME=
+REGION= 
+ACCESS_KEY_ID= 
+SECRET_ACCESS_KEY= 
+BUCKET_NAME= 
 CLOUDFRONT_DOMAIN=
-
-RAZORPAY_KEY_ID=
+RAZORPAY_KEY_ID= 
 RAZORPAY_SECRET=
-
 FRONTEND_URL=
+```
 
-▶️ Running the Project
-Run Backend
+▶️ Running the Project (Run Backend)
+```
 cd backend
 npm run dev
-
-Run Frontend
-cd frontend
+```
+Run Frontend 
+```
+cd frontend 
 npm run dev
-
+```
 
 The project will start on your configured ports, typically:
-
+```
 Frontend: http://localhost:5173
-
-Backend: http://localhost:5000
-
+Backend: http://localhost:3000
+```
 💳 Payment Integration
 
-Nuvee integrates Razorpay for fast and secure payments.
-Ensure your Razorpay credentials are set correctly in both .env files before running the app.
+Nuvee integrates Razorpay for fast and secure payments. Ensure your Razorpay credentials are set correctly in both .env files before running the app.
 
 ☁️ Cloud Deployment
 
@@ -116,31 +111,19 @@ AWS CloudFront serves static assets via CDN for faster load times.
 
 CI/CD pipelines ensure smooth automated deployment and updates.
 
+
 🤝 Contribution Guide
+###
+I hearty welcome contributions! Please follow these steps:
 
-We welcome contributions from the community! 💖
+- Fork the repository
 
-Fork the repository
+- Create a new branch ```(git checkout -b feature-branch-name)```
 
-Create a new branch
+- Make your changes and commit them ```(git commit -m "Add feature description").```
 
-git checkout -b feature-branch-name
+- Push your changes ```(git push origin feature-branch-name). Create a Pull Request.```
 
+---
 
-Commit your changes
-
-git commit -m "Add feature description"
-
-
-Push to your fork
-
-git push origin feature-branch-name
-
-
-Open a Pull Request
-
-📫 Contact
-
-For any issues, suggestions, or contributions, feel free to open an issue or reach out.
-
-GitHub: @mohammedniyafsm
+Thank you for checking out this project! Feel free to open an issue if you have any questions or suggestions.
