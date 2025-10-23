@@ -3,38 +3,62 @@ name: Backend CI/CD
 on:
   push:
     branches:
-      - main   # Runs when code is pushed to main branch
+      - main
 
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
 
     steps:
+      # 1️⃣ Checkout repo
       - name: Checkout code
         uses: actions/checkout@v4
 
+      # 2️⃣ Setup Node.js
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: 20
 
-      - name: Install and build backend
-        working-directory: ./Backend
-        run: |
-          npm install
-          npm run build
-
+      # 3️⃣ Deploy to EC2
       - name: Deploy to EC2 via SSH
         uses: appleboy/ssh-action@v1.1.0
         with:
           host: ${{ secrets.EC2_HOST }}
           username: ${{ secrets.EC2_USER }}
           key: ${{ secrets.EC2_KEY }}
+          port: 22
           script: |
+            set -e
+
+            # Navigate to repo
             cd /home/ubuntu/Nuv-e
+
+            # Pull latest code
             git fetch origin main
             git reset --hard origin/main
+
+            # Navigate to backend
             cd Backend
+
+            # Write .env from GitHub secrets
+            echo "PORT=${{ secrets.PORT }}" > .env
+            echo "JWT_SECRET_KEY=${{ secrets.JWT_SECRET_KEY }}" >> .env
+            echo "OTP_SECRET_KEY=${{ secrets.OTP_SECRET_KEY }}" >> .env
+            echo "EMAIL_USER=${{ secrets.EMAIL_USER }}" >> .env
+            echo "EMAIL_PASS=${{ secrets.EMAIL_PASS }}" >> .env
+            echo "REGION=${{ secrets.REGION }}" >> .env
+            echo "ACCESS_KEY_ID=${{ secrets.ACCESS_KEY_ID }}" >> .env
+            echo "SECRET_ACCESS_KEY=${{ secrets.SECRET_ACCESS_KEY }}" >> .env
+            echo "BUCKET_NAME=${{ secrets.BUCKET_NAME }}" >> .env
+            echo "CLOUDFRONT_DOMAIN=${{ secrets.CLOUDFRONT_DOMAIN }}" >> .env
+            echo "RAZORPAY_KEY_ID=${{ secrets.RAZORPAY_KEY_ID }}" >> .env
+            echo "RAZORPAY_SECRET=${{ secrets.RAZORPAY_SECRET }}" >> .env
+            echo "FRONTEND_URL=${{ secrets.FRONTEND_URL }}" >> .env
+
+            # Install dependencies and build
             npm install
             npm run build
+
+            # Restart backend with PM2
             pm2 restart backend || pm2 start dist/index.js --name backend
