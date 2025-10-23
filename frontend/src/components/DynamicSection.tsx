@@ -99,6 +99,7 @@ function DynamicSection({
   const categoryBg: Record<string, string> = {
     "SIGNATURE COLLECTION": "#d6d0d0",
     "BLOOM ESSENCE": "#CBC6D8",
+    "NOIR COLLECTION" : "#F2D6AF"
   };
 
   const bgColor = categoryBg[category] || "#FFFFFF";

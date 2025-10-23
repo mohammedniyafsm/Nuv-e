@@ -34,6 +34,7 @@ interface CardProps {
 const categoryBg: Record<string, string> = {
   "SIGNATURE COLLECTION": "#ECC9CA",
   "BLOOM ESSENCE": "#CBC6D8",
+   "NOIR COLLECTION" : "#F2D6AF"
 };
 
 function Card1({ name, price, _id, category, images }: CardProps) {
@@ -142,7 +143,7 @@ function Card1({ name, price, _id, category, images }: CardProps) {
         <img
           onClick={() => navigate(`/product/${_id}`)}
           className="absolute w-[140px] md:w-[280px] object-contain transition-opacity duration-300 opacity-0 group-hover:opacity-100 cursor-pointer"
-          src= "./images/product2.png"
+           src= {images[1].url || "./images/product1.png"}
           alt={`${name} hover`}
         />
       </div>

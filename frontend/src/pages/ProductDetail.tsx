@@ -63,6 +63,7 @@ function ProductDetail() {
     const categoryBg: Record<string, string> = {
         "SIGNATURE COLLECTION": "#EDCACA",
         "BLOOM ESSENCE": "#CBC6D8",
+        "NOIR COLLECTION" : "#F2D6AF"
     };
 
     const name = product?.name ?? "";
@@ -82,7 +83,7 @@ function ProductDetail() {
             {/* HERO SECTION - UNTOUCHED */}
             <div className="flex pt-20 lg:pt-34 justify-between flex-col lg:flex-row">
                 <div className="pl-6 lg:pl-44 pt-6 lg:pt-10 flex justify-center lg:justify-start">
-                    <img className='h-80 lg:h-100 w-auto' src="/images/product1.png" alt="" />
+                    <img className='h-80 lg:h-100 w-auto' src= { product?.images[0].url || "./images/product1.png"} alt="" />
                 </div>
 
                 <div className="bg-[#F2F2F2] w-full lg:w-[700px] lg:h-[800px] px-6 lg:px-20 py-6 lg:py-10 mt-6 lg:mt-0">
@@ -142,7 +143,7 @@ function ProductDetail() {
             {/* MIDDLE SECTION - FINAL, NO BG, PIXEL-PERFECT */}
             <div className="relative lg:h-[1500px] h-auto overflow-hidden">
                 <div className="absolute left-4 top-20 lg:left-0 lg:top-20 z-10">
-                    <img className="h-64 hidden sm:block lg:h-96 w-auto" src="/images/handproduct1.png" alt="" />
+                    <img className="h-64 hidden sm:block lg:h-96 w-auto" src= { product?.images[2]?.url || "./images/product1.png"} alt="" />
                 </div>
                 <div className="relative z-20 flex justify-center pt-32 lg:pt-[500px] px-4 lg:px-0">
                     <div className="flex flex-col items-center text-center max-w-4xl">
@@ -176,7 +177,7 @@ function ProductDetail() {
                         </ul>
                     </div>
                 <div className="absolute right-4 top-32 lg:right-0 lg:bottom-12 z-10">
-                    <img className="h-64 hidden sm:block lg:h-96 w-auto" src="/images/product2.png" alt="" />
+                    <img className="h-64 hidden sm:block lg:h-96 w-auto" src= { product?.images[1]?.url || "./images/product1.png"} alt="" />
                 </div>
                 </div>
                 
@@ -190,7 +191,7 @@ function ProductDetail() {
                 </div>
                 <div className="flex flex-col lg:flex-row pt-20 lg:pt-32 gap-8 lg:gap-0 px-6 lg:px-0">
                     <div className="px-6 lg:px-18 flex justify-center">
-                        <img className='h-80 lg:h-[600px] w-auto lg:w-[500px]' src="/images/p1d.png" alt="" />
+                        <img className='h-80 lg:h-[600px] w-auto lg:w-[500px]' src= { product?.images[3]?.url || "./images/product1.png"} alt="" />
                     </div>
                     <div className="px-6 lg:px-20 flex-1">
                         <div className="pt-10 lg:pt-16">

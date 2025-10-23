@@ -19,6 +19,12 @@ function Section() {
       subtitle: "Experience Timeless",
       subtitle2: "Comfort",
     },
+    {
+      category: "NOIR COLLECTION", 
+      title: "Nuvée Luxury",
+      subtitle: "Experience Timeless",
+      subtitle2: "Comfort",
+    },
   ]);
 
   return (
