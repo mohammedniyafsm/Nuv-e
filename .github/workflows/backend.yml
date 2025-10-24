@@ -31,7 +31,7 @@ jobs:
           script: |
             set -e
 
-            # Navigate to repo
+            #  Navigate to repo
             cd /home/ubuntu/Nuv-e
 
             # Pull latest code
