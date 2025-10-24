@@ -62,7 +62,8 @@ export const loginAdmin = async (req: Request, res: Response): Promise<void> => 
         const token = generateToken(existingUser._id.toString(), existingUser.role);
         res.cookie("admin_token", token, {
             httpOnly: true,
-            secure: true
+            secure: true,
+            sameSite:"none"
         })
             .status(200).json({ message: "Logged In Successfully" })
     } catch (error) {

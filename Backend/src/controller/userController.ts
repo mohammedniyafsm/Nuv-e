@@ -55,7 +55,8 @@ export const loginUser = async (req: Request, res: Response): Promise<void> => {
 
         res.cookie("access_token", token, {
             httpOnly: true,
-            secure: false
+            secure: true,
+            sameSite:"none"
         })
             .status(200).json({ message: "Logged in successfully" });
         return;
@@ -106,7 +107,8 @@ export const sendOtp = async (req: Request, res: Response): Promise<void> => {
         );
         res.cookie("otp_token", otpToken, {
             httpOnly: true,
-            secure: false
+            secure: true,
+            sameSite:"none",
         })
         .status(200).json({ message: "OTP Sent Successfully" });
         return;
@@ -206,7 +208,8 @@ export const forgotPassword = async (req: Request, res: Response): Promise<void>
         await User.findByIdAndUpdate(user._id, { lastOtpSentAt: new Date() });
         res.cookie("forgot_password_otp_token", otptoken, {
             httpOnly: true,
-            secure: false
+            secure: true,
+            sameSite:"none",
         })
             .status(200).json({ message: "OTP sent to your email successfully" });
         return;
