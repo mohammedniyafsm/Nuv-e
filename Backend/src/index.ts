@@ -13,6 +13,7 @@ connectDB();
 app.use(express.json());
 app.use(cookieParser());
 
+// PRoduction and development setup
 const FRONTEND_URL = process.env.FRONTEND_URL;
 
 const corsOption = {
