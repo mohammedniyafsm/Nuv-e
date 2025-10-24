@@ -14,15 +14,21 @@ app.use(express.json());
 app.use(cookieParser());
 
 // PRoduction and development setup
-const FRONTEND_URL = process.env.FRONTEND_URL;
+const FRONTEND_URL =
+  process.env.NODE_ENV === "production"
+    ? process.env.FRONTEND_URL || "hhttps://d2bljxiphqwq8x.cloudfront.net/"
+    :  "http://localhost:5173";
 
-const corsOption = {
+// ✅ CORS setup with cookies support
+app.use(
+  cors({
     origin: FRONTEND_URL,
-    methods: "GET,POST,PUT,DELETE,PATCH,HEAD",
+    methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
     credentials: true,
-};
+  })
+);
 
-app.use(cors(corsOption));
+///cjsncjsdc
 app.use('/api', userRoute); // user Route
 app.use('/api', adminRoute); //admin Route
 
@@ -30,6 +36,8 @@ app.use('/api', adminRoute); //admin Route
 app.use('/', (req: Request, res: Response) => {
     res.send("Server Running....")
 })
+
+
 
 app.listen(process.env.PORT, () => {
     console.log(`Server Running at PORT ${process.env.PORT}`)

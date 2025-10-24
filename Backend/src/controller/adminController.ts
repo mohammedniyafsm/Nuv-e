@@ -13,6 +13,9 @@ import { getSignedUrl } from "@aws-sdk/s3-request-presigner"
 import s3Client from "../utils/s3Client";
 
 
+const isProduction = process.env.NODE_ENV === "production";
+
+
 // ADMIN SIGNUP 
 export const signupAdmin = async (req: Request, res: Response): Promise<void> => {
     try {
@@ -62,8 +65,8 @@ export const loginAdmin = async (req: Request, res: Response): Promise<void> => 
         const token = generateToken(existingUser._id.toString(), existingUser.role);
         res.cookie("admin_token", token, {
             httpOnly: true,
-            secure: true,
-            sameSite:"none"
+            secure: isProduction,
+            sameSite: isProduction ? "none" : "lax"
         })
             .status(200).json({ message: "Logged In Successfully" })
     } catch (error) {
@@ -100,7 +103,7 @@ export const Logout = async (req:Request,res:Response): Promise<void> =>{
     try {
         res.clearCookie("admin_token",{
             httpOnly :true,
-            secure : false
+            secure : isProduction
         })
         res.json({message : "Logged Out Successfully"});
         return;
