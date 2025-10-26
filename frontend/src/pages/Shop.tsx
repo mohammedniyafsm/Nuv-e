@@ -5,10 +5,19 @@ import { useDispatch, useSelector } from "react-redux";
 import { type AppDispatch, type RootState } from "../app/store";
 import { allProduct, paginatedProducts, searchProducts, filterProducts } from "../features/Product/Product";
 import Card1 from "../components/ui/Card1";
+import { useLocation } from "react-router-dom";
 
 function Shop() {
     const { products } = useSelector((state: RootState) => state.product);
     const dispatch = useDispatch<AppDispatch>();
+
+    const { pathname } = useLocation();
+
+    // Scroll to top on route change
+    useEffect(() => {
+        window.scrollTo(0, 0);
+    }, [pathname]);
+
 
     // --- Sidebar toggle states ---
     const [showRange, setShowRange] = useState(false);
@@ -253,7 +262,7 @@ function Shop() {
                 )}
 
                 {/* Products */}
-                <div className="">
+                <div className="mb-12">
                     <div className="flex xl:flex-grow lg:ml-[250px] xl:ml-[350px] ">
                         <div className="w-full md:px-10">
                             <div className="px-4 flex  items-center">
@@ -268,12 +277,12 @@ function Shop() {
                                 </div>
                                 <div onClick={() => setMobileFiltersOpen(true)} className="block md:hidden  items-center  border border-gray-200 px-3 py-2 rounded-xl cursor-pointer hover:bg-gray-50">
                                     <div className="flex gap-2">
-                                    <div className=" flex flex-col justify-center items-center gap-[4px]">
-                                        <span className="block w-5 h-[1.5px] bg-gray-500"></span>
-                                        <span className="block w-5 h-[1.5px] bg-gray-500"></span>
-                                        <span className="block w-5 h-[1.5px] bg-gray-500"></span>
-                                    </div>
-                                    <h1 className="text-sm text-gray-700">Filter</h1>
+                                        <div className=" flex flex-col justify-center items-center gap-[4px]">
+                                            <span className="block w-5 h-[1.5px] bg-gray-500"></span>
+                                            <span className="block w-5 h-[1.5px] bg-gray-500"></span>
+                                            <span className="block w-5 h-[1.5px] bg-gray-500"></span>
+                                        </div>
+                                        <h1 className="text-sm text-gray-700">Filter</h1>
                                     </div>
                                 </div>
                             </div>
@@ -293,17 +302,20 @@ function Shop() {
                     </div>
 
                     {/* Pagination */}
-                    <div className="flex justify-center items-center gap-4 py-10 lg:ml-64 xl:ml-80">
-                        {[1, 2, 3].map((page) => (
-                            <h1
-                                key={page}
-                                onClick={() => handlePagination(page)}
-                                className={` ${currentPage === page ? "bg-gray-300" : "bg-gray-100"}  h-6 w-6 flex justify-center rounded-full items-center text-xs cursor-pointer`}
-                            >
-                                {page}
-                            </h1>
-                        ))}
-                    </div>
+                    {products.length > 20 && (
+                        <div className="flex justify-center items-center gap-4 py-10 lg:ml-64 xl:ml-80">
+                            {[1, 2, 3].map((page) => (
+                                <h1
+                                    key={page}
+                                    onClick={() => handlePagination(page)}
+                                    className={` ${currentPage === page ? "bg-gray-300" : "bg-gray-100"}  h-6 w-6 flex justify-center rounded-full items-center text-xs cursor-pointer`}
+                                >
+                                    {page}
+                                </h1>
+                            ))}
+                        </div>
+
+                    )}
                 </div>
             </div>
         </>

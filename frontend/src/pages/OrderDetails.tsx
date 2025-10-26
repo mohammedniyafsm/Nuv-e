@@ -4,11 +4,16 @@ import axios from "axios";
 import { Loader2 } from "lucide-react";
 import toast from "react-hot-toast";
 
+interface ProductImage {
+  url: string;
+  alt?: string;
+}
+
 interface OrderItem {
   productId: {
     _id: string;
     name: string;
-    images: string[];
+    images: ProductImage[];
   };
   quantity: number;
   price: number;
@@ -51,10 +56,6 @@ export default function AdminOrderDetail() {
   const [order, setOrder] = useState<OrderDetail | null>(null);
   const [loading, setLoading] = useState(true);
 
-  const handleshow = () => {
-    console.log(order)
-  }
-
   useEffect(() => {
     const fetchOrder = async () => {
       try {
@@ -64,15 +65,12 @@ export default function AdminOrderDetail() {
         );
 
         const { orderDetail, shippingAddress } = res.data;
-
-        // Merge shippingAddress into orderDetail
         const enrichedOrder = {
           ...orderDetail,
           shippingAddress: shippingAddress || null,
         };
 
         setOrder(enrichedOrder);
-        console.log("Enriched Order:", enrichedOrder);
       } catch (error: any) {
         toast.error(error.response?.data?.message || "Failed to load order");
         setOrder(null);
@@ -110,10 +108,6 @@ export default function AdminOrderDetail() {
           <p><strong>Email:</strong> {order.userId.email}</p>
         </div>
       </section>
-
-      <div onClick={handleshow} className="">
-        csvsvvf
-      </div>
 
       {/* Shipping Info */}
       <section className="bg-white shadow rounded-lg p-6 mb-6">
@@ -161,22 +155,30 @@ export default function AdminOrderDetail() {
       <section className="bg-white shadow rounded-lg p-6 mb-6">
         <h3 className="text-xl font-semibold mb-4 text-gray-700">🛒 Items</h3>
         <div className="space-y-4">
-          {order.items.map((item, index) => (
-            <div key={index} className="flex flex-col sm:flex-row sm:items-center justify-between border-b pb-4">
-              <div className="flex items-center gap-4">
-                <img
-                  src={item.productId.images?.[0] || "/placeholder.jpg"}
-                  alt={item.productId.name}
-                  className="w-20 h-20 object-cover rounded-md border"
-                />
-                <div>
-                  <p className="font-medium text-gray-800">{item.productId.name}</p>
-                  <p className="text-sm text-gray-500">Qty: {item.quantity} × ₹{item.price}</p>
+          {order.items.map((item, index) => {
+            const imageUrl =
+              item.productId?.images?.[0]?.url ||
+              "/images/placeholder.jpg";
+
+            return (
+              <div key={index} className="flex flex-col sm:flex-row sm:items-center justify-between border-b pb-4">
+                <div className="flex items-center gap-4">
+                  <img
+                    src={imageUrl}
+                    alt={item.productId?.images?.[0]?.alt || item.productId.name}
+                    className="w-20 h-20 object-cover rounded-md border"
+                  />
+                  <div>
+                    <p className="font-medium text-gray-800">{item.productId.name}</p>
+                    <p className="text-sm text-gray-500">
+                      Qty: {item.quantity} × ₹{item.price}
+                    </p>
+                  </div>
                 </div>
+                <p className="font-semibold text-gray-700 mt-2 sm:mt-0">₹{item.subtotal}</p>
               </div>
-              <p className="font-semibold text-gray-700 mt-2 sm:mt-0">₹{item.subtotal}</p>
-            </div>
-          ))}
+            );
+          })}
         </div>
       </section>
 

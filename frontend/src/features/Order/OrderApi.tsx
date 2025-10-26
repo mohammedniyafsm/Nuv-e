@@ -44,6 +44,7 @@ export interface PaymentI {
 //FETCH ALL ORDER 
 export const getOrders = async () => {
   const response = await axios.get(`${API_URL}/api/orders`, { withCredentials: true });
+  console.log(response.data.orders);
   return response.data.orders;
 };
 

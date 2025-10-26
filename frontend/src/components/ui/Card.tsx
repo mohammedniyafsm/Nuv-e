@@ -18,7 +18,6 @@ import type { AppDispatch, RootState } from "../../app/store";
 
 interface CartItem {
   _id: string;
-  // ✅ productId can be either a string or an object
   productId: string | { _id: string };
   quantity?: number;
 }
@@ -80,14 +79,17 @@ function Card({ name, price, _id, category, images }: CardProps) {
     }
   };
 
-  const handleWishlistToggle = () => {
+  const handleWishlistToggle = (_id : any) => {
     if (favour) {
       dispatch(removeWishlist(_id));
       toast.success("Removed from Wishlist");
+      console.log("removed",_id)
     } else {
       dispatch(addWishlist(_id));
       toast.success("Added to Wishlist");
+      console.log("added Wishlist")
     }
+    dispatch(WishLists());
   };
 
   return (
@@ -107,7 +109,7 @@ function Card({ name, price, _id, category, images }: CardProps) {
           {/* Wishlist Icon */}
           <button
             className="bg-white rounded-full h-7 w-7 md:h-8 md:w-8 flex items-center justify-center hover:bg-gray-100 transition-colors"
-            onClick={handleWishlistToggle}
+            onClick={()=>handleWishlistToggle(_id)}
             aria-label="Toggle wishlist"
           >
             {favour ? (

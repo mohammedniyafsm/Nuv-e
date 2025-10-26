@@ -6,7 +6,8 @@ export const getWishList = async () => {
     const res = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/api/wishlist`, {
       withCredentials: true,
     });
-    return res.data;
+    return res.data.wishlist;
+    
   } catch (error: any) {
     if (error.response?.status === 404) {
       return { _id: "", userId: "", products: [] };
@@ -20,7 +21,8 @@ export const postWishlist  = async(productId : string)=>{
     const response = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/api/wishlist`,{productId},
         { withCredentials : true }
     )
-    return response.data.wishlist;
+    console.log(response.data.wishlist.products);
+    return response.data.wishlist.products;
 }
 
 // DELETE USER WISHLIST
@@ -28,7 +30,7 @@ export const deleteWishlist  = async(productId : string)=>{
     const response = await axios.delete(`${import.meta.env.VITE_BACKEND_URL}/api/wishlist/${productId}`,
         { withCredentials : true }
     )
-    return response.data.update;
+    return response.data.update.products;
 }
 
 // MOVE WISHLIST PRODUCT TO CART 

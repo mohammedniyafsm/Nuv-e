@@ -316,7 +316,7 @@ function CartCard() {
                     >
                       <div className="flex items-center gap-4 flex-1">
                         <img
-                          src={product?.image || "/images/product1.png"}
+                          src={product?.images[0].url || "/images/product1.png"}
                           alt={product?.name || "Product"}
                           className="h-24 w-24 rounded-lg object-cover border border-gray-200"
                           loading="lazy"

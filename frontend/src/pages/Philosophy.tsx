@@ -1,7 +1,17 @@
+import { useLocation } from 'react-router-dom';
 import Git from '../components/icons/Git'
 import Navbar from '../components/Navbar'
+import { useEffect } from 'react';
 
 function Philosophy() {
+
+  const { pathname } = useLocation();
+
+  // Scroll to top on route change
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [pathname]);
+
   return (
     <>
 
@@ -14,7 +24,7 @@ function Philosophy() {
               <span className='font-neogroteskessalt-boldit'>Eternal</span>
             </h1>
           </div>
-          
+
           <div className="absolute inset-0 flex justify-center ml-8 sm:ml-0 items-center md:left-[20%] lg:left-[180px] md:top-0 lg:top-15">
             <img className='h-auto max-h-[80vh] md:h-[500px] lg:h-[700px] w-auto' src="./public/images/mask.png" alt="Mask" />
           </div>
@@ -70,9 +80,9 @@ function Philosophy() {
             synthetic shortcuts and harmful additives.
           </p>
           <p className='flex-1'>
-            With nothing to hide and no black boxes, we 
-            believe you deserve to know exactly what 
-            goes into every scent. From the first note to 
+            With nothing to hide and no black boxes, we
+            believe you deserve to know exactly what
+            goes into every scent. From the first note to
             the lasting trail, every drop is crafted.
           </p>
         </div>
@@ -95,9 +105,9 @@ function Philosophy() {
             synthetic shortcuts and harmful additives.
           </p>
           <p className='flex-1'>
-            With nothing to hide and no black boxes, we 
-            believe you deserve to know exactly what 
-            goes into every scent. From the first note to 
+            With nothing to hide and no black boxes, we
+            believe you deserve to know exactly what
+            goes into every scent. From the first note to
             the lasting trail, every drop is crafted.
           </p>
         </div>
