@@ -1,10 +1,11 @@
 import express from "express";
 import { adminProtect, protect, userProtect } from "../middleware/Auth";
 import { addProduct, deleteProduct, getAdminProducts, getProductByIdAdmin, updateProduct } from "../controller/productController";
-import { adminProfile, getAllUsers, getPresignedUrl, getUserById, loginAdmin, Logout, sendOtp, signupAdmin, updateUserStatus, verifyOtp } from "../controller/adminController";
+import { adminProfile, getAllUsers,  getUserById, loginAdmin, Logout, sendOtp, signupAdmin, updateUserStatus, verifyOtp } from "../controller/adminController";
 import { bulkUpdateOrderStatus, deleteOrder, getAllOrders, getOrderByIdAdmin, updateOrderStatus } from "../controller/orderController";
 import { createCoupon, deleteCoupon, getCoupons, updateCoupon } from "../controller/couponController";
 import { getAdminDashboard, getRevenueByPeriod } from "../controller/DashbaordController";
+import upload from "../middleware/Upload";
 
 const router = express.Router();
 
@@ -17,9 +18,8 @@ router.get('/admin/profile', adminProtect, protect, adminProfile); // Get admin 
 router.get('/admin/logout', adminProtect, protect, Logout); // Logout
 
 //  PRODUCT MANAGEMENT (Admin)
-router.post('/admin/products', adminProtect, protect, addProduct); // Add new product
+router.post('/admin/products', adminProtect, protect,upload.array('images', 4), addProduct); // Add new product
 router.get('/admin/products', adminProtect, protect, getAdminProducts); // Get all products (admin view)
-router.get('/admin/s3-presign', adminProtect, protect, getPresignedUrl); // Get S3 presigned URL for image upload
 router.put('/admin/products/:id', adminProtect, protect, updateProduct); // Update product by ID
 router.delete('/admin/products/:id', adminProtect, protect, deleteProduct); // Delete product by ID
 router.get('/admin/products/:id', adminProtect, protect, getProductByIdAdmin); // Get product details by ID (admin view)

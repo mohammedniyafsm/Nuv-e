@@ -8,9 +8,6 @@ import { sendOtpEmail } from "../utils/nodemailer";
 import { JwtPayload } from "jsonwebtoken";
 import jwt from "jsonwebtoken"
 import User from "../models/User";
-import { PutObjectCommand } from "@aws-sdk/client-s3";
-import { getSignedUrl } from "@aws-sdk/s3-request-presigner"
-import s3Client from "../utils/s3Client";
 
 
 const isProduction = process.env.NODE_ENV === "production";
@@ -198,30 +195,3 @@ export const updateUserStatus = async (req: Request, res: Response): Promise<voi
     }
 }
 
-// GET PRESIGNED URL FOR ADDING IMAGES TO S3 BUCKET
-export const getPresignedUrl = async (req: Request, res: Response): Promise<void> => {
-    try {
-        const filename = req.query.filename as string;
-        const contentType = req.query.contentType as string;
-
-        const key = `products/${filename}_${Date.now()}`;
-
-        if (!filename || !contentType) {
-            res.status(400).json({ message: "Missing filename or contentType" });
-            return;
-        }
-
-        const command = new PutObjectCommand({
-            Bucket: process.env.BUCKET_NAME as string,
-            Key: key,
-            ContentType: contentType
-        })
-
-        const url = await getSignedUrl(s3Client, command, { expiresIn: 60 });
-        res.json({ url, key, cloudfrontUrl: `https://${process.env.CLOUDFRONT_DOMAIN}/${key}` });
-        return;
-    } catch (error) {
-        res.status(500).json({ message: "Server Error ", error });
-        return;
-    }
-}

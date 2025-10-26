@@ -5,8 +5,38 @@ import { Product } from "../models/Product";
 // ADD PRODUCT
 export const addProduct = async (req: Request, res: Response): Promise<void> => {
     try {
-        const { name, category, size, price, discount, stock, description, images } = req.body;
-        const newProduct = await Product.create({ name, category, size, price, discount, stock, description, images });
+        const { name, category, size, price, discount, stock, description } = req.body;
+        const images = req.files as Express.Multer.File[];
+
+        if (!images || images.length === 0) {
+            res.status(400).json({ message: "No images uploaded" });
+            return;
+        }
+
+        console.log(images)
+        const orderedImages: { url: string; alt: string }[] = [];
+
+        for (const file of images) {
+            const match = file.originalname.match(/(\d+)\.png$/); 
+            if (match) {
+                const index = parseInt(match[1], 10) - 1; 
+                orderedImages[index] = {
+                    url: file.path,
+                    alt: file.originalname,
+                };
+            } else {
+                orderedImages.push({
+                    url: file.path,
+                    alt: file.originalname,
+                });
+            }
+        }
+
+        const finalImages = orderedImages.filter(Boolean);
+
+        console.log("🖼️ Ordered images:", finalImages);
+
+        const newProduct = await Product.create({ name, category, size, price, discount, stock, description, images: finalImages });
         console.log(newProduct);
         res.status(200).json({ message: "Product Added Successfully", newProduct });
         return;
@@ -80,7 +110,7 @@ export const getProductByIdAdmin = async (req: Request, res: Response): Promise<
 // GET ALL PRODUCTS (PUBLIC)
 export const getAllProducts = async (req: Request, res: Response): Promise<void> => {
     try {
-        const products = await Product.find().sort({createdAt : -1});
+        const products = await Product.find().sort({ createdAt: -1 });
         res.status(200).json(products);
     } catch (error) {
         res.status(500).json({ message: "Server Error", error });
@@ -152,7 +182,7 @@ export const getPaginatedProducts = async (req: Request, res: Response): Promise
         const { page, limit, sort } = req.query;
         const li = Number(limit);
         const pa = Number(page)
-        const skip = (pa - 1 )* li;
+        const skip = (pa - 1) * li;
         let sortOption: any = {};
         if (sort) sortOption[sort as string] = 1
 
