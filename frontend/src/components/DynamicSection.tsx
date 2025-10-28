@@ -40,6 +40,7 @@ function DynamicSection({
         }
       );
       setProduct(data.response || []);
+      console.log(category ,data.response)
     } catch (error) {
       console.error("Error fetching products:", error);
     }
@@ -53,7 +54,7 @@ function DynamicSection({
   useEffect(() => {
     const updateCardSettings = () => {
       const width = window.innerWidth;
-      
+
       if (width < 640) {
         // Small mobile: 1 card
         setVisibleCards(1);
@@ -99,7 +100,10 @@ function DynamicSection({
   const categoryBg: Record<string, string> = {
     "SIGNATURE COLLECTION": "#d6d0d0",
     "BLOOM ESSENCE": "#CBC6D8",
-    "NOIR COLLECTION" : "#F2D6AF"
+    "NOIR COLLECTION": "#F2D6AF",
+    "DAYLIGHT SERIES": "#D7CDC2",
+    "ELITE Oud": "#C1CBDA",
+    "VELVET Desire" : "#D6CCC3"
   };
 
   const bgColor = categoryBg[category] || "#FFFFFF";

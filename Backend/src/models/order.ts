@@ -10,6 +10,7 @@ interface IOrder {
     paymentStatus: string,
     orderStatus: string,
     trackingId?: string,
+    coupon? : string,
     discountAmount: number,
     subtotal: number,
     totalAmount: number,
@@ -74,6 +75,9 @@ const OrderSchema = new Schema<IOrder>({
     },
     trackingId: {
         type: String,
+    },
+    coupon : {
+        type : String,
     },
     discountAmount: {
         type: Number,

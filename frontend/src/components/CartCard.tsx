@@ -46,10 +46,10 @@ const Edit = ({ className }: { className?: string }) => (
 function CartCard() {
   const dispatch = useDispatch<AppDispatch>();
   const navigate = useNavigate();
-  const { items,  subtotal, discountAmount, totalAmount, coupon, loading } = useSelector((state: RootState) => state.cart);
-  const { _id ,username,email} = useSelector((state :RootState )=> state.user)
-    
- 
+  const { items, subtotal, discountAmount, totalAmount, coupon, loading } = useSelector((state: RootState) => state.cart);
+  const { _id, username, email } = useSelector((state: RootState) => state.user)
+
+
   const { address, loading: addressLoading } = useSelector((state: RootState) => state.address);
 
   const [couponCode, setCouponCode] = useState("");
@@ -97,7 +97,6 @@ function CartCard() {
     try {
       await dispatch(applyCouponAction(couponCode)).unwrap();
       toast.success("Coupon applied successfully!");
-      setCouponCode("");
       setCouponError("");
     } catch (error: any) {
       toast.error(error);
@@ -109,6 +108,7 @@ function CartCard() {
     try {
       await dispatch(removeCouponAction()).unwrap();
       toast.success("Coupon removed successfully!");
+      setCouponCode("");
     } catch (err: any) {
       console.error(err);
     }
@@ -183,7 +183,7 @@ function CartCard() {
       return;
     }
     try {
-      if(selectedPayment == "COD"){
+      if (selectedPayment == "COD") {
         await dispatch(
           placeOrder({
             items,
@@ -191,13 +191,14 @@ function CartCard() {
             paymentMethod: selectedPayment,
             paymentStatus: selectedPayment === "COD" ? "Pending" : "Paid",
             discountAmount,
+            coupon: couponCode
           })
         ).unwrap();
         await dispatch(clearCartAction())
         toast.success("Order placed successfully!");
         navigate("/account/orders");
-      }else{
-       handleRazorpayPayment();
+      } else {
+        handleRazorpayPayment();
       }
     } catch (err) {
       toast.error("Failed to place order.");
@@ -205,47 +206,48 @@ function CartCard() {
   };
 
   const handleRazorpayPayment = async () => {
-  try {
-    const order = await createPaymentOrder(totalAmount);
-    const options: any = {
-      key: import.meta.env.VITE_RAZORPAY_KEY_ID,
-      amount: order.amount,
-      currency: order.currency,
-      name: "Nuvée",
-      description: "Order Payment",
-      order_id: order.id,
-      handler: async (response: any) => {
-        const verification = await verifyPaymentOrder(response);
-        if (verification.message === "Payment verified successfully") {
-          toast.success("Payment Successful!");
-          await dispatch(placeOrder({
-            items,
-            shippingAddressId: selectedAddressId,
-            paymentMethod: "UPI",
-            paymentStatus: "Paid",
-            discountAmount,
-          })).unwrap();
-          await dispatch(clearCartAction());
-          navigate("/account/orders");
-        } else {
-          toast.error("Payment verification failed!");
-        }
-      },
-      prefill: {
-        name: {username},
-        email: {email},
-        contact: {_id},
-      },
-      theme: { color: "#3399cc" },
-    };
+    try {
+      const order = await createPaymentOrder(totalAmount);
+      const options: any = {
+        key: import.meta.env.VITE_RAZORPAY_KEY_ID,
+        amount: order.amount,
+        currency: order.currency,
+        name: "Nuvée",
+        description: "Order Payment",
+        order_id: order.id,
+        handler: async (response: any) => {
+          const verification = await verifyPaymentOrder(response);
+          if (verification.message === "Payment verified successfully") {
+            toast.success("Payment Successful!");
+            await dispatch(placeOrder({
+              items,
+              shippingAddressId: selectedAddressId,
+              paymentMethod: "UPI",
+              paymentStatus: "Paid",
+              discountAmount,
+              coupon: couponCode
+            })).unwrap();
+            await dispatch(clearCartAction());
+            navigate("/account/orders");
+          } else {
+            toast.error("Payment verification failed!");
+          }
+        },
+        prefill: {
+          name: { username },
+          email: { email },
+          contact: { _id },
+        },
+        theme: { color: "#3399cc" },
+      };
 
-    const rzp = new (window as any).Razorpay(options);
-    rzp.open();
-  } catch (err) {
-    console.error(err);
-    toast.error("Payment failed!");
-  }
-};
+      const rzp = new (window as any).Razorpay(options);
+      rzp.open();
+    } catch (err) {
+      console.error(err);
+      toast.error("Payment failed!");
+    }
+  };
 
 
   if (loading) return (

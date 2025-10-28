@@ -10,22 +10,14 @@ import { useNavigate } from "react-router-dom";
 
 function ProductAdmin() {
   const dispatch = useDispatch<AppDispatch>();
-
-  useEffect(() => {
-    dispatch(allProduct())
-      .unwrap()
-      .then((data) => console.log("Products from backend:", data))
-      .catch((err) => console.error("Failed to fetch products:", err));
-  }, []);
+  const navigate = useNavigate();
 
   const product = useSelector((state: RootState) => state.product);
 
-  const navigate = useNavigate();
-
-  const [images, setImages] = useState<File[]>([]);
   const [add, setAdd] = useState(false);
   const [editProduct, setEditProduct] = useState<any>(null);
   const [search, setSearch] = useState("");
+  const [images, setImages] = useState<File[]>([]);
 
   const [productNew, setNewProduct] = useState({
     name: "",
@@ -37,72 +29,67 @@ function ProductAdmin() {
     description: "",
   });
 
+  // 🔹 Load all products
+  useEffect(() => {
+    dispatch(allProduct())
+      .unwrap()
+      .then((data) => console.log("✅ Products from backend:", data))
+      .catch((err) => console.error("❌ Failed to fetch products:", err));
+  }, [dispatch]);
+
+  // 🔹 Input field change
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
     setNewProduct((prev) => ({ ...prev, [name]: value }));
   };
 
+  // 🔹 Handle image input
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files) setImages(Array.from(e.target.files));
+    if (e.target.files) {
+      setImages(Array.from(e.target.files));
+    }
   };
 
-  const uploadImagesToS3 = async () => {
-    const uploadPromises = images.map(async (file) => {
-      const { data } = await axios.get(
-        `${import.meta.env.VITE_BACKEND_URL}/api/admin/s3-presign?filename=${encodeURIComponent(
-          file.name
-        )}&contentType=${file.type}`,
-        { withCredentials: true }
-      );
-      await fetch(data.url, { method: "PUT", headers: { "Content-Type": file.type }, body: file });
-      return {
-        url: data.cloudfrontUrl,
-        // Extract number from filename: "1.png" → 1
-        order: parseInt(file.name.match(/(\d+)\.png$/i)?.[1] || "0")
-      };
-    });
-    const results = await Promise.all(uploadPromises);
-
-    // Sort by order: 1 → 2 → 3 → 4
-    return results
-      .sort((a, b) => a.order - b.order)
-      .map(r => r.url);
-  };
-
+  // 🔹 Delete product
   const handleDelete = async (id: string) => {
-    await axios.delete(`${import.meta.env.VITE_BACKEND_URL}/api/admin/products/${id}`, {
-      withCredentials: true,
-    });
-    toast.success("Product Deleted Successfully!");
-    dispatch(allProduct());
+    try {
+      await axios.delete(`${import.meta.env.VITE_BACKEND_URL}/api/admin/products/${id}`, {
+        withCredentials: true,
+      });
+      toast.success("🗑️ Product deleted successfully!");
+      dispatch(allProduct());
+    } catch (err) {
+      toast.error("Failed to delete product.");
+      console.error(err);
+    }
   };
 
+  // 🔹 Submit (Add / Edit)
   const handleSubmit = async () => {
     try {
-      const imageUrls =
-        images.length > 0
-          ? await uploadImagesToS3()
-          : editProduct?.images.map((img: any) => img.url);
-
-      const productData = {
-        ...productNew,
-        images: imageUrls.map((url: any) => ({ url })),
-      };
+      const formData = new FormData();
+      Object.entries(productNew).forEach(([key, value]) => {
+        formData.append(key, value);
+      });
+      images.forEach((file) => formData.append("images", file));
 
       if (editProduct) {
+        // Update product
         await axios.put(
           `${import.meta.env.VITE_BACKEND_URL}/api/admin/products/${editProduct._id}`,
-          productData,
+          formData,
           { withCredentials: true }
         );
-        toast.success("Product Updated Successfully!");
+        toast.success("✅ Product updated successfully!");
       } else {
-        await axios.post(`${import.meta.env.VITE_BACKEND_URL}/api/admin/products`, productData, {
+        // Add new product
+        await axios.post(`${import.meta.env.VITE_BACKEND_URL}/api/admin/products`, formData, {
           withCredentials: true,
         });
-        toast.success("Product Added Successfully!");
+        toast.success("✅ Product added successfully!");
       }
 
+      // Reset state
       setAdd(false);
       setEditProduct(null);
       setNewProduct({
@@ -118,10 +105,11 @@ function ProductAdmin() {
       dispatch(allProduct());
     } catch (error) {
       console.error("Error:", error);
-      toast.error("Failed to save product.");
+      toast.error("❌ Failed to save product.");
     }
   };
 
+  // 🔹 Edit product
   const handleEdit = (item: any) => {
     setEditProduct(item);
     setNewProduct({
@@ -133,9 +121,11 @@ function ProductAdmin() {
       stock: item.stock,
       description: item.description,
     });
+    setImages([]);
     setAdd(true);
   };
 
+  // 🔹 Search filter
   const filterProduct = product.products.filter(
     (f) =>
       f.name.toLowerCase().includes(search.toLowerCase()) ||
@@ -146,6 +136,7 @@ function ProductAdmin() {
     <section className="px-4 sm:px-6 md:px-12 py-4 w-full">
       {!add && (
         <>
+          {/* Top Bar */}
           <div className="flex flex-col sm:flex-row justify-between sm:items-center py-4 gap-4">
             <div>
               <h1 className="text-lg sm:text-xl font-neogrotesk-regular">Products</h1>
@@ -164,6 +155,7 @@ function ProductAdmin() {
             </button>
           </div>
 
+          {/* Search Bar */}
           <div className="w-full">
             <input
               className="mt-6 bg-white px-6 h-10 w-full rounded-xl border border-gray-200 focus:outline-none"
@@ -174,6 +166,7 @@ function ProductAdmin() {
             />
           </div>
 
+          {/* Product Cards */}
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 py-10">
             {filterProduct?.length > 0 ? (
               filterProduct.map((item) => (
@@ -181,16 +174,14 @@ function ProductAdmin() {
                   key={item._id}
                   className="w-full bg-white rounded-xl shadow-sm border border-[#dbdada] p-4 flex flex-col justify-between"
                 >
-                  <img onClick={() => navigate(`/product/${item._id}`)}
-                    className="h-64 sm:h-72 w-full object-cover rounded-xl"
-                    src={item.images[0].url}
+                  <img
+                    onClick={() => navigate(`/product/${item._id}`)}
+                    className="h-64 sm:h-72 w-full object-cover rounded-xl cursor-pointer"
+                    src={item.images?.[0]?.url || "/placeholder.jpg"}
                     alt={item.name}
                   />
                   <div className="flex justify-between items-center pt-4">
                     <h1 className="font-medium">{item.name}</h1>
-                    <button className="h-6 w-20 rounded-md bg-green-200 text-green-800 text-xs">
-                      {item.status}
-                    </button>
                   </div>
                   <h1 className="text-[#6b6b6b] text-sm">{item.category}</h1>
                   <div className="flex justify-between items-center mt-4">
@@ -222,83 +213,36 @@ function ProductAdmin() {
         </>
       )}
 
+      {/* Add / Edit Form */}
       {(add || editProduct) && (
         <section className="bg-white mt-8 rounded-2xl px-6 sm:px-8 md:px-10 py-8 w-full">
-          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-3">
-            <h1 className="text-lg sm:text-xl font-neogrotesk-regular">
-              {editProduct ? "Edit Product" : "Add New Product"}
-            </h1>
-          </div>
+          <h1 className="text-lg sm:text-xl font-neogrotesk-regular mb-6">
+            {editProduct ? "Edit Product" : "Add New Product"}
+          </h1>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
-            <div>
-              <label className="block text-sm mb-1">Product Name</label>
-              <input
-                name="name"
-                value={productNew.name}
-                onChange={handleChange}
-                type="text"
-                placeholder="Nuvee Eau de Parfum"
-                className="w-full px-4 py-2 rounded-xl bg-[#ececf0] text-sm focus:outline-none"
-              />
-            </div>
-            <div>
-              <label className="block text-sm mb-1">Category</label>
-              <input
-                name="category"
-                value={productNew.category}
-                onChange={handleChange}
-                type="text"
-                placeholder="Perfume"
-                className="w-full px-4 py-2 rounded-xl bg-[#ececf0] text-sm focus:outline-none"
-              />
-            </div>
-            <div>
-              <label className="block text-sm mb-1">Size</label>
-              <input
-                name="size"
-                value={productNew.size}
-                onChange={handleChange}
-                type="text"
-                placeholder="100ml"
-                className="w-full px-4 py-2 rounded-xl bg-[#ececf0] text-sm focus:outline-none"
-              />
-            </div>
-            <div>
-              <label className="block text-sm mb-1">Price</label>
-              <input
-                name="price"
-                value={productNew.price}
-                onChange={handleChange}
-                type="text"
-                placeholder="89.00"
-                className="w-full px-4 py-2 rounded-xl bg-[#ececf0] text-sm focus:outline-none"
-              />
-            </div>
-            <div>
-              <label className="block text-sm mb-1">Discount (%)</label>
-              <input
-                name="discount"
-                value={productNew.discount}
-                onChange={handleChange}
-                type="text"
-                placeholder="10"
-                className="w-full px-4 py-2 rounded-xl bg-[#ececf0] text-sm focus:outline-none"
-              />
-            </div>
-            <div>
-              <label className="block text-sm mb-1">Stock</label>
-              <input
-                name="stock"
-                value={productNew.stock}
-                onChange={handleChange}
-                type="text"
-                placeholder="45"
-                className="w-full px-4 py-2 rounded-xl bg-[#ececf0] text-sm focus:outline-none"
-              />
-            </div>
+            {[
+              { label: "Product Name", name: "name", placeholder: "Nuvee Eau de Parfum" },
+              { label: "Category", name: "category", placeholder: "Perfume" },
+              { label: "Size", name: "size", placeholder: "100ml" },
+              { label: "Price", name: "price", placeholder: "89.00" },
+              { label: "Discount (%)", name: "discount", placeholder: "10" },
+              { label: "Stock", name: "stock", placeholder: "45" },
+            ].map((field) => (
+              <div key={field.name}>
+                <label className="block text-sm mb-1">{field.label}</label>
+                <input
+                  name={field.name}
+                  value={(productNew as any)[field.name]}
+                  onChange={handleChange}
+                  type="text"
+                  placeholder={field.placeholder}
+                  className="w-full px-4 py-2 rounded-xl bg-[#ececf0] text-sm focus:outline-none"
+                />
+              </div>
+            ))}
 
-            <div className="col-span-1 sm:col-span-2 md:col-span-3">
+            <div className="col-span-3">
               <label className="block text-sm mb-1">Description</label>
               <textarea
                 name="description"
@@ -307,10 +251,10 @@ function ProductAdmin() {
                 rows={4}
                 placeholder="Enter product description..."
                 className="w-full px-4 py-2 rounded-xl bg-[#ececf0] text-sm focus:outline-none"
-              ></textarea>
+              />
             </div>
 
-            <div className="col-span-1 sm:col-span-2 md:col-span-3">
+            <div className="col-span-3">
               <label className="block text-sm mb-1">Upload Images</label>
               <input
                 onChange={handleFileChange}
@@ -321,7 +265,7 @@ function ProductAdmin() {
             </div>
           </div>
 
-          <div className="flex flex-col sm:flex-row justify-end gap-4 mt-8">
+          <div className="flex justify-end gap-4 mt-8">
             <button
               onClick={() => {
                 setAdd(false);

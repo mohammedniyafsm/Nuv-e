@@ -33,7 +33,10 @@ interface CardProps {
 const categoryBg: Record<string, string> = {
   "SIGNATURE COLLECTION": "#ECC9CA",
   "BLOOM ESSENCE": "#CBC6D8",
-  "NOIR COLLECTION" : "#F2D6AF"
+  "NOIR COLLECTION": "#F2D6AF",
+  "DAYLIGHT SERIES": "#D7CDC2",
+  "ELITE Oud": "#C1CBDA",
+  "VELVET Desire": "#D6CCC3"
 
 };
 
@@ -79,11 +82,11 @@ function Card({ name, price, _id, category, images }: CardProps) {
     }
   };
 
-  const handleWishlistToggle = (_id : any) => {
+  const handleWishlistToggle = (_id: any) => {
     if (favour) {
       dispatch(removeWishlist(_id));
       toast.success("Removed from Wishlist");
-      console.log("removed",_id)
+      console.log("removed", _id)
     } else {
       dispatch(addWishlist(_id));
       toast.success("Added to Wishlist");
@@ -109,7 +112,7 @@ function Card({ name, price, _id, category, images }: CardProps) {
           {/* Wishlist Icon */}
           <button
             className="bg-white rounded-full h-7 w-7 md:h-8 md:w-8 flex items-center justify-center hover:bg-gray-100 transition-colors"
-            onClick={()=>handleWishlistToggle(_id)}
+            onClick={() => handleWishlistToggle(_id)}
             aria-label="Toggle wishlist"
           >
             {favour ? (
@@ -140,13 +143,13 @@ function Card({ name, price, _id, category, images }: CardProps) {
         <img
           onClick={() => navigate(`/product/${_id}`)}
           className="absolute w-[140px] md:w-[280px] object-contain transition-opacity duration-300 opacity-100 group-hover:opacity-0 cursor-pointer"
-          src= { images[0]?.url || "./images/product1.png"}
+          src={images[0]?.url || "./images/product1.png"}
           alt={name}
         />
         <img
           onClick={() => navigate(`/product/${_id}`)}
           className="absolute w-[140px] md:w-[280px] object-contain transition-opacity duration-300 opacity-0 group-hover:opacity-100 cursor-pointer"
-          src=  { images[1]?.url || "./images/product2.png"}
+          src={images[1]?.url || "./images/product2.png"}
           alt={`${name} hover`}
         />
       </div>

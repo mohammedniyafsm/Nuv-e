@@ -46,7 +46,7 @@ function Shop() {
                 category: selectedCollection || undefined
             }));
         } else {
-            dispatch(paginatedProducts({ page: currentPage, limit: 15 }));
+            dispatch(paginatedProducts({ page: currentPage, limit: 12 }));
         }
     }, [minPrice, maxPrice, selectedCollection, currentPage, dispatch]);
 
@@ -302,9 +302,9 @@ function Shop() {
                     </div>
 
                     {/* Pagination */}
-                    {products.length > 20 && (
+                   
                         <div className="flex justify-center items-center gap-4 py-10 lg:ml-64 xl:ml-80">
-                            {[1, 2, 3].map((page) => (
+                            {[1, 2].map((page) => (
                                 <h1
                                     key={page}
                                     onClick={() => handlePagination(page)}
@@ -315,7 +315,7 @@ function Shop() {
                             ))}
                         </div>
 
-                    )}
+                   
                 </div>
             </div>
         </>

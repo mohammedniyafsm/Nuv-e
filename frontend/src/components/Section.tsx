@@ -19,8 +19,26 @@ function Section() {
       subtitle: "Experience Timeless",
       subtitle2: "Comfort",
     },
+     {
+    category: "VELVET Desire",
+    title: "Nuvée Velvet",
+    subtitle: "Unveil Smooth",
+    subtitle2: "Seduction",
+  },
+      {
+      category: "ELITE Oud",
+      title: "Nuvée Oud",
+      subtitle: "Indulge in Deep",
+      subtitle2: "Luxury",
+    },
     {
-      category: "NOIR COLLECTION", 
+      category: "DAYLIGHT SERIES",
+      title: "Nuvée Daylight",
+      subtitle: "Embrace Fresh",
+      subtitle2: "Radiance",
+    },
+  {
+      category: "NOIR COLLECTION",
       title: "Nuvée Luxury",
       subtitle: "Experience Timeless",
       subtitle2: "Comfort",

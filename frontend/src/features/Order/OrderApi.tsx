@@ -30,6 +30,7 @@ export interface OrderI {
   orderStatus?: string;
   totalAmount?: number;
   placedAt?: Date;
+  coupon : String,
 }
 
 export interface PaymentI {

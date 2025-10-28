@@ -4,6 +4,7 @@ import { Order } from "../models/order";
 import { razorpay } from "../utils/razorpay";
 import Address from '../models/Address';
 import { Types } from 'mongoose';
+import { Coupon } from '../models/Coupon';
 
 // GET USER ORDERS(USER)
 export const getUserOrders = async (req: Request, res: Response): Promise<void> => {
@@ -25,8 +26,22 @@ export const getUserOrders = async (req: Request, res: Response): Promise<void> 
 export const placeOrder = async (req: Request, res: Response): Promise<void> => {
     try {
         const userId = req.user.id;
-        const { items, shippingAddressId, paymentMethod, paymentStatus,discountAmount } = req.body;
-        const newOrder = new Order({ userId, items, shippingAddressId, paymentMethod, paymentStatus ,discountAmount })
+        const userObjectId = new Types.ObjectId(userId);
+        const { items, shippingAddressId, paymentMethod, paymentStatus, discountAmount, coupon } = req.body;
+        const couponDoc = await Coupon.findOne({ code: coupon });
+
+        if (couponDoc) {
+            const existingUserUsage = couponDoc.userUsed.find((u) => u.userId.toString() === userId.toString());
+
+            if (existingUserUsage) {
+                existingUserUsage.timesUsed += 1;
+            } else {
+                couponDoc.userUsed.push({ userId : userObjectId, timesUsed: 1 });
+            }
+            await couponDoc.save();
+        }
+
+        const newOrder = new Order({ userId, items, shippingAddressId, paymentMethod, paymentStatus, discountAmount, coupon })
         await newOrder.save();
         res.status(200).json({ message: "Order Placed" });
         return;
@@ -140,7 +155,7 @@ export const bulkUpdateOrderStatus = async (req: Request, res: Response): Promis
 // GET ALL ORDERS (ADMIN)
 export const getAllOrders = async (req: Request, res: Response): Promise<void> => {
     try {
-        const orders = await Order.find().populate('userId').sort({placedAt: -1});
+        const orders = await Order.find().populate('userId').sort({ placedAt: -1 });
         res.status(200).json({ orders });
         return;
     } catch (error) {
@@ -207,50 +222,50 @@ export const returnOrder = async (req: Request, res: Response): Promise<void> =>
 
 // GET ORDER DETAILS WITH USER INFORMATION(ADMIN)
 export const getOrderByIdAdmin = async (req: Request, res: Response): Promise<void> => {
-  try {
-    const orderId = req.params.id;
+    try {
+        const orderId = req.params.id;
 
-    // Validate orderId format
-    if (!Types.ObjectId.isValid(orderId)) {
-      res.status(400).json({ message: "Invalid order ID format" });
-      return;
+        // Validate orderId format
+        if (!Types.ObjectId.isValid(orderId)) {
+            res.status(400).json({ message: "Invalid order ID format" });
+            return;
+        }
+
+        // Fetch order with user and product details
+        const orderDetail = await Order.findById(orderId)
+            .populate({ path: "userId", model: "User", select: "username email" })
+            .populate({ path: "items.productId", model: "Product" });
+
+        if (!orderDetail) {
+            res.status(404).json({ message: "Order not found" });
+            return;
+        }
+
+        // Extract shipping address ID
+        const shippingAddressId = orderDetail.shippingAddressId;
+
+        if (!shippingAddressId || !Types.ObjectId.isValid(shippingAddressId)) {
+            res.status(400).json({ message: "Invalid or missing shipping address ID" });
+            return;
+        }
+
+        // Find embedded address by ID
+        const addressDoc = await Address.findOne(
+            { "address._id": shippingAddressId },
+            { "address.$": 1 } // Project only the matched address
+        );
+
+        const shippingAddress = addressDoc?.address?.[0] ?? null;
+
+        // Respond with full order details
+        res.status(200).json({
+            orderDetail,
+            shippingAddress,
+        });
+    } catch (error) {
+        console.error("Error fetching order:", error);
+        res.status(500).json({ message: "Server error", error });
     }
-
-    // Fetch order with user and product details
-    const orderDetail = await Order.findById(orderId)
-      .populate({ path: "userId", model: "User", select: "username email" })
-      .populate({ path: "items.productId", model: "Product" });
-
-    if (!orderDetail) {
-      res.status(404).json({ message: "Order not found" });
-      return;
-    }
-
-    // Extract shipping address ID
-    const shippingAddressId = orderDetail.shippingAddressId;
-
-    if (!shippingAddressId || !Types.ObjectId.isValid(shippingAddressId)) {
-      res.status(400).json({ message: "Invalid or missing shipping address ID" });
-      return;
-    }
-
-    // Find embedded address by ID
-    const addressDoc = await Address.findOne(
-      { "address._id": shippingAddressId },
-      { "address.$": 1 } // Project only the matched address
-    );
-
-    const shippingAddress = addressDoc?.address?.[0] ?? null;
-
-    // Respond with full order details
-    res.status(200).json({
-      orderDetail,
-      shippingAddress,
-    });
-  } catch (error) {
-    console.error("Error fetching order:", error);
-    res.status(500).json({ message: "Server error", error });
-  }
 };
 
 
