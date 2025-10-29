@@ -60,7 +60,7 @@ function AdminLogin() {
             <div className="px-4 py-4 md:px-10">
                 <img
                     className="h-10 md:w-24 md:h-12"
-                    src="./public/images/logo.png"
+                    src="https://res.cloudinary.com/djbawwbzi/image/upload/v1761751553/logo_zidtnt.png"
                     alt="Logo"
                 />
             </div>

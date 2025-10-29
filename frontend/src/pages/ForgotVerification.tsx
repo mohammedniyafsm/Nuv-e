@@ -68,7 +68,7 @@ function ForgotVerification() {
             <div className="px-2 md:px-10">
                 <Link to="/">
                 <img
-                    src="./public/images/logo.png"
+                    src="https://res.cloudinary.com/djbawwbzi/image/upload/v1761751553/logo_zidtnt.png"
                     alt="Logo"
                     className="w-20 h-10 md:w-24 md:h-12"
                 />

@@ -22,7 +22,7 @@ function Landing() {
             <div className="relative h-full w-full ">
 
                 <div className="absolute sm:left-1/2 sm:-translate-x-1/2 bottom-0 xl:left-1/2 xl:-translate-x-1/2 z-0  img-fade-top  ">
-                    <img className="h-[300px]  xl:h-[500px] img-fade-right " src="./public/images/hero1.png" alt="" />
+                    <img className="h-[300px]  xl:h-[500px] img-fade-right " src="https://res.cloudinary.com/djbawwbzi/image/upload/v1761751476/hero1_bmflap.png" alt="" />
                 </div>
 
                 <div className=" absolute hidden md:hidden lg:block lg:left-32 lg:top-24 xl:block  xl:top-16 xl:left-110">
