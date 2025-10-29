@@ -46,6 +46,7 @@ function App() {
           <Route path='/wishlist' element={<Wishlist />} />
           <Route path='/otp' element={<Otp />} />
 
+
           {/* Nested Account Routes */}
           <Route path='/account' element={<Account />}>
             <Route index element={<UserProfile />} />

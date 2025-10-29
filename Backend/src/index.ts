@@ -17,7 +17,7 @@ app.use(cookieParser());
 // PRoduction and development setup
 const FRONTEND_URL =
   process.env.NODE_ENV === "production"
-    ? process.env.FRONTEND_URL || "hhttps://d2bljxiphqwq8x.cloudfront.net/"
+    ? process.env.FRONTEND_URL || "https://nuvee.niyaf.xyz"
     :  "http://localhost:5173";
 
 app.use(
