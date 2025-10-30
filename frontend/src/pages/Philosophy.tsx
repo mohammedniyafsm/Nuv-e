@@ -26,7 +26,7 @@ function Philosophy() {
           </div>
 
           <div className="absolute inset-0 flex justify-center ml-8 sm:ml-0 items-center md:left-[20%] lg:left-[180px] md:top-0 lg:top-15">
-            <img className='h-auto max-h-[80vh] md:h-[500px] lg:h-[700px] w-auto' src="./public/images/mask.png" alt="Mask" />
+            <img className='h-auto max-h-[80vh] md:h-[500px] lg:h-[700px] w-auto' src="https://res.cloudinary.com/djbawwbzi/image/upload/v1761793140/Mask_nxuyhy.png" alt="Mask" />
           </div>
 
           <div className="absolute bottom-18 sm:bottom-4 right-4 sm:right-8 md:right-14 text-right">
@@ -53,7 +53,7 @@ function Philosophy() {
             that truly resonate—no <br />
             <span className='font-ITCGaramondStd-BkCondIta'>compromises !</span>
           </h1>
-          <img src="./public/images/sp2.jpg" className='h-48  sm:h-60 md:h-72 w-auto rounded-3xl md:rounded-4xl mb-4 md:mb-5 lg:ml-16' alt="Perfume detail" />
+          <img src="https://res.cloudinary.com/djbawwbzi/image/upload/v1761793140/Mask_nxuyhy.png" className='h-48  sm:h-60 md:h-72 w-auto rounded-3xl md:rounded-4xl mb-4 md:mb-5 lg:ml-16' alt="Perfume detail" />
           <p className='font-neogroteskessalt-light text-xs text-center sm:text-xs text-[#9C8080] max-w-[80%] md:max-w-[310px]'>
             Drawing on over 30 years of expertise in natural essences and
             the art of fragrance, we blend authentic ingredients with modern
@@ -63,7 +63,7 @@ function Philosophy() {
         </div>
 
         <div className="hidden md:block relative md:w-1/2 lg:right-0 lg:w-auto">
-          <img src="./public/images/philo2.png" className='h-auto max-h-[80vh] md:h-[400px] lg:h-[564px] w-auto' alt="Philosophy image" />
+          <img src="https://res.cloudinary.com/djbawwbzi/image/upload/v1761793202/philo2_vehho6.png" className='h-auto max-h-[80vh] md:h-[400px] lg:h-[564px] w-auto' alt="Philosophy image" />
         </div>
       </div>
 
@@ -89,7 +89,7 @@ function Philosophy() {
       </div>
 
       <div className="w-screen min-h-[50vh] md:h-screen">
-        <img src="./public/images/1k.jpg" className='h-full w-full object-cover' alt="Full screen image" />
+        <img src="https://res.cloudinary.com/djbawwbzi/image/upload/v1761793240/1k_azzovz.jpg" className='h-full w-full object-cover' alt="Full screen image" />
       </div>
 
       <div className="bg-[#F2F2F2] w-screen min-h-screen flex flex-col justify-center px-4 sm:px-8 md:px-12 lg:px-16 pt-16 md:pt-32 lg:pt-40">
@@ -144,7 +144,7 @@ function Philosophy() {
         <div className="flex flex-col md:flex-row justify-between items-start md:items-end mt-8 md:mt-0 px-4 sm:px-8 md:px-20">
           {/* Logo & Tagline */}
           <div className="py-6 md:py-12">
-            <img className="h-10 md:h-14 w-auto" src="./public/images/logo.png" alt="Nuvee Logo" />
+            <img className="h-10 md:h-14 w-auto" src="https://res.cloudinary.com/djbawwbzi/image/upload/v1761793282/logo_qj79sh.png" alt="Nuvee Logo" />
             <p className="text-[#a0a0a0] text-[10px] mt-2">
               Clean, Conscious, Clinical Perfume! <br />
               Honest products that truly work

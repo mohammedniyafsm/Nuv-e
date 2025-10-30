@@ -131,7 +131,7 @@ function Shop() {
                             <hr className="mt-2 text-[#CBB9B9]" />
                             {showCollection && (
                                 <div className="flex flex-col mt-2 gap-1" onClick={(e) => e.stopPropagation()}>
-                                    {["SIGNATURE COLLECTION", "BLOOM ESSENCE"].map((type) => (
+                                    {["SIGNATURE COLLECTION", "BLOOM ESSENCE","NOIR COLLECTION","DAYLIGHT SERIES","ELITE Oud","VELVET Desire"].map((type) => (
                                         <button
                                             key={type}
                                             className={`text-xs px-2 py-1 rounded ${selectedCollection === type ? "bg-gray-300" : "bg-white"}`}

@@ -17,9 +17,12 @@ interface WishListI {
 }
 
 const categoryBg: Record<string, string> = {
-  "SIGNATURE COLLECTION": "#ECC9CA",
+ "SIGNATURE COLLECTION": "#ECC9CA",
   "BLOOM ESSENCE": "#CBC6D8",
-   "NOIR COLLECTION" : "#F2D6AF"
+  "NOIR COLLECTION": "#F2D6AF",
+  "DAYLIGHT SERIES": "#D7CDC2",
+  "ELITE Oud": "#C1CBDA",
+  "VELVET Desire": "#D6CCC3"
 };
 
 function WishlistCard({ _id, name, category, size, price, images }: WishListI) {
