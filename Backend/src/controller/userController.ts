@@ -405,6 +405,7 @@ export const logoutUser = async (req: Request, res: Response): Promise<void> => 
         res.clearCookie("access_token", {
             httpOnly: true,
             secure: isProduction,
+            sameSite: isProduction ? "none" : "lax",
         })
         res.json({ message: "Logged Out Successfully" });
         return;

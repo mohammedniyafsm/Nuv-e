@@ -58,22 +58,25 @@ export const UserSlice = createSlice({
       .addCase(fetchUser.rejected, (state, action) => {
         state.loading = false;
         state.error = action.error.message || "Failed to fetch user";
+        state._id = "";
+        state.username = "";
+        state.email = "";
       })
 
       // ==================== UPDATE USER DATA ====================
       .addCase(updateUser.pending, (state) => {
         state.loading = true;
       })
-      .addCase(updateUser.fulfilled, (state, action) => {
-        state.loading = false;
-        state.username = action.payload.username;
-        state.email = action.payload.email;
-      })
-      .addCase(updateUser.rejected, (state, action) => {
-        state.loading = false;
-        state.error = action.error.message || "Failed to update user";
-      });
-  },
+    .addCase(updateUser.fulfilled, (state, action) => {
+      state.loading = false;
+      state.username = action.payload.username;
+      state.email = action.payload.email;
+    })
+    .addCase(updateUser.rejected, (state, action) => {
+      state.loading = false;
+      state.error = action.error.message || "Failed to update user";
+    });
+},
 });
 
 export const { logout } = UserSlice.actions;
