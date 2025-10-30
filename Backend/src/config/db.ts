@@ -1,17 +1,21 @@
 import mongoose from "mongoose";
 
-const mongoUrl = process.env.MONGODB_URL as string;
+const mongoUrl = process.env.MONGODB_URL;
 
 export const connectDB = async (): Promise<void> => {
     if (!mongoUrl) {
-        console.log("MONGO_URL NOT FOUND");
+        console.error("❌ MONGODB_URL not found in environment variables");
+        process.exit(1);
     }
+
     try {
-        await mongoose.connect(mongoUrl);
-        console.log("Connected To Database");
-        return
+        console.log(mongoUrl);
+        await mongoose.connect(mongoUrl, {
+            serverSelectionTimeoutMS: 10000, // 10s timeout
+        });
+        console.log("✅ Connected to MongoDB");
     } catch (error) {
-        console.log(error);
-        return
+        console.error("❌ MongoDB connection failed:", error);
+        process.exit(1);
     }
-}
+};
