@@ -1,11 +1,12 @@
-import  { useEffect } from 'react'
+import { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import type { AppDispatch, RootState } from '../app/store'
 import { fetchUser } from '../features/User/UserSlice';
 import Exit from './icons/Exit';
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-import { logout } from "../features/User/UserSlice"; 
+import { logout } from "../features/User/UserSlice";
+import { toast } from "react-hot-toast";
 
 function UserProfileHeader() {
   const dispatch = useDispatch<AppDispatch>();
@@ -21,7 +22,7 @@ function UserProfileHeader() {
 
       // Clear Redux state (optional, but good practice)
       dispatch(logout());
-
+      toast.success("Logged out successfully");
       // Redirect to login or homepage
       navigate("/login");
     } catch (error) {
