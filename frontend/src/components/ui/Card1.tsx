@@ -6,6 +6,7 @@ import toast from "react-hot-toast";
 import Bag from "../icons/bag";
 import FavorateOff from "../icons/FavorateOff";
 import FavorateOn from "../icons/FavorateOn";
+import { useAuth } from "../../hooks/useAuth";
 
 import {
   addWishlist,
@@ -41,6 +42,7 @@ const categoryBg: Record<string, string> = {
 };
 
 function Card1({ name, price, _id, category, images }: CardProps) {
+    const { loggedIn } = useAuth();
   const dispatch = useDispatch<AppDispatch>();
   const navigate = useNavigate();
 
@@ -70,6 +72,11 @@ function Card1({ name, price, _id, category, images }: CardProps) {
   const bgColor = categoryBg[category] || "#FFFFFF";
 
   const handleAddToCart = () => {
+    if (!loggedIn) {
+      toast.error("Please log in to add items to your cart");
+      navigate("/login");
+      return;
+    }
     if (cartExits) {
       const updatedQuantity = (cartExits.quantity ?? 0) + 1;
       dispatch(
@@ -83,6 +90,11 @@ function Card1({ name, price, _id, category, images }: CardProps) {
   };
 
   const handleWishlistToggle = () => {
+     if (!loggedIn) {
+      toast.error("Please log in to add items to your wishlist");
+      navigate("/login");
+      return;
+    }
     if (favour) {
       dispatch(removeWishlist(_id));
       toast.success("Removed from Wishlist");

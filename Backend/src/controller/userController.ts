@@ -402,7 +402,7 @@ export const Logged = async (req: Request, res: Response): Promise<void> => {
 //USER LOGOUT 
 export const logoutUser = async (req: Request, res: Response): Promise<void> => {
     try {
-        res.clearCookie("acess_token", {
+        res.clearCookie("access_token", {
             httpOnly: true,
             secure: isProduction,
         })

@@ -11,11 +11,12 @@ import Exfoliating from '../components/icons/Exfoliating'
 import FooterAbove from '../components/FooterAbove'
 import { useEffect, useState } from 'react'
 import axios from 'axios'
-import { useLocation, useParams } from 'react-router-dom'
+import { useLocation, useNavigate, useParams } from 'react-router-dom'
 import { useDispatch } from 'react-redux'
 import { type AppDispatch } from '../app/store'
 import { addCart, Carts } from '../features/Cart/CartSlice'
 import toast from 'react-hot-toast'
+import { useAuth } from '../hooks/useAuth'
 
 interface Product {
     _id: string;
@@ -34,6 +35,8 @@ interface Product {
 }
 
 function ProductDetail() {
+    const { loggedIn } = useAuth();
+    const navigate = useNavigate();
     const [product, setProduct] = useState<Product | null>(null);
     const { id } = useParams<{ id: string }>();
     const [currentQuantity, setQuantity] = useState(1);
@@ -62,6 +65,11 @@ function ProductDetail() {
     const incrementQuantity = () => setQuantity(prev => prev + 1);
     const decrementQuantity = () => { if (currentQuantity > 1) setQuantity(prev => prev - 1); };
     const addToCart = () => {
+        if (!loggedIn) {
+            toast.error("Please log in to add items to your cart");
+            navigate("/login");
+            return;
+        }
         if (!product) return;
         dispatch(addCart({ productId: product._id, quantity: currentQuantity, price: Number(product.price) }));
         toast.success("Product Added to Cart");
@@ -73,7 +81,7 @@ function ProductDetail() {
         "NOIR COLLECTION": "#F2D6AF",
         "DAYLIGHT SERIES": "#D7CDC2",
         "ELITE Oud": "#C1CBDA",
-          "VELVET Desire": "#D6CCC3"
+        "VELVET Desire": "#D6CCC3"
     };
 
     const name = product?.name ?? "";

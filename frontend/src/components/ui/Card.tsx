@@ -15,6 +15,7 @@ import {
 import { addCart, Carts, updateCart } from "../../features/Cart/CartSlice";
 
 import type { AppDispatch, RootState } from "../../app/store";
+import { useAuth } from "../../hooks/useAuth";
 
 interface CartItem {
   _id: string;
@@ -41,6 +42,8 @@ const categoryBg: Record<string, string> = {
 };
 
 function Card({ name, price, _id, category, images }: CardProps) {
+  const { loggedIn } = useAuth();
+
   const dispatch = useDispatch<AppDispatch>();
   const navigate = useNavigate();
 
@@ -70,6 +73,11 @@ function Card({ name, price, _id, category, images }: CardProps) {
   const bgColor = categoryBg[category] || "#FFFFFF";
 
   const handleAddToCart = () => {
+    if (!loggedIn) {
+      toast.error("Please log in to add items to your cart");
+      navigate("/login");
+      return;
+    }
     if (cartExits) {
       const updatedQuantity = (cartExits.quantity ?? 0) + 1;
       dispatch(
@@ -83,6 +91,11 @@ function Card({ name, price, _id, category, images }: CardProps) {
   };
 
   const handleWishlistToggle = (_id: any) => {
+    if (!loggedIn) {
+      toast.error("Please log in to add items to your Wishlist");
+      navigate("/login");
+      return;
+    }
     if (favour) {
       dispatch(removeWishlist(_id));
       toast.success("Removed from Wishlist");
