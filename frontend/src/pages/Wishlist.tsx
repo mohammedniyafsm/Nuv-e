@@ -4,6 +4,7 @@ import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import type { AppDispatch, RootState } from "../app/store";
 import { WishLists } from "../features/WishList/WishlistSlice";
+import WishlistShimmer from "../components/WishlistShimmer";
 
 function Wishlist() {
   const dispatch = useDispatch<AppDispatch>();
@@ -17,9 +18,7 @@ function Wishlist() {
     return (
       <>
         <Navbar />
-        <div className="flex justify-center items-center h-screen text-gray-600 text-xl">
-          Loading your wishlist...
-        </div>
+         <WishlistShimmer />
       </>
     );
   }

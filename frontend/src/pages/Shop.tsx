@@ -6,12 +6,14 @@ import { type AppDispatch, type RootState } from "../app/store";
 import { allProduct, paginatedProducts, searchProducts, filterProducts } from "../features/Product/Product";
 import Card1 from "../components/ui/Card1";
 import { useLocation } from "react-router-dom";
+import ShopShimmer from "../components/ShopShimmer";
 
 function Shop() {
     const { products } = useSelector((state: RootState) => state.product);
     const dispatch = useDispatch<AppDispatch>();
-
+    const [loading, setLoading] = useState(true);
     const { pathname } = useLocation();
+    
 
     // Scroll to top on route change
     useEffect(() => {
@@ -44,9 +46,12 @@ function Shop() {
                 priceMin: minPrice,
                 priceMax: maxPrice,
                 category: selectedCollection || undefined
-            }));
+            }))
+            .finally(() => setLoading(false));
         } else {
-            dispatch(paginatedProducts({ page: currentPage, limit: 12 }));
+            dispatch(paginatedProducts({ page: currentPage, limit: 12 }))
+            .finally(() => setLoading(false));
+
         }
     }, [minPrice, maxPrice, selectedCollection, currentPage, dispatch]);
 
@@ -131,7 +136,7 @@ function Shop() {
                             <hr className="mt-2 text-[#CBB9B9]" />
                             {showCollection && (
                                 <div className="flex flex-col mt-2 gap-1" onClick={(e) => e.stopPropagation()}>
-                                    {["SIGNATURE COLLECTION", "BLOOM ESSENCE","NOIR COLLECTION","DAYLIGHT SERIES","ELITE Oud","VELVET Desire"].map((type) => (
+                                    {["SIGNATURE COLLECTION", "BLOOM ESSENCE", "NOIR COLLECTION", "DAYLIGHT SERIES", "ELITE Oud", "VELVET Desire"].map((type) => (
                                         <button
                                             key={type}
                                             className={`text-xs px-2 py-1 rounded ${selectedCollection === type ? "bg-gray-300" : "bg-white"}`}
@@ -287,35 +292,42 @@ function Shop() {
                                 </div>
                             </div>
                             <div className="flex gap-4 justify-center flex-wrap">
-                                {products.map((s) => (
-                                    <Card1
-                                        name={s.name}
-                                        category={s.category}
-                                        images={s.images}
-                                        price={s.price}
-                                        key={s._id}
-                                        _id={s._id}
-                                    />
-                                ))}
+                                {loading ? (
+                                    <ShopShimmer n={12} />
+                                ) : products.length > 0 ?  (
+                                    products.map((s) => (
+                                        <Card1
+                                            name={s.name}
+                                            category={s.category}
+                                            images={s.images}
+                                            price={s.price}
+                                            key={s._id}
+                                            _id={s._id}
+                                        />
+                                    ))
+                                ) : (
+                                    <div className="text-gray-600 text-sm py-20">No products found.</div>
+                                )}
                             </div>
+
                         </div>
                     </div>
 
                     {/* Pagination */}
-                   
-                        <div className="flex justify-center items-center gap-4 py-10 lg:ml-64 xl:ml-80">
-                            {[1, 2].map((page) => (
-                                <h1
-                                    key={page}
-                                    onClick={() => handlePagination(page)}
-                                    className={` ${currentPage === page ? "bg-gray-300" : "bg-gray-100"}  h-6 w-6 flex justify-center rounded-full items-center text-xs cursor-pointer`}
-                                >
-                                    {page}
-                                </h1>
-                            ))}
-                        </div>
 
-                   
+                    <div className="flex justify-center items-center gap-4 py-10 lg:ml-64 xl:ml-80">
+                        {[1, 2].map((page) => (
+                            <h1
+                                key={page}
+                                onClick={() => handlePagination(page)}
+                                className={` ${currentPage === page ? "bg-gray-300" : "bg-gray-100"}  h-6 w-6 flex justify-center rounded-full items-center text-xs cursor-pointer`}
+                            >
+                                {page}
+                            </h1>
+                        ))}
+                    </div>
+
+
                 </div>
             </div>
         </>

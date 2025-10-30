@@ -3,6 +3,7 @@ import LeftArrowScroll from "./icons/LeftArrowScroll";
 import RightArrowScroll from "./icons/RightArrowScroll";
 import Card from "./ui/Card";
 import axios from "axios";
+import ShopShimmer from "./ShopShimmer";
 
 interface SectionI {
   category: string;
@@ -23,12 +24,14 @@ function DynamicSection({
 }: SectionI) {
   const scrollRef = useRef<HTMLDivElement>(null);
   const [product, setProduct] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
   const [visibleCards, setVisibleCards] = useState(1);
   const [cardWidth, setCardWidth] = useState(250);
   const [gap, setGap] = useState(8);
 
   const fetchProduct = async () => {
     try {
+      setLoading(true);
       const { data } = await axios.get(
         `${import.meta.env.VITE_BACKEND_URL}/api/user/products/filter`,
         {
@@ -40,7 +43,8 @@ function DynamicSection({
         }
       );
       setProduct(data.response || []);
-      console.log(category ,data.response)
+      setLoading(false);
+      console.log(category, data.response)
     } catch (error) {
       console.error("Error fetching products:", error);
     }
@@ -103,7 +107,7 @@ function DynamicSection({
     "NOIR COLLECTION": "#F2D6AF",
     "DAYLIGHT SERIES": "#D7CDC2",
     "ELITE Oud": "#C1CBDA",
-    "VELVET Desire" : "#D6CCC3"
+    "VELVET Desire": "#D6CCC3"
   };
 
   const bgColor = categoryBg[category] || "#FFFFFF";
@@ -149,16 +153,20 @@ function DynamicSection({
 
         {/* ===== Cards Section ===== */}
         <div className="relative mt-6 md:mt-10">
-          <div
-            ref={scrollRef}
-            className="flex gap-2 md:gap-6 overflow-x-scroll scroll-smooth scrollbar-hide"
-            style={{
-              scrollSnapType: "x mandatory",
-              WebkitOverflowScrolling: "touch",
-            }}
-          >
-            {product.length > 0 ? (
-              product.map((item) => (
+          {loading ? (
+            <div className="flex gap-4 overflow-hidden">
+              <ShopShimmer n={3} />
+            </div>
+          ) : product.length > 0 ? (
+            <div
+              ref={scrollRef}
+              className="flex gap-2 md:gap-6 overflow-x-scroll scroll-smooth scrollbar-hide"
+              style={{
+                scrollSnapType: "x mandatory",
+                WebkitOverflowScrolling: "touch",
+              }}
+            >
+              {product.map((item) => (
                 <div
                   key={item._id}
                   className="flex-shrink-0 w-[250px] md:w-[340px]"
@@ -172,13 +180,13 @@ function DynamicSection({
                     price={item.price}
                   />
                 </div>
-              ))
-            ) : (
-              <p className="text-gray-400 text-center w-full text-sm py-8">
-                No products in this price range.
-              </p>
-            )}
-          </div>
+              ))}
+            </div>
+          ) : (
+            <p className="text-gray-400 text-center w-full text-sm py-8">
+              No products in this price range.
+            </p>
+          )}
         </div>
       </main>
     </div>

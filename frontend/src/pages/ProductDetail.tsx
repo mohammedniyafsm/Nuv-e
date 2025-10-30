@@ -74,8 +74,6 @@ function ProductDetail() {
         "DAYLIGHT SERIES": "#D7CDC2",
         "ELITE Oud": "#C1CBDA",
           "VELVET Desire": "#D6CCC3"
-
-
     };
 
     const name = product?.name ?? "";

@@ -18,9 +18,11 @@ function UserProfileHeader() {
   return (
     <div className='bg-[#ffff] w-full px-4 py-8 rounded-xl border border-[#dbdada]'>
 
-      <div className="flex gap-8 items-center">
+      <div className="pl-10 flex gap-8 items-center">
         <div className="">
-          <img className='h-20 w-20 rounded-full' src="./public/images/1k.jpg" alt="" />
+          <div className="h-16 w-16 rounded-full flex justify-center items-center bg-gray-500">
+            <h1 className='text-white text-2xl font-neogrotesk-regular'>{username.charAt(0).toUpperCase()}</h1>
+          </div>
         </div>
         <div className="">
           <h1 >{username}</h1>
