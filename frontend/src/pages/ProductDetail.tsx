@@ -132,8 +132,8 @@ function ProductDetail() {
                             <div onClick={incrementQuantity} className="h-7 w-7 bg-[#D9D9D9] flex justify-center items-center rounded-full cursor-pointer">+</div>
                         </div>
                     </div>
-                    <div style={{ backgroundColor: bgColor }} className="h-14 lg:h-16 w-full lg:w-[550px] rounded-4xl mt-8 lg:mt-10 flex items-center justify-center lg:justify-start px-4 lg:px-0">
-                        <h1 onClick={addToCart} className='font-neogroteskessalt-light text-sm cursor-pointer underline text-white pl-0 lg:pl-56 text-center lg:text-left'>ADD TO CART</h1>
+                    <div style={{ backgroundColor: bgColor }} className="transition-transform duration-300 hover:scale-105 h-14 lg:h-16 w-full lg:w-[550px] rounded-4xl mt-8 lg:mt-10 flex items-center justify-center lg:justify-start px-4 lg:px-0">
+                        <h1  onClick={addToCart} className='hover:text-black font-neogroteskessalt-light text-sm cursor-pointer underline text-white pl-0 lg:pl-56 text-center lg:text-left'>ADD TO CART</h1>
                         <div className="bg-[#F2F2F2] h-10 w-10 rounded-full flex justify-center items-center ml-4 lg:ml-46">
                             <Bag className='h-7 w-7 text-[#D4969B]' />
                         </div>

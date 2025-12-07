@@ -56,7 +56,7 @@ function Navbar() {
           <Link to="/">
           <img
             className="w-12 h-6 md:w-24 md:h-12"
-            src="/images/logo.png"
+            src="https://res.cloudinary.com/dnkenioua/image/upload/v1765077654/logo_yg6xtp.png"
             alt="Logo"
           />
           </Link>

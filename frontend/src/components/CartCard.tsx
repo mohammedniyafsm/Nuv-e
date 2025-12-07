@@ -16,6 +16,7 @@ import toast from "react-hot-toast";
 import { placeOrder } from "../features/Order/Order";
 import { createPaymentOrder, verifyPaymentOrder } from "../features/Order/OrderApi";
 import { fetchUser } from "../features/User/UserSlice";
+import CartShimmer from "./users/CartShimmer";
 
 
 // Custom Icons
@@ -252,7 +253,7 @@ function CartCard() {
 
   if (loading) return (
     <div className="text-center mt-20 text-gray-600 text-lg animate-pulse">
-      Loading cart...
+       <CartShimmer />;
     </div>
   );
 

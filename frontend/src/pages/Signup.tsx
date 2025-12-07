@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import toast from 'react-hot-toast';
 
@@ -56,11 +56,13 @@ function Signup() {
     <div className="md:px-12 md:py-8 w-screen min-h-screen bg-[#F2F2F2]">
       {/* Logo */}
       <div className="px-4 py-4 md:px-10">
-        <img
-          className="h-10 md:w-24 md:h-12"
-          src="https://res.cloudinary.com/djbawwbzi/image/upload/v1761751553/logo_zidtnt.png"
-          alt="Logo"
-        />
+        <Link to={"/"}>
+          <img
+            className="cursor-pointer  h-10 md:w-24 md:h-12"
+            src="https://res.cloudinary.com/djbawwbzi/image/upload/v1761751553/logo_zidtnt.png"
+            alt="Logo"
+          />
+        </Link>
       </div>
 
       <div className="flex justify-center flex-col">
@@ -121,7 +123,7 @@ function Signup() {
           <h1 className="text-[#8E8888] md:text-base text-[10px] font-neogrotesk-regular">
             Have an Account Already?
           </h1>
-          <h1 className="underline md:text-base text-xs font-neogroteskessalt-light cursor-pointer" onClick={()=>navigate("/login")}>
+          <h1 className="underline md:text-base text-xs font-neogroteskessalt-light cursor-pointer" onClick={() => navigate("/login")}>
             Login
           </h1>
         </div>

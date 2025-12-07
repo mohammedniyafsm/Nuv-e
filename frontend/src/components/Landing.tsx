@@ -1,6 +1,7 @@
 import {useGSAP } from "@gsap/react"
 import gsap from "gsap";
 import ArrowCurve from "./icons/arrow";
+import { useNavigate } from "react-router-dom";
 
 function Landing() {
     useGSAP(()=>{
@@ -17,6 +18,8 @@ function Landing() {
 
           
     },[])
+
+    const navigate = useNavigate();
     return (
         <div className="h-[450px]  md:h-screen w-full pt-20 bg-nuvee-gradient">
             <div className="relative h-full w-full ">
@@ -52,8 +55,8 @@ function Landing() {
                             full collection and find the scent that <br />
                             truly defines you.</h1>
                     </div>
-                    <div id="box-button" className="mx-8 my-4 md:w-[190px] md:h-[40px] xl:h-[45px] xl:w-[241px] bg-primary flex justify-center items-center rounded-4xl">
-                        <h1  className="font-neogroteskessalt-light text-secondary text-xs ">EXPLORE NOW</h1>
+                    <div id="box-button" className="cursor-pointer mx-8 my-4 md:w-[190px] md:h-[40px] xl:h-[45px] xl:w-[241px] bg-primary flex justify-center items-center rounded-4xl">
+                        <h1 onClick={()=>navigate('/shop') }  className="  font-neogroteskessalt-light text-secondary text-xs ">EXPLORE NOW</h1>
                     </div>
                 </div>
 
