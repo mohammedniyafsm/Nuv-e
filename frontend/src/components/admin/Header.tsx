@@ -1,6 +1,7 @@
 import axios from "axios";
 import Exit from "../icons/Exit";
 import toast from "react-hot-toast";
+import { Link } from "react-router-dom";
 
 function Header() {
 
@@ -16,11 +17,12 @@ function Header() {
         
         {/* Logo and Title */}
         <div className="flex-col sm:flex-row sm:items-center sm:gap-3">
+          <Link to={"/"} >
           <img
-            src="./public/images/logo.png"
+            src="https://res.cloudinary.com/dnkenioua/image/upload/v1765077654/logo_yg6xtp.png"
             alt="Logo"
-            className="w-20 sm:w-24 h-10 sm:h-12 object-contain"
-          />
+            className="cursor-pointer w-20 sm:w-24 h-10 sm:h-12 object-contain"
+          /></Link>
           <h1 className="font-neogrotesk-ultralight text-primary text-base sm:text-lg mt-1 sm:mt-0">
             Admin Panel
           </h1>
